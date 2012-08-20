@@ -29,3 +29,37 @@ SlmLocale is available through composer. Add "slm/locale" to your composer.json 
     "slm/locale": "dev-master"
 
 In the `vendor/slm/locale/config` directory you can find a slmlocale.global.php.dist file. You can copy that file to `config/autoload/slmlocale.global.php` (note you have to omit the .dist extension now). In that file you can tune every option from the detector and attach some strategies. To enable SlmLocale, mind to add `"SlmLocale"` to your application.config.php modules list.
+
+Usage
+---
+Open the configuration file (at `config/autoload/slmlocale.global.php`) and there the complete behaviour of SlmLocale can be tuned. Here below every value will be addressed.
+
+### Default locale
+If you remove the `//` before the `'default'` line, you are able to set the default locale for your application
+
+    'default' => 'en-US'
+
+### Supported locales
+If you only want to have a specified set of locales your application supports, you can remove the `//` before the `'supported'`. In the array you can specify the list you want to support. Keep in mind the order of the list is important. If a strategy can detect multiple locales (like with the HTTP Accept-Language header) the first match in the list will be chosen.
+
+    'supported' => array('en-US', 'en-GB', 'en');
+
+### Aliased locales
+[tbd]
+
+### Strategy configuration
+[tbd]
+
+Development
+---
+SlmLocale is at this moment under development and it is not recommended to use SlmLocale in a production environment. All new features of SlmLocale are made with test driven development and continuous integration from Travis-CI.
+
+[![Build Status](https://secure.travis-ci.org/juriansluiman/SlmLocale.png?branch=master)](http://travis-ci.org/juriansluiman/SlmLocale)
+
+If you notice any bugs in SlmLocale, please create an issue in [the tracker](https://github.com/juriansluiman/SlmLocale/issues). At this moment, the `Detector` class is finished. The supplied strategies are all not finished yet:
+
+ 1. Http Accept-Language strategy: under development
+ 2. Cookie strategy: not started
+ 3. Subdomain strategy: not started
+ 4. TldStrategy: not started
+ 5. UtiPathStrategy: not started
