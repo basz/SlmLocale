@@ -1,0 +1,117 @@
+<?php
+/**
+ * Copyright (c) 2012 Soflomo http://soflomo.com.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ *   * Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ *
+ *   * Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in
+ *     the documentation and/or other materials provided with the
+ *     distribution.
+ *
+ *   * Neither the names of the copyright holders nor the names of the
+ *     contributors may be used to endorse or promote products derived
+ *     from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @package     SlmLocale
+ * @author      Jurian Sluiman <jurian@soflomo.com>
+ * @copyright   2012 Soflomo http://soflomo.com.
+ * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @link        http://ensemble.github.com
+ */
+
+namespace SlmLocale;
+
+use Locale;
+use SlmLocale\Exception\LocaleNotFoundException;
+use SlmLocale\Locale\Detector;
+use Zend\ModuleManager\Feature;
+use Zend\EventManager\EventInterface;
+use Zend\EventManager\EventManagerInterface;
+
+class Module implements
+    Feature\AutoloaderProviderInterface,
+    Feature\ConfigProviderInterface,
+    Feature\ServiceProviderInterface,
+    Feature\BootstrapListenerInterface
+{
+    public function getAutoloaderConfig()
+    {
+        return array(
+            'Zend\Loader\ClassMapAutoloader' => array(
+                __DIR__ . '/autoload_classmap.php',
+            ),
+            'Zend\Loader\StandardAutoloader' => array(
+                'namespaces' => array(
+                    __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
+                ),
+            ),
+        );
+    }
+
+    public function getConfig()
+    {
+        return include __DIR__ . '/config/module.config.php';
+    }
+
+    public function getServiceConfig()
+    {
+        return array(
+            'invokables' => array(
+                'SlmLocale\Strategy\TestStrategy' => 'SlmLocale\Strategy\TestStrategy',
+            ),
+            'factories' => array(
+                'SlmLocale\Locale\Detector' => 'SlmLocale\Service\DetectorFactory',
+            ),
+        );
+    }
+
+    public function onBootstrap(EventInterface $event)
+    {
+        $app = $event->getParam('application');
+        $sm  = $app->getServiceManager();
+
+        $detector = $sm->get('SlmLocale\Locale\Detector');
+        $locale   = $detector->detect($app->getRequest());
+
+        $this->setLocale($locale, $detector, $app->getEventManager());
+    }
+
+    public function setLocale($locale, Detector $detector, EventManagerInterface $events)
+    {
+        if (null === $locale) {
+            if ($detector->throwExceptionOnNotFound()) {
+                throw new LocaleNotFoundException(
+                    'No locale found in locale detection'
+                );
+            }
+            return;
+        }
+
+        $params = array('locale' => $locale);
+        $events->trigger(__FUNCTION__, $this, $params);
+
+        Locale::setDefault($locale);
+
+        $events->trigger(__FUNCTION__ . '.post', $this, $params);
+    }
+}
