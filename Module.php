@@ -97,25 +97,12 @@ class Module implements
         $detector = $sm->get('SlmLocale\Locale\Detector');
         $locale   = $detector->detect($app->getRequest());
 
-        $this->setLocale($locale, $detector, $app->getEventManager());
-    }
-
-    public function setLocale($locale, Detector $detector, EventManagerInterface $events)
-    {
-        if (null === $locale) {
-            if ($detector->throwExceptionOnNotFound()) {
-                throw new LocaleNotFoundException(
-                    'No locale found in locale detection'
-                );
-            }
-            return;
+        if (null === $locale && $detector->throwExceptionOnNotFound()) {
+            throw new LocaleNotFoundException(
+                'No locale found in locale detection'
+            );
         }
 
-        $params = array('locale' => $locale);
-        $events->trigger(__FUNCTION__, $this, $params);
-
         Locale::setDefault($locale);
-
-        $events->trigger(__FUNCTION__ . '.post', $this, $params);
     }
 }
