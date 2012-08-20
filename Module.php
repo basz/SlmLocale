@@ -97,12 +97,15 @@ class Module implements
         $detector = $sm->get('SlmLocale\Locale\Detector');
         $locale   = $detector->detect($app->getRequest());
 
-        if (null === $locale && $detector->throwExceptionOnNotFound()) {
+        if (null !== $locale) {
+            Locale::setDefault($locale);
+            return;
+        }
+
+        if ($detector->throwExceptionOnNotFound()) {
             throw new LocaleNotFoundException(
                 'No locale found in locale detection'
             );
         }
-
-        Locale::setDefault($locale);
     }
 }
