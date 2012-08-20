@@ -81,7 +81,7 @@ class Module implements
                 'SlmLocale\Strategy\HttpAcceptLanguageStrategy' => 'SlmLocale\Strategy\HttpAcceptLanguageStrategy',
                 'SlmLocale\Strategy\SubdomainStrategy'          => 'SlmLocale\Strategy\SubdomainStrategy',
                 'SlmLocale\Strategy\TldStrategy'                => 'SlmLocale\Strategy\TldStrategy',
-                'SlmLocale\Strategy\UtiPathStrategy'            => 'SlmLocale\Strategy\UtiPathStrategy',
+                'SlmLocale\Strategy\UriPathStrategy'            => 'SlmLocale\Strategy\UriPathStrategy',
             ),
             'factories' => array(
                 'SlmLocale\Locale\Detector' => 'SlmLocale\Service\DetectorFactory',
