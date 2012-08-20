@@ -110,7 +110,128 @@ class DetectorTest extends TestCase
         $this->setEventManager($detector);
 
         $locale = $detector->detect(new Request);
+        $this->assertEquals('Foo', $locale);
+    }
 
+    public function testListenerReturningValueIsAcceptedAsLocale()
+    {
+        $detector  = new Detector;
+
+        $self = $this;
+        $this->setEventManager($detector, LocaleEvent::EVENT_DETECT, function($e) {
+            return 'Foo';
+        });
+
+        $locale = $detector->detect(new Request);
+        $this->assertEquals('Foo', $locale);
+    }
+
+    public function testListenerReturningValueIsAcceptedAsLocaleWhenLocaleIsSupported()
+    {
+        $detector  = new Detector;
+        $supported = array('Bar', 'Baz');
+        $detector->setSupported($supported);
+
+        $self = $this;
+        $this->setEventManager($detector, LocaleEvent::EVENT_DETECT, function($e) {
+            return 'Bar';
+        });
+
+        $locale = $detector->detect(new Request);
+        $this->assertEquals('Bar', $locale);
+    }
+
+    public function testUseDefaultLocaleWhenResultIsNotSupported()
+    {
+        $detector  = new Detector;
+        $supported = array('Bar', 'Baz');
+        $detector->setSupported($supported);
+        $detector->setDefault('Foo');
+
+        $self = $this;
+        $this->setEventManager($detector, LocaleEvent::EVENT_DETECT, function($e) {
+            return 'Bat';
+        });
+
+        $locale = $detector->detect(new Request);
+        $this->assertEquals('Foo', $locale);
+    }
+
+    public function testEmptySupportedListIndicatesNoSupportedList()
+    {
+        $detector  = new Detector;
+        $supported = array();
+        $detector->setSupported($supported);
+
+        $this->assertFalse($detector->hasSupported());
+    }
+
+    public function testAliasedLocaleReturnsCanonical()
+    {
+        $detector  = new Detector;
+        $aliases   = array('Foo' => 'FooBar');
+        $detector->setAliases($aliases);
+
+        $self = $this;
+        $this->setEventManager($detector, LocaleEvent::EVENT_DETECT, function($e) {
+            return 'Foo';
+        });
+
+        $locale = $detector->detect(new Request);
+        $this->assertEquals('FooBar', $locale);
+    }
+
+    public function testAliasWillReturnCanonical()
+    {
+        $detector = new Detector;
+        $aliases  = array('Foo' => 'FooBar');
+        $detector->setAliases($aliases);
+
+        $this->assertEquals('FooBar', $detector->getCanonical('Foo'));
+    }
+
+    public function testAliasOnlyHasAliasWhenCanonicalIsKnown()
+    {
+        $detector = new Detector;
+        $aliases  = array('Foo' => 'FooBar', 'Bar' => 'BarBaz');
+        $detector->setAliases($aliases);
+
+        $this->assertTrue($detector->hasAlias('Foo'));
+        $this->assertFalse($detector->hasAlias('Bat'));
+    }
+
+    public function testStrategyAttachesToEventManager()
+    {
+        $detector = new Detector;
+        $strategy = $this->getMock('SlmLocale\Strategy\StrategyInterface');
+
+        $events = $this->getMock('Zend\EventManager\EventManager', array('attachAggregate'));
+        $events->expects($this->once())
+               ->method('attachAggregate')
+               ->with($strategy);
+
+        $detector->setEventManager($events);
+        $detector->addStrategy($strategy);
+    }
+
+    public function testStrategyWithHighestPriorityWins()
+    {
+        $detector  = new Detector;
+        $this->setEventManager($detector);
+
+        $strategy1 = $this->getMock('SlmLocale\Strategy\AbstractStrategy', array('detect'));
+        $strategy1->expects($this->once())
+                  ->method('detect')
+                  ->will($this->returnValue('Foo'));
+
+        $strategy2 = $this->getMock('SlmLocale\Strategy\AbstractStrategy', array('detect'));
+        $strategy2->expects($this->never())
+                  ->method('detect');
+
+        $detector->addStrategy($strategy1, 10);
+        $detector->addStrategy($strategy2, 1);
+
+        $locale = $detector->detect(new Request);
         $this->assertEquals('Foo', $locale);
     }
 
@@ -118,7 +239,7 @@ class DetectorTest extends TestCase
     {
         $events = new EventManager;
 
-        if (null !== $event) {
+        if (null !== $event && null !== $callback) {
             $events->attach($event, $callback);
         }
 
