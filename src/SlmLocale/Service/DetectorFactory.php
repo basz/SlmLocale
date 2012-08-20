@@ -69,7 +69,7 @@ class DetectorFactory implements FactoryInterface
         }
 
         if (array_key_exists('supported', $config)) {
-            $detector->setDefault($config['supported']);
+            $detector->setSupported($config['supported']);
         }
 
         if (array_key_exists('aliases', $config)) {
