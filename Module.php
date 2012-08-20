@@ -77,7 +77,11 @@ class Module implements
     {
         return array(
             'invokables' => array(
-                'SlmLocale\Strategy\TestStrategy' => 'SlmLocale\Strategy\TestStrategy',
+                'SlmLocale\Strategy\CookieStrategy'             => 'SlmLocale\Strategy\CookieStrategy',
+                'SlmLocale\Strategy\HttpAcceptLanguageStrategy' => 'SlmLocale\Strategy\HttpAcceptLanguageStrategy',
+                'SlmLocale\Strategy\SubdomainStrategy'          => 'SlmLocale\Strategy\SubdomainStrategy',
+                'SlmLocale\Strategy\TldStrategy'                => 'SlmLocale\Strategy\TldStrategy',
+                'SlmLocale\Strategy\UtiPathStrategy'            => 'SlmLocale\Strategy\UtiPathStrategy',
             ),
             'factories' => array(
                 'SlmLocale\Locale\Detector' => 'SlmLocale\Service\DetectorFactory',
