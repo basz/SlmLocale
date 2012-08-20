@@ -92,9 +92,17 @@ class DetectorFactory implements FactoryInterface
 
             } elseif (is_array($strategy)) {
                 $name     = $strategy['name'];
-                $priority = $strategy['priority'];
+                $class    = $serviceLocator->get($name);
 
-                $class = $serviceLocator->get($name);
+                if (array_key_exists('options', $strategy)) {
+                    $class->setOptions($strategy['options']);
+                }
+
+                $priority = 1;
+                if (array_key_exists('priority', $strategy)) {
+                    $priority = $strategy['priority'];
+                }
+
                 $detector->addStrategy($class, $priority);
 
             } else {
