@@ -126,6 +126,84 @@ class DetectorFactoryTest extends TestCase
         $this->assertTrue($called);
     }
 
+    public function testConfigurationCanHoldMultipleStrategies()
+    {
+        $sl = $this->getServiceLocator(array(
+            'strategies' => array('TestStrategy1', 'TestStrategy2')
+        ));
+
+        $self    = $this;
+        $called1 = false;
+        $sl->setFactory('TestStrategy1', function() use ($self, &$called1) {
+            $called1 = true;
+            return $self->getMock('SlmLocale\Strategy\StrategyInterface');
+        });
+
+        $called2 = false;
+        $sl->setFactory('TestStrategy2', function() use ($self, &$called2) {
+            $called2 = true;
+            return $self->getMock('SlmLocale\Strategy\StrategyInterface');
+        });
+
+        $detector = $sl->get('SlmLocale\Locale\Detector');
+        $this->assertTrue($called1);
+        $this->assertTrue($called2);
+    }
+
+    public function testStrategyConfigurationCanBeAnArray()
+    {
+        $sl = $this->getServiceLocator(array(
+            'strategies' => array(
+                array('name' => 'TestStrategy')
+            ),
+        ));
+
+        $self   = $this;
+        $called = false;
+        $sl->setFactory('TestStrategy', function() use ($self, &$called) {
+            $called = true;
+            return $self->getMock('SlmLocale\Strategy\StrategyInterface');
+        });
+
+        $detector = $sl->get('SlmLocale\Locale\Detector');
+        $this->assertTrue($called);
+    }
+
+    public function testStrategyCanBeAttachedWithPriorities()
+    {
+        $sl = $this->getServiceLocator(array(
+            'strategies' => array(
+                array('name' => 'TestStrategy', 'priority' => 100)
+            ),
+        ));
+        $em = $sl->get('EventManager');
+
+        $strategy = $this->getMock('SlmLocale\Strategy\StrategyInterface', array('attach', 'detach'));
+        $strategy->expects($this->once())
+                 ->method('attach')
+                 ->with($em, 100);
+        $sl->setService('TestStrategy', $strategy);
+
+        $detector = $sl->get('SlmLocale\Locale\Detector');
+    }
+
+    public function testStrategyCanBeInstantiatedWithOptions()
+    {
+        $sl = $this->getServiceLocator(array(
+            'strategies' => array(
+                array('name' => 'TestStrategy', 'options' => 'Foo')
+            ),
+        ));
+        $strategy = $this->getMock('SlmLocale\Strategy\StrategyInterface', array('attach', 'detach', 'setOptions'));
+        $strategy->expects($this->once())
+                 ->method('setOptions')
+                 ->with('Foo');
+
+        $sl->setService('TestStrategy', $strategy);
+
+        $detector = $sl->get('SlmLocale\Locale\Detector');
+    }
+
     public function getServiceLocator(array $config = array())
     {
         $config = array(
