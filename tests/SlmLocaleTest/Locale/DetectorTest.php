@@ -235,6 +235,31 @@ class DetectorTest extends TestCase
         $this->assertEquals('Foo', $locale);
     }
 
+    public function testFoundEventUsesLocaleEventObject()
+    {
+        $detector = new Detector;
+
+        $self = $this;
+        $this->setEventManager($detector, LocaleEvent::EVENT_FOUND, function($e) use ($self) {
+            $self->assertInstanceOf('SlmLocale\LocaleEvent', $e);
+        });
+
+        $detector->detect(new Request);
+    }
+
+    public function testLocaleIsSetInFoundEvent()
+    {
+        $detector = new Detector;
+        $detector->setDefault('Foo');
+
+        $self = $this;
+        $this->setEventManager($detector, LocaleEvent::EVENT_FOUND, function($e) use ($self) {
+            $self->assertEquals('Foo', $e->getLocale());
+        });
+
+        $detector->detect(new Request);
+    }
+
     public function setEventManager(Detector $detector, $event = null, $callback = null)
     {
         $events = new EventManager;
