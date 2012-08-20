@@ -94,7 +94,7 @@ class DetectorFactory implements FactoryInterface
                 $name     = $strategy['name'];
                 $class    = $serviceLocator->get($name);
 
-                if (array_key_exists('options', $strategy)) {
+                if (array_key_exists('options', $strategy) && method_exists($strategy, 'setOptions')) {
                     $class->setOptions($strategy['options']);
                 }
 
