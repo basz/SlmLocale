@@ -1,0 +1,28 @@
+{
+    "name": "slm/locale",
+    "description": "Automatic detection of locales for Zend Framework 2",
+    "type": "library",
+    "keywords": [
+        "zf2",
+        "i18n",
+        "locale"
+    ],
+    "homepage": "https://github.com/juriansluiman/SlmLocale",
+    "authors": [
+        {
+            "name": "Jurian Sluiman",
+            "email": "jurian@soflomo.com",
+            "homepage": "http://juriansluiman.nl"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3.",
+        "ext-intl": "*",
+        "zendframework/zendframework": "dev-master"
+    },
+    "autoload": {
+        "classmap": [
+            "./"
+        ]
+    }
+}
