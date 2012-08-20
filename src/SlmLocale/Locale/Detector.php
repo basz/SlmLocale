@@ -120,7 +120,7 @@ class Detector implements EventManagerAwareInterface
 
     public function hasSupported()
     {
-        return (null !== $this->supported && count($this->supported));
+        return (is_array($this->supported) && count($this->supported));
     }
 
     public function getAliases()
@@ -159,7 +159,7 @@ class Detector implements EventManagerAwareInterface
         $event->setRequest($request);
 
         if ($this->hasSupported()) {
-            $event->setSupported($supported);
+            $event->setSupported($this->getSupported());
         }
 
         $events  = $this->getEventManager();
