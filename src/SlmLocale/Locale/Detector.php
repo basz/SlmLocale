@@ -155,7 +155,7 @@ class Detector implements EventManagerAwareInterface
 
     public function detect(RequestInterface $request)
     {
-        $event = new LocaleEvent(__FUNCTION__, $this);
+        $event = new LocaleEvent(LocaleEvent::EVENT_DETECT, $this);
         $event->setRequest($request);
 
         if ($this->hasSupported()) {
@@ -189,7 +189,7 @@ class Detector implements EventManagerAwareInterface
 
     public function found($locale)
     {
-        $event = new LocaleEvent(__FUNCTION__, $this);
+        $event = new LocaleEvent(LocaleEvent::EVENT_FOUND, $this);
         $event->setLocale($locale);
 
         $events  = $this->getEventManager();
