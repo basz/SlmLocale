@@ -4,8 +4,7 @@ SlmLocale is a Zend Framework 2 module to automatically detect a locale for your
 
 SlmLocale supports out of the box several strategies to search for a locale. Through interfaces, other strategies could be created. The set of default stragies is:
 
- 1. Use top level domain name
- 2. Use subdomain
+ 1. Use domain name (subdomain or TLD)
  3. Use first segment of the path of an uri
  4. Use a cookie
  5. Use the HTTP Accept-Language header
@@ -60,6 +59,5 @@ If you notice any bugs in SlmLocale, please create an issue in [the tracker](htt
 
  1. Http Accept-Language strategy: under development
  2. Cookie strategy: not started
- 3. Subdomain strategy: not started
- 4. TldStrategy: not started
+ 3. Domain name strategy: under development
  5. UtiPathStrategy: not started
