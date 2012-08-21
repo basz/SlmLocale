@@ -95,7 +95,7 @@ class Module implements
         $sm  = $app->getServiceManager();
 
         $detector = $sm->get('SlmLocale\Locale\Detector');
-        $locale   = $detector->detect($app->getRequest());
+        $locale   = $detector->detect($app->getRequest(), $app->getResponse());
 
         if (null !== $locale) {
             Locale::setDefault($locale);

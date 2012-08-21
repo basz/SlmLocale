@@ -45,6 +45,7 @@ use SlmLocale\LocaleEvent;
 use SlmLocale\Locale\Detector;
 
 use Zend\Stdlib\Request;
+use Zend\Stdlib\Response;
 use Zend\EventManager\EventManager;
 
 class DetectorTest extends TestCase
@@ -58,7 +59,7 @@ class DetectorTest extends TestCase
             $self->assertInstanceOf('SlmLocale\LocaleEvent', $e);
         });
 
-        $detector->detect(new Request);
+        $detector->detect(new Request, new Response);
     }
 
     public function testRequestObjectIsSetInDetectEvent()
@@ -74,7 +75,7 @@ class DetectorTest extends TestCase
             $self->assertEquals($expected, $actual);
         });
 
-        $detector->detect($request);
+        $detector->detect($request, new Response);
     }
 
     public function testSupportedLocalesAreDefaultNull()
@@ -86,7 +87,7 @@ class DetectorTest extends TestCase
             $self->assertNull($e->getSupported());
         });
 
-        $detector->detect(new Request);
+        $detector->detect(new Request, new Response);
     }
 
     public function testSupportedLocalesAreSetInEvent()
@@ -100,7 +101,7 @@ class DetectorTest extends TestCase
             $self->assertEquals($supported, $e->getSupported());
         });
 
-        $detector->detect(new Request);
+        $detector->detect(new Request, new Response);
     }
 
     public function testNotShortCircuitedEventReturnsDefaultLocale()
@@ -109,7 +110,7 @@ class DetectorTest extends TestCase
         $detector->setDefault('Foo');
         $this->setEventManager($detector);
 
-        $locale = $detector->detect(new Request);
+        $locale = $detector->detect(new Request, new Response);
         $this->assertEquals('Foo', $locale);
     }
 
@@ -122,7 +123,7 @@ class DetectorTest extends TestCase
             return 'Foo';
         });
 
-        $locale = $detector->detect(new Request);
+        $locale = $detector->detect(new Request, new Response);
         $this->assertEquals('Foo', $locale);
     }
 
@@ -137,7 +138,7 @@ class DetectorTest extends TestCase
             return 'Bar';
         });
 
-        $locale = $detector->detect(new Request);
+        $locale = $detector->detect(new Request, new Response);
         $this->assertEquals('Bar', $locale);
     }
 
@@ -153,7 +154,7 @@ class DetectorTest extends TestCase
             return 'Bat';
         });
 
-        $locale = $detector->detect(new Request);
+        $locale = $detector->detect(new Request, new Response);
         $this->assertEquals('Foo', $locale);
     }
 
@@ -177,7 +178,7 @@ class DetectorTest extends TestCase
             return 'Foo';
         });
 
-        $locale = $detector->detect(new Request);
+        $locale = $detector->detect(new Request, new Response);
         $this->assertEquals('FooBar', $locale);
     }
 
@@ -231,7 +232,7 @@ class DetectorTest extends TestCase
         $detector->addStrategy($strategy1, 10);
         $detector->addStrategy($strategy2, 1);
 
-        $locale = $detector->detect(new Request);
+        $locale = $detector->detect(new Request, new Response);
         $this->assertEquals('Foo', $locale);
     }
 
@@ -244,7 +245,7 @@ class DetectorTest extends TestCase
             $self->assertInstanceOf('SlmLocale\LocaleEvent', $e);
         });
 
-        $detector->detect(new Request);
+        $detector->detect(new Request, new Response);
     }
 
     public function testRequestObjectIsSetInFoundEvent()
@@ -260,7 +261,23 @@ class DetectorTest extends TestCase
             $self->assertEquals($expected, $actual);
         });
 
-        $detector->detect($request);
+        $detector->detect($request, new Response);
+    }
+
+    public function testResponseObjectIsSetInFoundEvent()
+    {
+        $detector = new Detector;
+        $response = new Response;
+
+        $self = $this;
+        $this->setEventManager($detector, LocaleEvent::EVENT_FOUND, function($e) use ($self, $response) {
+            $expected = spl_object_hash($response);
+            $actual   = spl_object_hash($e->getResponse());
+
+            $self->assertEquals($expected, $actual);
+        });
+
+        $detector->detect(new Request, $response);
     }
 
     public function testLocaleIsSetInFoundEvent()
@@ -273,7 +290,7 @@ class DetectorTest extends TestCase
             $self->assertEquals('Foo', $e->getLocale());
         });
 
-        $detector->detect(new Request);
+        $detector->detect(new Request, new Response);
     }
 
     public function setEventManager(Detector $detector, $event = null, $callback = null)

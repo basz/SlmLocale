@@ -47,6 +47,7 @@ use SlmLocale\Strategy\StrategyInterface;
 use Zend\EventManager\EventManagerAwareInterface;
 use Zend\EventManager\EventManagerInterface;
 use Zend\Stdlib\RequestInterface;
+use Zend\Stdlib\ResponseInterface;
 
 class Detector implements EventManagerAwareInterface
 {
@@ -153,10 +154,11 @@ class Detector implements EventManagerAwareInterface
         return $this->throwException;
     }
 
-    public function detect(RequestInterface $request)
+    public function detect(RequestInterface $request, ResponseInterface $response)
     {
         $event = new LocaleEvent(LocaleEvent::EVENT_DETECT, $this);
         $event->setRequest($request);
+        $event->setResponse($response);
 
         if ($this->hasSupported()) {
             $event->setSupported($this->getSupported());

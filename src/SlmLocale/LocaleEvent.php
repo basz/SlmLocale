@@ -44,6 +44,7 @@ namespace SlmLocale;
 
 use Zend\EventManager\Event;
 use Zend\Stdlib\RequestInterface;
+use Zend\Stdlib\ResponseInterface;
 
 class LocaleEvent extends Event
 {
@@ -51,6 +52,7 @@ class LocaleEvent extends Event
     const EVENT_FOUND  = 'found';
 
     protected $request;
+    protected $response;
     protected $supported;
     protected $locale;
 
@@ -63,6 +65,18 @@ class LocaleEvent extends Event
     {
         $this->setParam('request', $request);
         $this->request = $request;
+        return $this;
+    }
+
+    public function getResponse()
+    {
+        return $this->response;
+    }
+
+    public function setResponse(ResponseInterface $response)
+    {
+        $this->setParam('response', $response);
+        $this->response = $response;
         return $this;
     }
 
