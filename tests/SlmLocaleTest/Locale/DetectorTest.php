@@ -61,7 +61,7 @@ class DetectorTest extends TestCase
         $detector->detect(new Request);
     }
 
-    public function testRequestObjectIsSetInEvent()
+    public function testRequestObjectIsSetInDetectEvent()
     {
         $detector = new Detector;
         $request  = new Request;
@@ -245,6 +245,22 @@ class DetectorTest extends TestCase
         });
 
         $detector->detect(new Request);
+    }
+
+    public function testRequestObjectIsSetInFoundEvent()
+    {
+        $detector = new Detector;
+        $request  = new Request;
+
+        $self = $this;
+        $this->setEventManager($detector, LocaleEvent::EVENT_FOUND, function($e) use ($self, $request) {
+            $expected = spl_object_hash($request);
+            $actual   = spl_object_hash($e->getRequest());
+
+            $self->assertEquals($expected, $actual);
+        });
+
+        $detector->detect($request);
     }
 
     public function testLocaleIsSetInFoundEvent()

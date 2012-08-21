@@ -168,7 +168,7 @@ class Detector implements EventManagerAwareInterface
         });
 
         if (!$results->stopped()) {
-            return $this->found($this->getDefault());
+            return $this->found($this->getDefault(), $event);
         }
 
         $locale = $results->last();
@@ -178,22 +178,22 @@ class Detector implements EventManagerAwareInterface
         }
 
         if (!$this->hasSupported()) {
-            return $this->found($locale);
+            return $this->found($locale, $event);
         }
         if (in_array($locale, $this->getSupported())) {
-            return $this->found($locale);
+            return $this->found($locale, $event);
         }
 
-        return $this->found($this->getDefault());
+        return $this->found($this->getDefault(), $event);
     }
 
-    public function found($locale)
+    public function found($locale, LocaleEvent $event)
     {
-        $event = new LocaleEvent(LocaleEvent::EVENT_FOUND, $this);
+        $event->setName(LocaleEvent::EVENT_FOUND);
         $event->setLocale($locale);
 
         $events  = $this->getEventManager();
-        $this->getEventManager()->trigger($event);
+        $events->trigger($event);
 
         return $locale;
     }
