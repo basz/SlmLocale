@@ -49,8 +49,8 @@ class HttpAcceptLanguageStrategy extends AbstractStrategy
 {
     public function detect(LocaleEvent $event)
     {
-        $request   = $event->getRequest();
-        $headers   = $request->getHeaders();
+        $request = $event->getRequest();
+        $headers = $request->getHeaders();
 
         if ($lookup = $event->hasSupported()) {
             $supported = $event->getSupported();

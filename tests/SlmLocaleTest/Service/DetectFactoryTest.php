@@ -198,7 +198,6 @@ class DetectorFactoryTest extends TestCase
         $strategy->expects($this->once())
                  ->method('setOptions')
                  ->with('Foo');
-
         $sl->setService('TestStrategy', $strategy);
 
         $detector = $sl->get('SlmLocale\Locale\Detector');
