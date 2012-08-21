@@ -78,9 +78,8 @@ class Module implements
         return array(
             'invokables' => array(
                 'SlmLocale\Strategy\CookieStrategy'             => 'SlmLocale\Strategy\CookieStrategy',
+                'SlmLocale\Strategy\HostStrategy'               => 'SlmLocale\Strategy\HostStrategy',
                 'SlmLocale\Strategy\HttpAcceptLanguageStrategy' => 'SlmLocale\Strategy\HttpAcceptLanguageStrategy',
-                'SlmLocale\Strategy\SubdomainStrategy'          => 'SlmLocale\Strategy\SubdomainStrategy',
-                'SlmLocale\Strategy\TldStrategy'                => 'SlmLocale\Strategy\TldStrategy',
                 'SlmLocale\Strategy\UriPathStrategy'            => 'SlmLocale\Strategy\UriPathStrategy',
             ),
             'factories' => array(
