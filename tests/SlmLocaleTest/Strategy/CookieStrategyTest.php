@@ -73,7 +73,7 @@ class CookieStrategyTest extends TestCase
         $this->assertNull($locale);
     }
 
-    public function testReturnsVoidWhenNoCookieIsSetYet()
+    public function testReturnsVoidWhenNoCookieIsNotSet()
     {
         $strategy = $this->strategy;
         $event    = $this->event;
