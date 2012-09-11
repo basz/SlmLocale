@@ -61,7 +61,7 @@ class CookieStrategy extends AbstractStrategy
         }
 
         $cookie    = $request->getCookie();
-        $locale    = $cookie->{self::COOKIE_NAME};
+        $locale    = $cookie->offsetGet(self::COOKIE_NAME);
         $supported = $event->getSupported();
 
         if (in_array($locale, $supported)) {
