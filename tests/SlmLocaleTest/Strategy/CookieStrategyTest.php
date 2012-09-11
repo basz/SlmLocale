@@ -73,6 +73,16 @@ class CookieStrategyTest extends TestCase
         $this->assertNull($locale);
     }
 
+    public function testReturnsVoidWhenNoCookieIsSetYet()
+    {
+        $strategy = $this->strategy;
+        $event    = $this->event;
+        $event->setSupported(array('foo'));
+
+        $locale = $strategy->detect($event);
+        $this->assertNull($locale);
+    }
+
     public function testLocaleInCookieIsReturned()
     {
         $name = CookieStrategy::COOKIE_NAME;
