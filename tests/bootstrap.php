@@ -39,8 +39,18 @@
  * @link        http://juriansluiman.nl
  */
 
-// Get base, application and tests path
-define('BASE_PATH',  dirname(__DIR__));
+chdir(__DIR__);
+$previousDir = '.';
+while (!is_dir($previousDir . DIRECTORY_SEPARATOR . 'vendor')) {
+    $appRoot = dirname(getcwd());
 
-// Load autoloader
-require_once BASE_PATH . '/vendor/autoload.php';
+    if ($previousDir === $appRoot) {
+        throw new RuntimeException('Unable to locate application root');
+    }
+
+    $previousDir = $appRoot;
+    chdir($appRoot);
+}
+
+// Load composer autoloader
+require_once $appRoot . '/vendor/autoload.php';
