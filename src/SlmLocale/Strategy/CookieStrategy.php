@@ -43,14 +43,42 @@
 namespace SlmLocale\Strategy;
 
 use SlmLocale\LocaleEvent;
+use Zend\Http\Request as HttpRequest;
 
 class CookieStrategy extends AbstractStrategy
 {
+    const COOKIE_NAME = 'slm_locale';
+
     public function detect(LocaleEvent $event)
     {
+        $request = $event->getRequest();
+
+        if (!$request instanceof HttpRequest) {
+            return;
+        }
+        if (!$event->hasSupported()) {
+            return;
+        }
+
+        $cookie    = $request->getCookie();
+        $locale    = $cookie->{self::COOKIE_NAME};
+        $supported = $event->getSupported();
+
+        if (in_array($locale, $supported)) {
+            return $locale;
+        }
     }
 
     public function found(LocaleEvent $event)
     {
+        $locale  = $event->getLocale();
+        $request = $event->getRequest();
+        $cookie  = $request->getCookie();
+
+        if ($cookie->offsetExists(self::COOKIE_NAME) && $locale === $cookie->offsetGet(self::COOKIE_NAME)) {
+            return;
+        }
+
+        $cookie->offsetSet(self::COOKIE_NAME, $locale);
     }
 }
