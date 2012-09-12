@@ -111,22 +111,6 @@ class UriPathStrategyTest extends TestCase
         $this->assertNull($this->strategy->detect($this->event));
     }
 
-    public function testDetect_SetsBaseUrlInRouter()
-    {
-        $serviceManager = $this->getServiceLocator();
-        $this->strategy->setServiceManager($serviceManager);
-
-        $request = new HttpRequest;
-        $request->setUri('http://example.com/en');
-
-        $this->event->setRequest($request);
-        $this->event->setResponse(new HttpResponse);
-
-        $locale = $this->strategy->detect($this->event);
-
-        $this->assertEquals($serviceManager->get('router')->getBaseUrl(), '/en');
-    }
-
     /**
      * @runInSeparateProcess
      * 'cause headers will be send (warning https://github.com/sebastianbergmann/phpunit/issues/254)
