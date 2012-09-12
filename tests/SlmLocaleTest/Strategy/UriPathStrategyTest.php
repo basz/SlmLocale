@@ -112,6 +112,23 @@ class UriPathStrategyTest extends TestCase
         $this->assertNull($this->strategy->detect($this->event));
     }
 
+    public function testDetect_PreExistingBaseUrlInRouterDetectsCorrectPathPartAsLocale()
+    {
+        $serviceManager = $this->getServiceLocator();
+        $serviceManager->get('router')->setBaseUrl('/some/seep/installation/path');
+        $this->strategy->setServiceManager($serviceManager);
+
+        $this->event->setLocale('en');
+
+        $request = new HttpRequest;
+        $request->setUri('http://example.com/some/deep/installation/path/en/some/deep/path');
+
+        $this->event->setRequest($request);
+        $this->event->setResponse(new HttpResponse);
+
+        $this->assertEquals('en', $this->strategy->detect($this->event));
+    }
+
     /**
      * @runInSeparateProcess
      * 'cause headers will be send (warning https://github.com/sebastianbergmann/phpunit/issues/254)
@@ -177,6 +194,29 @@ class UriPathStrategyTest extends TestCase
         $locale = $this->strategy->found($this->event);
 
         $this->assertEquals($serviceManager->get('router')->getBaseUrl(), '/en');
+    }
+
+    /**
+     * @runInSeparateProcess
+     * 'cause headers will be send (warning https://github.com/sebastianbergmann/phpunit/issues/254)
+     */
+    public function testFound_PrependToPreExistingBaseUrlInRouter()
+    {
+        $serviceManager = $this->getServiceLocator();
+        $serviceManager->get('router')->setBaseUrl('/some/seep/installation/path');
+        $this->strategy->setServiceManager($serviceManager);
+
+        $this->event->setLocale('en');
+
+        $request = new HttpRequest;
+        $request->setUri('http://example.com/some/seep/installation/path/en');
+
+        $this->event->setRequest($request);
+        $this->event->setResponse(new HttpResponse);
+
+        $locale = $this->strategy->found($this->event);
+
+        $this->assertEquals($serviceManager->get('router')->getBaseUrl(), '/some/seep/installation/path/en');
     }
 
     /**

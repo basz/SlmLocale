@@ -78,7 +78,13 @@ class UriPathStrategy extends AbstractStrategy implements ServiceManagerAwareInt
             return;
         }
 
-        $locale = $this->detectLocaleInRequest($event->getRequest());
+        $router          = $this->serviceManager->get('router');
+        $existingBaseUrl = null; 
+        if (method_exists($router, 'getBaseUrl')) {
+            $existingBaseUrl = $router->getBaseUrl();
+        }
+
+        $locale = $this->detectLocaleInRequest($event->getRequest(), $existingBaseUrl);
 
         if (!strlen($locale)) {
             return;
@@ -102,13 +108,15 @@ class UriPathStrategy extends AbstractStrategy implements ServiceManagerAwareInt
             return;
         }
 
-        $router = $this->serviceManager->get('router');
+        $router          = $this->serviceManager->get('router');
+        $existingBaseUrl = null; 
         if (method_exists($router, 'getBaseUrl')) {
-            $router->setBaseUrl('/' . $locale);
+            $existingBaseUrl = $router->getBaseUrl();
+            $router->setBaseUrl($existingBaseUrl . '/' . $locale);
         }
 
         $uri = $event->getRequest()->getUri();
-        if ($locale == $this->detectLocaleInRequest($event->getRequest())) {
+        if ($locale == $this->detectLocaleInRequest($event->getRequest(), $existingBaseUrl)) {
             if (substr($uri->getPath(), -1) != '/') {
                 $response = $event->getResponse();
                 $response->setStatusCode(self::REDIRECT_STATUS_CODE);
@@ -118,6 +126,7 @@ class UriPathStrategy extends AbstractStrategy implements ServiceManagerAwareInt
 
             return;
         }
+
 
         $uri->setPath('/' . $locale . $uri->getPath());
 
@@ -131,10 +140,15 @@ class UriPathStrategy extends AbstractStrategy implements ServiceManagerAwareInt
         $response->send();
     }
 
-    protected function detectLocaleInRequest(RequestInterface $request)
+    protected function detectLocaleInRequest(RequestInterface $request, $baseurl = null)
     {
         $uri    = $request->getUri();
         $path   = $uri->getPath();
+        
+        if ($baseurl) {
+            $path = substr($path, strlen($baseurl));
+        }
+        
         $parts  = explode("/", trim($path, '/'));
         $locale = array_shift($parts);
 
