@@ -117,7 +117,7 @@ class UriPathStrategy extends AbstractStrategy implements ServiceManagerAwareInt
 
         $uri = $event->getRequest()->getUri();
         if ($locale == $this->detectLocaleInRequest($event->getRequest(), $existingBaseUrl)) {
-            if (substr($uri->getPath(), -1) != '/') {
+            if ($router->getBaseUrl() == $uri->getPath()) {
                 $response = $event->getResponse();
                 $response->setStatusCode(self::REDIRECT_STATUS_CODE);
                 $response->getHeaders()->addHeaderLine('Location', $uri->toString() . '/');
