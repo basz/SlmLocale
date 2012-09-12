@@ -45,6 +45,7 @@ namespace SlmLocale\Strategy;
 use SlmLocale\LocaleEvent;
 use Zend\ServiceManager\ServiceManager;
 use Zend\ServiceManager\ServiceManagerAwareInterface;
+use Zend\Stdlib\RequestInterface;
 
 class UriPathStrategy extends AbstractStrategy implements ServiceManagerAwareInterface
 {
@@ -73,82 +74,71 @@ class UriPathStrategy extends AbstractStrategy implements ServiceManagerAwareInt
 
     public function detect(LocaleEvent $event)
     {
-         $request = $event->getRequest();
-         if (!method_exists($request, 'getUri')) {
+        if (!method_exists($event->getRequest(), 'getUri')) {
             return;
-         }
+        }
 
-         $locale = $this->detectLocaleInRequest($event->getRequest());
+        $locale = $this->detectLocaleInRequest($event->getRequest());
 
-         if (!strlen($locale)) {
-             return;
-         }
+        if (!strlen($locale)) {
+            return;
+        }
 
-         if (!$event->hasSupported() || !in_array($locale, $event->getSupported())) {
-             return;
-         }
+        if (!$event->hasSupported() || !in_array($locale, $event->getSupported())) {
+            return;
+        }
 
-         return $locale;
+        return $locale;
     }
 
     public function found(LocaleEvent $event)
     {
-        $request = $event->getRequest();
-        if (!method_exists($request, 'getUri')) {
-           return;
+        if (!method_exists($event->getRequest(), 'getUri')) {
+            return;
         }
 
-        $uri     = $event->getRequest()->getUri();
-        $locale  = $event->getLocale();
-
+        $locale = $event->getLocale();
         if (null === $locale) {
-           return;
+            return;
         }
 
-        $router  = $this->serviceManager->get('router');
-
+        $router = $this->serviceManager->get('router');
         if (method_exists($router, 'getBaseUrl')) {
-             $router->setBaseUrl('/'. $locale);
+            $router->setBaseUrl('/' . $locale);
         }
 
-         if ($locale == $this->detectLocaleInRequest($event->getRequest())) {
-             if (substr($uri->getPath(), -1) != '/') {
-                 $response = $event->getResponse();
-                 $location = $uri->toString() . '/';
-
+        $uri = $event->getRequest()->getUri();
+        if ($locale == $this->detectLocaleInRequest($event->getRequest())) {
+            if (substr($uri->getPath(), -1) != '/') {
+                $response = $event->getResponse();
                 $response->setStatusCode(self::REDIRECT_STATUS_CODE);
-                $response->getHeaders()->addHeaderLine('Location', $location);
-
+                $response->getHeaders()->addHeaderLine('Location', $uri->toString() . '/');
                 $response->send();
-             }
+            }
 
-             return;
-         }
+            return;
+        }
 
-         $uri->setPath('/' . $locale . $uri->getPath());
+        $uri->setPath('/' . $locale . $uri->getPath());
 
         if (!$this->redirectWhenFound) {
             return;
         }
 
-        $location = $uri->toString();
-
-         $response = $event->getResponse();
-
+        $response = $event->getResponse();
         $response->setStatusCode(self::REDIRECT_STATUS_CODE);
-        $response->getHeaders()->addHeaderLine('Location', $location);
-
+        $response->getHeaders()->addHeaderLine('Location', $uri->toString());
         $response->send();
     }
 
-    protected function detectLocaleInRequest($request)
+    protected function detectLocaleInRequest(RequestInterface $request)
     {
-         $uri    = $request->getUri();
-         $path   = $uri->getPath();
-         $parts  = explode("/", trim($path, '/'));
-         $locale = array_shift($parts);
+        $uri    = $request->getUri();
+        $path   = $uri->getPath();
+        $parts  = explode("/", trim($path, '/'));
+        $locale = array_shift($parts);
 
-         return $locale;
-
+        return $locale;
     }
+
 }

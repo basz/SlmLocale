@@ -63,7 +63,8 @@ class UriPathStrategyTest extends TestCase
     }
 
     /**
-     * Asserts that when the request instance does not has the getUri method detection is not possible as is the case for console requests
+     * Asserts that when the request instance does not has the getUri method detection is not possible as is the case for
+     * console requests.
      */
     public function testDetect_ConsoleRequestReturnsNull()
     {
@@ -99,7 +100,7 @@ class UriPathStrategyTest extends TestCase
 
         $this->assertEquals('en', $this->strategy->detect($this->event));
     }
-    
+
     public function testDetect_NullForUnsupported()
     {
         $request = new HttpRequest;
@@ -128,7 +129,7 @@ class UriPathStrategyTest extends TestCase
         $locale = $this->strategy->found($this->event);
 
         $this->assertEquals($this->event->getResponse()->getStatusCode(), 302);
-        $this->assertContains($this->event->getResponse()->getHeaders()->toString(),
+        $this->assertContains($this->event->getResponse()->getHeaders()->toString(), 
             "Location: http://username:password@example.com:8080/en/some/deep/path/some.file?withsomeparam=true\r\n");
     }
 
@@ -136,8 +137,8 @@ class UriPathStrategyTest extends TestCase
      * @runInSeparateProcess
      * 'cause headers will be send (warning https://github.com/sebastianbergmann/phpunit/issues/254)
      */
-     public function testFound_ShouldRespectDisabledRedirectWhenFoundOption()
-     {
+    public function testFound_ShouldRespectDisabledRedirectWhenFoundOption()
+    {
         $this->strategy->setOptions(array('redirect_when_found' => false));
         $this->strategy->setServiceManager($this->getServiceLocator());
 
@@ -166,7 +167,7 @@ class UriPathStrategyTest extends TestCase
         $this->strategy->setServiceManager($serviceManager);
 
         $this->event->setLocale('en');
-        
+
         $request = new HttpRequest;
         $request->setUri('http://example.com/en');
 
@@ -188,7 +189,7 @@ class UriPathStrategyTest extends TestCase
         $this->strategy->setServiceManager($serviceManager);
 
         $this->event->setLocale('en');
-        
+
         $request = new HttpRequest;
         $request->setUri('http://example.com/en');
 
@@ -210,7 +211,7 @@ class UriPathStrategyTest extends TestCase
         $this->strategy->setServiceManager($serviceManager);
 
         $this->event->setLocale('en');
-        
+
         $request = new HttpRequest;
         $request->setUri('http://example.com/en/');
 
@@ -222,7 +223,7 @@ class UriPathStrategyTest extends TestCase
         $this->assertNotEquals($this->event->getResponse()->getStatusCode(), 302);
     }
 
-    protected function getServiceLocator($withConsoleRouter=false)
+    protected function getServiceLocator($withConsoleRouter = false)
     {
         $serviceLocator = new ServiceManager;
         $serviceLocator->setService('router', $withConsoleRouter ? new ConsoleRouter : new HttpRouter);
