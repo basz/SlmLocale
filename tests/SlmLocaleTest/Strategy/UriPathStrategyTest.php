@@ -178,6 +178,54 @@ class UriPathStrategyTest extends TestCase
      * @runInSeparateProcess
      * 'cause headers will be send (warning https://github.com/sebastianbergmann/phpunit/issues/254)
      */
+    public function testFound_WithDisabledRedirectWhenFoundOptionLocaleShouldStillBeDirectedAnywayWhenPathContainsNothingFurther()
+    {
+        $this->strategy->setOptions(array('redirect_when_found' => false));
+        $this->strategy->setServiceManager($this->getServiceLocator());
+
+        $this->event->setLocale('en');
+        $this->event->setSupported(array('nl', 'de', 'en'));
+
+        $request = new HttpRequest;
+        $request->setUri('http://example.com/en');
+
+        $this->event->setRequest($request);
+        $this->event->setResponse(new HttpResponse);
+
+        $locale = $this->strategy->found($this->event);
+
+        $this->assertEquals($this->event->getResponse()->getStatusCode(), 302);
+        $this->assertContains($this->event->getResponse()->getHeaders()->toString(), "Location: http://example.com/en/\r\n");
+    }
+
+    /**
+     * @runInSeparateProcess
+     * 'cause headers will be send (warning https://github.com/sebastianbergmann/phpunit/issues/254)
+     */
+    public function testFound_WithDisabledRedirectWhenFoundOptionLocaleShouldStillBeDirectedAnyway()
+    {
+        $this->strategy->setOptions(array('redirect_when_found' => false));
+        $this->strategy->setServiceManager($this->getServiceLocator());
+
+        $this->event->setLocale('en');
+        $this->event->setSupported(array('nl', 'de', 'en'));
+
+        $request = new HttpRequest;
+        $request->setUri('http://example.com/en/something.ext');
+
+        $this->event->setRequest($request);
+        $this->event->setResponse(new HttpResponse);
+
+        $locale = $this->strategy->found($this->event);
+
+        $this->assertNotEquals($this->event->getResponse()->getStatusCode(), 302);
+        $this->assertEquals($this->event->getResponse()->getHeaders()->toString(), "");
+    }
+
+    /**
+     * @runInSeparateProcess
+     * 'cause headers will be send (warning https://github.com/sebastianbergmann/phpunit/issues/254)
+     */
     public function testFound_SetsBaseUrlInRouter()
     {
         $serviceManager = $this->getServiceLocator();
