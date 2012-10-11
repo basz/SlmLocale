@@ -75,9 +75,9 @@ class CookieStrategy extends AbstractStrategy
 
     public function found(LocaleEvent $event)
     {
-        $locale  = $event->getLocale();
-        $request = $event->getRequest();
-        $cookie  = $request->getCookie();
+        $locale   = $event->getLocale();
+        $response = $event->getResponse();
+        $cookie   = $response->getCookie();
 
         if ($cookie->offsetExists(self::COOKIE_NAME) && $locale === $cookie->offsetGet(self::COOKIE_NAME)) {
             return;
