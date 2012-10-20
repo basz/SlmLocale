@@ -43,6 +43,7 @@
 namespace SlmLocale\Strategy;
 
 use SlmLocale\LocaleEvent;
+use Zend\Http\Header\SetCookie;
 use Zend\Http\Request as HttpRequest;
 
 class CookieStrategy extends AbstractStrategy
@@ -61,7 +62,7 @@ class CookieStrategy extends AbstractStrategy
         }
 
         $cookie = $request->getCookie();
-        if (!$cookie->offsetExists(self::COOKIE_NAME)) {
+        if (!$cookie || !$cookie->offsetExists(self::COOKIE_NAME)) {
             return;
         }
 
@@ -76,13 +77,15 @@ class CookieStrategy extends AbstractStrategy
     public function found(LocaleEvent $event)
     {
         $locale   = $event->getLocale();
+        $request  = $event->getRequest();
+        $cookie   = $request->getCookie();
         $response = $event->getResponse();
-        $cookie   = $response->getCookie();
 
-        if ($cookie->offsetExists(self::COOKIE_NAME) && $locale === $cookie->offsetGet(self::COOKIE_NAME)) {
+        if ($cookie->offsetExists(self::COOKIE_NAME)) {
             return;
         }
 
-        $cookie->offsetSet(self::COOKIE_NAME, $locale);
+        $setCookie = new SetCookie(self::COOKIE_NAME, $locale);
+        $response->getHeaders()->addHeader($setCookie);
     }
 }
