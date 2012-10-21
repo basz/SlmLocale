@@ -46,7 +46,9 @@ use SlmLocale\Strategy\CookieStrategy;
 use SlmLocale\LocaleEvent;
 
 use Zend\Http\Header\Cookie;
-use Zend\Http\Request as HttpRequest;
+use Zend\Http\Header\SetCookie;
+use Zend\Http\Request  as HttpRequest;
+use Zend\Http\Response as HttpResponse;
 
 class CookieStrategyTest extends TestCase
 {
@@ -57,17 +59,17 @@ class CookieStrategyTest extends TestCase
     {
         $this->strategy = new CookieStrategy;
         $this->event    = new LocaleEvent;
-        $this->cookie   = new Cookie;
 
-        $request = new HttpRequest;
-        $request->getHeaders()->addHeader($this->cookie);
+        $request  = new HttpRequest;
+        $response = new HttpResponse;
         $this->event->setRequest($request);
+        $this->event->setResponse($response);
     }
 
     public function testReturnsVoidWhenNoSupportedLocalesAreGiven()
     {
-        $strategy = $this->strategy;
         $event    = $this->event;
+        $strategy = $this->strategy;
 
         $locale = $strategy->detect($event);
         $this->assertNull($locale);
@@ -75,8 +77,8 @@ class CookieStrategyTest extends TestCase
 
     public function testReturnsVoidWhenNoCookieIsNotSet()
     {
-        $strategy = $this->strategy;
         $event    = $this->event;
+        $strategy = $this->strategy;
         $event->setSupported(array('foo'));
 
         $locale = $strategy->detect($event);
@@ -85,26 +87,77 @@ class CookieStrategyTest extends TestCase
 
     public function testLocaleInCookieIsReturned()
     {
-        $name = CookieStrategy::COOKIE_NAME;
-        $this->cookie->offsetSet($name, 'foo');
+        $cookie = new Cookie;
+        $cookie->offsetSet(CookieStrategy::COOKIE_NAME, 'foo');
+
+        $event = $this->event;
+        $event->setSupported(array('foo'));
+        $event->getRequest()
+              ->getHeaders()->addHeader($cookie);
 
         $strategy = $this->strategy;
-        $event    = $this->event;
-        $event->setSupported(array('foo'));
 
-        $locale = $strategy->detect($event);
+        $locale   = $strategy->detect($event);
         $this->assertEquals('foo', $locale);
     }
 
-    public function testLocalePutInCookieWhenFound()
+    public function testLocaleInSetCookieHeaderWhenFound()
     {
         $strategy = $this->strategy;
         $event    = $this->event;
+        $headers  = $event->getResponse()->getHeaders();
         $event->setLocale('foo');
 
         $strategy->found($event);
 
-        $name = CookieStrategy::COOKIE_NAME;
-        $this->assertEquals('foo', $this->cookie->offsetGet($name));
+        $this->assertTrue($headers->has('Set-Cookie'));
+
+        $cookies = $headers->get('Set-Cookie');
+        $cookie  = $cookies[0];
+        $name    = CookieStrategy::COOKIE_NAME;
+        $this->assertEquals($name, $cookie->getName());
+        $this->assertEquals('foo', $cookie->getValue());
+    }
+
+    public function testSetCookieHeaderSkippedWhenLocaleInRequestHeader()
+    {
+        $cookie = new Cookie;
+        $cookie->offsetSet(CookieStrategy::COOKIE_NAME, 'foo');
+
+        $event = $this->event;
+        $event->getRequest()
+              ->getHeaders()->addHeader($cookie);
+
+        $strategy = $this->strategy;
+        $headers  = $event->getResponse()->getHeaders();
+        $event->setLocale('foo');
+
+        $strategy->found($event);
+
+        $this->assertFalse($headers->has('Set-Cookie'));
+    }
+
+    public function testLocaleInSetCookieHeaderWhenLocaleInRequestIsDifferent()
+    {
+        $cookie = new Cookie;
+        $cookie->offsetSet(CookieStrategy::COOKIE_NAME, 'foo');
+
+        $event = $this->event;
+        $event->getRequest()
+              ->getHeaders()->addHeader($cookie);
+
+        $strategy = $this->strategy;
+        $headers  = $event->getResponse()->getHeaders();
+        $event->setLocale('bar');
+
+        $strategy->found($event);
+
+        $this->assertTrue($headers->has('Set-Cookie'));
+
+        $cookies = $headers->get('Set-Cookie');
+        $cookie  = $cookies[0];
+        $name    = CookieStrategy::COOKIE_NAME;
+        $this->assertEquals($name, $cookie->getName());
+        $this->assertEquals('bar', $cookie->getValue());
     }
 }
