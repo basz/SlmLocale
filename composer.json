@@ -18,7 +18,7 @@
     "require": {
         "php": ">=5.3.3.",
         "ext-intl": "*",
-        "zendframework/zendframework": "dev-master"
+        "zendframework/zendframework": "2.*"
     },
     "autoload": {
         "classmap": [
