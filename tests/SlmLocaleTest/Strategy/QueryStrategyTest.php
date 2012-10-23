@@ -106,7 +106,7 @@ class QueryStrategyTest extends TestCase
         $request->setQuery($query);
 
         $locale = $strategy->detect($event);
-        $this->assertEqual($locale, 'locale');
+        $this->assertEquals('locale', $locale);
     }
 
     public function testQueryKeyCanBeModifiedAndHaveLocaleReturned()
@@ -123,7 +123,7 @@ class QueryStrategyTest extends TestCase
         $request->setQuery($query);
 
         $locale = $strategy->detect($event);
-        $this->assertEqual($locale, 'locale');
+        $this->assertEquals('locale', $locale);
     }
 
 }
