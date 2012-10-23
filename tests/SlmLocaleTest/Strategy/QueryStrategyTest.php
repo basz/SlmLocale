@@ -87,7 +87,7 @@ class QueryStrategyTest extends TestCase
         $query    = $request->getQuery();
 
         $query->lang = 'locale';
-        $request->setQuery($query->toString());
+        $request->setQuery($query);
 
         $locale = $strategy->detect($event);
         $this->assertNull($locale);
@@ -103,7 +103,7 @@ class QueryStrategyTest extends TestCase
         $request = $event->getRequest();
         $query = $request->getQuery();
         $query->lang = 'locale';
-        $request->setQuery($query->toString());
+        $request->setQuery($query);
 
         $locale = $strategy->detect($event);
         $this->assertEqual($locale, 'locale');
@@ -120,7 +120,7 @@ class QueryStrategyTest extends TestCase
         $request = $event->getRequest();
         $query = $request->getQuery();
         $query->language = 'locale';
-        $request->setQuery($query->toString());
+        $request->setQuery($query);
 
         $locale = $strategy->detect($event);
         $this->assertEqual($locale, 'locale');
