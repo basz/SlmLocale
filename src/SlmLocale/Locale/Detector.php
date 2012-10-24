@@ -199,4 +199,31 @@ class Detector implements EventManagerAwareInterface
 
         return $locale;
     }
+
+    public function assemble($locale, $uri)
+    {
+        $event = new LocaleEvent(LocaleEvent::EVENT_ASSEMBLE, $this);
+        $event->setLocale($locale);
+
+        if ($this->hasSupported()) {
+            $event->setSupported($this->getSupported());
+        }
+
+        if (!$uri instanceof \Zend\Uri\Uri) {
+            $uri = new \Zend\Uri\Uri($uri);
+        }
+
+        $event->setUri($uri);
+
+        $events  = $this->getEventManager();
+        $results = $events->trigger($event, function($r) {
+            return is_string($r);
+        });
+
+        if (!$results->stopped()) {
+            return null;
+        }
+
+        return $results->last();
+    }
 }

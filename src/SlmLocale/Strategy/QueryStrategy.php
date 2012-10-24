@@ -44,6 +44,7 @@ namespace SlmLocale\Strategy;
 
 use SlmLocale\LocaleEvent;
 use Zend\Http\Request as HttpRequest;
+use Zend\Uri\Uri;
 
 class QueryStrategy extends AbstractStrategy
 {
@@ -88,6 +89,21 @@ class QueryStrategy extends AbstractStrategy
         }
 
         return $locale;
+    }
+
+    public function assemble(LocaleEvent $event)
+    {
+        if (!$event->hasSupported()) {
+            return;
+        }
+
+        $uri = $event->getUri();
+
+        $query = $uri->getQueryAsArray();
+        $query[$this->query_key] = $event->getLocale();
+        $uri->setQuery($query);
+
+        return $uri->toString();
     }
 
 }

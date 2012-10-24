@@ -40,88 +40,33 @@
  * @link        http://ensemble.github.com
  */
 
-namespace SlmLocale;
+namespace SlmLocale\View\Helper;
 
-use Zend\EventManager\Event;
-use Zend\Stdlib\RequestInterface;
-use Zend\Stdlib\ResponseInterface;
-use Zend\Uri\Uri;
+use Zend\View\Helper\AbstractHelper;
+use Zend\View\Helper\HeadScript;
+use Zend\Mvc\Router\Http\TreeRouteStack;
+use Zend\Http\PhpEnvironment\Request as HttpRequest;
 
-class LocaleEvent extends Event
+class LocaleMenu extends AbstractHelper
 {
-    const EVENT_DETECT   = 'detect';
-    const EVENT_FOUND    = 'found';
-    const EVENT_ASSEMBLE = 'assemble';
+    protected $supported = array();
 
-    protected $request;
-    protected $response;
-    protected $locale;
-    protected $supported;
-    protected $uri;
+    public function __invoke(array $options=array()) {
+        $html = '<ul class="slm_locale">';
+        foreach($this->supported as $supported) {
+            $uri = $this->getView()->localeUri($supported, null);
+            $html .= sprintf('<li class="slm_locale_"><a href="%s"%s title="%s">%s</a></li>',
+                $uri,
+                \Locale::getDefault() == $supported ? ' class="active"' : '',
+                \Locale::getDisplayLanguage($supported, $supported),
+                \Locale::getDisplayLanguage($supported, \Locale::getDefault()));
+        }
+        $html .= '</ul>';
 
-    public function getRequest()
-    {
-        return $this->request;
+        return $html;
     }
-
-    public function setRequest(RequestInterface $request)
-    {
-        $this->setParam('request', $request);
-        $this->request = $request;
-        return $this;
-    }
-
-    public function getResponse()
-    {
-        return $this->response;
-    }
-
-    public function setResponse(ResponseInterface $response)
-    {
-        $this->setParam('response', $response);
-        $this->response = $response;
-        return $this;
-    }
-
-    public function getSupported()
-    {
-        return $this->supported;
-    }
-
-    public function setSupported(array $supported)
-    {
-        $this->setParam('supported', $supported);
+    public function setSupported($supported) {
         $this->supported = $supported;
-        return $this;
-    }
-
-    public function hasSupported()
-    {
-        return is_array($this->supported) && count($this->supported);
-    }
-
-    public function getLocale()
-    {
-        return $this->locale;
-    }
-
-    public function setLocale($locale)
-    {
-        $this->setParam('locale', $locale);
-        $this->locale = $locale;
-        return $this;
-    }
-
-    public function setUri(Uri $uri)
-    {
-        $this->setParam('uri', $uri);
-        $this->uri = $uri;
-        return $this;
-    }
-
-    public function getUri()
-    {
-        return $this->uri;
     }
 
 }
