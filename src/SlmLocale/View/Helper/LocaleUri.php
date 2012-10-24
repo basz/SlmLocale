@@ -40,88 +40,56 @@
  * @link        http://ensemble.github.com
  */
 
-namespace SlmLocale;
+namespace SlmLocale\View\Helper;
 
-use Zend\EventManager\Event;
-use Zend\Stdlib\RequestInterface;
-use Zend\Stdlib\ResponseInterface;
-use Zend\Uri\Uri;
+use Zend\View\Helper\AbstractHelper;
+use Zend\View\Helper\HeadScript;
+use Zend\Mvc\Router\Http\TreeRouteStack;
+use Zend\Http\PhpEnvironment\Request as HttpRequest;
 
-class LocaleEvent extends Event
+class LocaleUri extends AbstractHelper
 {
-    const EVENT_DETECT   = 'detect';
-    const EVENT_FOUND    = 'found';
-    const EVENT_ASSEMBLE = 'assemble';
+    /**
+     * @var \SlmLocale/Locale/Detector $detector
+     */
+    protected $detector;
 
-    protected $request;
-    protected $response;
-    protected $locale;
-    protected $supported;
-    protected $uri;
-
-    public function getRequest()
+    /**
+     * @param \SlmLocale\View\Helper\SlmLocale $detector
+     */
+    public function setDetector($detector)
     {
-        return $this->request;
+        $this->detector = $detector;
     }
 
-    public function setRequest(RequestInterface $request)
+    /**
+     * @return \SlmLocale\View\Helper\SlmLocale
+     */
+    public function getDetector()
     {
-        $this->setParam('request', $request);
-        $this->request = $request;
-        return $this;
+        return $this->detector;
     }
-
-    public function getResponse()
+    /**
+     * Generates an localized url
+     *
+     * @see    Zend\View\Helpes\Url::__invoke()
+     * @param  null    $locale             Locale
+     * @param  string  $name               Name of the route
+     * @param  array   $params             Parameters for the link
+     * @param  array   $options            Options for the route
+     * @param  boolean $reuseMatchedParams Whether to reuse matched parameters
+     * @return string  Url                 For the link href attribute
+     * @throws Exception\RuntimeException  If no RouteStackInterface was provided
+     * @throws Exception\RuntimeException  If no RouteMatch was provided
+     * @throws Exception\RuntimeException  If RouteMatch didn't contain a matched route name
+     */
+    public function __invoke($locale = null, $name = null, array $params = array(), $options = array(), $reuseMatchedParams = true)
     {
-        return $this->response;
-    }
+        $url = $this->detector->assemble($locale,
+            $this->getView()->url($name, $params, $options, $reuseMatchedParams)
+        );
 
-    public function setResponse(ResponseInterface $response)
-    {
-        $this->setParam('response', $response);
-        $this->response = $response;
-        return $this;
-    }
-
-    public function getSupported()
-    {
-        return $this->supported;
-    }
-
-    public function setSupported(array $supported)
-    {
-        $this->setParam('supported', $supported);
-        $this->supported = $supported;
-        return $this;
-    }
-
-    public function hasSupported()
-    {
-        return is_array($this->supported) && count($this->supported);
-    }
-
-    public function getLocale()
-    {
-        return $this->locale;
-    }
-
-    public function setLocale($locale)
-    {
-        $this->setParam('locale', $locale);
-        $this->locale = $locale;
-        return $this;
-    }
-
-    public function setUri(Uri $uri)
-    {
-        $this->setParam('uri', $uri);
-        $this->uri = $uri;
-        return $this;
-    }
-
-    public function getUri()
-    {
-        return $this->uri;
+        return $url;
     }
 
 }

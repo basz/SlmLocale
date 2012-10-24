@@ -40,88 +40,22 @@
  * @link        http://ensemble.github.com
  */
 
-namespace SlmLocale;
+namespace SlmLocale\Service;
 
-use Zend\EventManager\Event;
-use Zend\Stdlib\RequestInterface;
-use Zend\Stdlib\ResponseInterface;
-use Zend\Uri\Uri;
+use SlmLocale\View\Helper\LocaleMenu;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
-class LocaleEvent extends Event
+class LocaleMenuFactory implements FactoryInterface
 {
-    const EVENT_DETECT   = 'detect';
-    const EVENT_FOUND    = 'found';
-    const EVENT_ASSEMBLE = 'assemble';
-
-    protected $request;
-    protected $response;
-    protected $locale;
-    protected $supported;
-    protected $uri;
-
-    public function getRequest()
+    public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return $this->request;
-    }
+        $serviceLocator = $serviceLocator->getServiceLocator();
 
-    public function setRequest(RequestInterface $request)
-    {
-        $this->setParam('request', $request);
-        $this->request = $request;
-        return $this;
-    }
-
-    public function getResponse()
-    {
-        return $this->response;
-    }
-
-    public function setResponse(ResponseInterface $response)
-    {
-        $this->setParam('response', $response);
-        $this->response = $response;
-        return $this;
-    }
-
-    public function getSupported()
-    {
-        return $this->supported;
-    }
-
-    public function setSupported(array $supported)
-    {
-        $this->setParam('supported', $supported);
-        $this->supported = $supported;
-        return $this;
-    }
-
-    public function hasSupported()
-    {
-        return is_array($this->supported) && count($this->supported);
-    }
-
-    public function getLocale()
-    {
-        return $this->locale;
-    }
-
-    public function setLocale($locale)
-    {
-        $this->setParam('locale', $locale);
-        $this->locale = $locale;
-        return $this;
-    }
-
-    public function setUri(Uri $uri)
-    {
-        $this->setParam('uri', $uri);
-        $this->uri = $uri;
-        return $this;
-    }
-
-    public function getUri()
-    {
-        return $this->uri;
+        $helper = new LocaleMenu();
+        $config = $serviceLocator->get('config');
+        $helper->setSupported(isset($config['slm_locale']['supported']) ? $config['slm_locale']['supported'] : array());
+        return $helper;
     }
 
 }
