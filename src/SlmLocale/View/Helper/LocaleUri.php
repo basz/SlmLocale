@@ -83,7 +83,7 @@ class LocaleUri extends AbstractHelper
      * @throws Exception\RuntimeException  If no RouteMatch was provided
      * @throws Exception\RuntimeException  If RouteMatch didn't contain a matched route name
      */
-    public function __invoke($locale = null, $name = null, array $params = array(), $options = array(), $reuseMatchedParams = false)
+    public function __invoke($locale = null, $name = null, array $params = array(), $options = array(), $reuseMatchedParams = true)
     {
         $url = $this->detector->assemble($locale,
             $this->getView()->url($name, $params, $options, $reuseMatchedParams)
