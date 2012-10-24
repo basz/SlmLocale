@@ -79,9 +79,9 @@ class Module implements
                 'localeUri' => 'SlmLocale\ViewHelper\LocaleUri',
                 'localeMenu' => 'SlmLocale\ViewHelper\LocaleMenu',
             ),
-            'factories' => array(
-                'SlmLocale\ViewHelper\LocaleUri' => 'SlmLocale\Service\LocaleUriFactory',
-                'SlmLocale\ViewHelper\LocaleMenu' => 'SlmLocale\Service\LocaleMenuFactory',
+            'invokables' => array(
+                'SlmLocale\ViewHelper\LocaleMenu' => 'SlmLocale\View\Helper\LocaleMenu',
+                'SlmLocale\ViewHelper\LocaleUri' => 'SlmLocale\View\Helper\LocaleUri',
             ),
         );
     }

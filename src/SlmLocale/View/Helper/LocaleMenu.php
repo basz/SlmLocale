@@ -46,27 +46,53 @@ use Zend\View\Helper\AbstractHelper;
 use Zend\View\Helper\HeadScript;
 use Zend\Mvc\Router\Http\TreeRouteStack;
 use Zend\Http\PhpEnvironment\Request as HttpRequest;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
-class LocaleMenu extends AbstractHelper
+class LocaleMenu extends AbstractHelper implements ServiceLocatorAwareInterface
 {
-    protected $supported = array();
+    /**
+     * @var ServiceManager $serviceLocator
+     */
+    protected $serviceLocator;
+
+    /**
+     * Set service locator
+     *
+     * @param ServiceLocatorInterface $serviceLocator
+     */
+    public function setServiceLocator(ServiceLocatorInterface $serviceLocator) {
+        $this->serviceLocator = $serviceLocator;
+    }
+
+    /**
+     * Get service locator
+     *
+     * @return ServiceLocatorInterface
+     */
+    public function getServiceLocator() {
+        return $this->serviceLocator;
+    }
 
     public function __invoke(array $options=array()) {
+        if (!$this->serviceLocator->getServiceLocator()->has('SlmLocale\Locale\Detector')) {
+            return '';
+        }
+
+        $detector = $this->serviceLocator->getServiceLocator()->get('SlmLocale\Locale\Detector');
+
         $html = '<ul class="slm_locale">';
-        foreach($this->supported as $supported) {
+        foreach($detector->getSupported() as $supported) {
             $uri = $this->getView()->localeUri($supported, null);
             $html .= sprintf('<li class="slm_locale_"><a href="%s"%s title="%s">%s</a></li>',
                 $uri,
                 \Locale::getDefault() == $supported ? ' class="active"' : '',
-                \Locale::getDisplayLanguage($supported, $supported),
-                \Locale::getDisplayLanguage($supported, \Locale::getDefault()));
+                \Locale::getDisplayLanguage($supported, \Locale::getDefault()),
+                \Locale::getDisplayLanguage($supported, $supported));
         }
         $html .= '</ul>';
 
         return $html;
-    }
-    public function setSupported($supported) {
-        $this->supported = $supported;
     }
 
 }

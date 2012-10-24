@@ -46,29 +46,34 @@ use Zend\View\Helper\AbstractHelper;
 use Zend\View\Helper\HeadScript;
 use Zend\Mvc\Router\Http\TreeRouteStack;
 use Zend\Http\PhpEnvironment\Request as HttpRequest;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
-class LocaleUri extends AbstractHelper
+class LocaleUri extends AbstractHelper implements ServiceLocatorAwareInterface
 {
     /**
-     * @var \SlmLocale/Locale/Detector $detector
+     * @var ServiceManager $serviceLocator
      */
-    protected $detector;
+    protected $serviceLocator;
 
     /**
-     * @param \SlmLocale\View\Helper\SlmLocale $detector
+     * Set service locator
+     *
+     * @param ServiceLocatorInterface $serviceLocator
      */
-    public function setDetector($detector)
-    {
-        $this->detector = $detector;
+    public function setServiceLocator(ServiceLocatorInterface $serviceLocator) {
+        $this->serviceLocator = $serviceLocator;
     }
 
     /**
-     * @return \SlmLocale\View\Helper\SlmLocale
+     * Get service locator
+     *
+     * @return ServiceLocatorInterface
      */
-    public function getDetector()
-    {
-        return $this->detector;
+    public function getServiceLocator() {
+        return $this->serviceLocator;
     }
+
     /**
      * Generates an localized url
      *
@@ -85,7 +90,11 @@ class LocaleUri extends AbstractHelper
      */
     public function __invoke($locale = null, $name = null, array $params = array(), $options = array(), $reuseMatchedParams = true)
     {
-        $url = $this->detector->assemble($locale,
+        if (!$this->serviceLocator->getServiceLocator()->has('SlmLocale\Locale\Detector')) {
+            return '';
+        }
+
+        $url = $this->serviceLocator->getServiceLocator()->get('SlmLocale\Locale\Detector')->assemble($locale,
             $this->getView()->url($name, $params, $options, $reuseMatchedParams)
         );
 
