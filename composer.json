@@ -21,8 +21,11 @@
         "zendframework/zendframework": "dev-master"
     },
     "autoload": {
+        "psr-0": {
+            "SlmLocale": "src/"
+        },
         "classmap": [
-            "./"
+            "./Module.php"
         ]
     }
 }
