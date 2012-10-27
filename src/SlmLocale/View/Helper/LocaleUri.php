@@ -42,6 +42,7 @@
 
 namespace SlmLocale\View\Helper;
 
+use SlmLocale\Locale\Detector;
 use Zend\View\Helper\AbstractHelper;
 use Zend\View\Helper\HeadScript;
 use Zend\Mvc\Router\Http\TreeRouteStack;
@@ -50,12 +51,12 @@ use Zend\Http\PhpEnvironment\Request as HttpRequest;
 class LocaleUri extends AbstractHelper
 {
     /**
-     * @var \SlmLocale/Locale/Detector $detector
+     * @var Detector $detector
      */
     protected $detector;
 
     /**
-     * @param \SlmLocale\View\Helper\SlmLocale $detector
+     * @param Detector $detector
      */
     public function setDetector($detector)
     {
@@ -63,12 +64,13 @@ class LocaleUri extends AbstractHelper
     }
 
     /**
-     * @return \SlmLocale\View\Helper\SlmLocale
+     * @return Detector $detector
      */
     public function getDetector()
     {
         return $this->detector;
     }
+
     /**
      * Generates an localized url
      *
@@ -85,7 +87,11 @@ class LocaleUri extends AbstractHelper
      */
     public function __invoke($locale = null, $name = null, array $params = array(), $options = array(), $reuseMatchedParams = true)
     {
-        $url = $this->detector->assemble($locale,
+        if (!$this->getDetector()) {
+            throw new RuntimeException('To assemble an url, a detector is required');
+        }
+
+        $url = $this->getDetector()->assemble($locale,
             $this->getView()->url($name, $params, $options, $reuseMatchedParams)
         );
 

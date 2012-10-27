@@ -42,18 +42,38 @@ namespace SlmLocaleTest\Locale\View\Helper;
 
 use PHPUnit_Framework_TestCase as TestCase;
 
+use SlmLocale\View\Helper\LocaleUri;
 use Zend\EventManager\EventManager;
 use Zend\ServiceManager\ServiceManager;
 
 class LocaleUriTest extends TestCase
 {
 
-    public function testFactoryInstantiatesViewHelper()
+    public function testAssemblesUrlWithDetectorAndUrlHelper()
     {
-        $sl = $this->getMvcConfiguredServiceLocator();
-        $viewhelper = $sl->get('viewhelpermanager')->get('SlmLocale\ViewHelper\LocaleUri');
+        $url = $this->getMock('Zend\View\Helper\Url', array('__invoke'));
+        $url->expects($this->once())
+            ->method('__invoke')
+            ->with('foo/bar')
+            ->will($this->returnValue('baz/bat'));
 
-        $this->assertInstanceOf('SlmLocale\View\Helper\LocaleUri', $viewhelper);
+        $view = $this->getMock('Zend\View\View', array('plugin'));
+        $view->expects($this->once())
+            ->method('plugin')
+            ->with('url')
+            ->will($this->returnValue($url));
+
+        $detector = $this->getMock('SlmLocale\Locale\Detector', array('assemble'));
+        $detector->expects($this->once())
+            ->method('assemble')
+            ->with(array('en-GB', 'baz/bat'))
+            ->will($this->returnValue('/en/baz/bat'));
+
+        $helper = new LocaleUri;
+        $helper->setView($view);
+        $helper->setDetector($detector);
+
+        $this->assertEquals('/en/baz/bat', $helper('en-GB', 'foo/bar'));
     }
 
     public function getMvcConfiguredServiceLocator(array $config = array())
