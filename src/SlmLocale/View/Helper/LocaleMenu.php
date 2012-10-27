@@ -126,7 +126,7 @@ class LocaleMenu extends AbstractHelper
 
             $uri = $this->getView()->localeUri($supported, null);
 
-            $html = sprintf('<li%s>', strlen($options['li_class']) ? sprintf(' class="%s"', $options['li_class']) : '');
+            $html .= sprintf('<li%s>', strlen($options['li_class']) ? sprintf(' class="%s"', $options['li_class']) : '');
 
             $html .= sprintf('<a href="%s"%s title="%s">%s</a></li>',
                 $uri,
