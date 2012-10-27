@@ -87,7 +87,7 @@ class LocaleMenu extends AbstractHelper
             throw new RuntimeException('To assemble an url, a detector is required');
         }
 
-        $defaults = array('ul_class' => '', 'li_class' => '', 'skip_current' => false, 'use_display_language' => false);
+        $defaults = array('ul_class' => '', 'li_class' => '', 'omit_current' => false, 'use_display_language' => false, 'show_region' => true, 'show_script' => true);
 
         if (isset($options['ul_class']) && !is_string($options['ul_class'])) {
             $options['ul_class'] = $defaults['ul_class'];
@@ -97,12 +97,20 @@ class LocaleMenu extends AbstractHelper
             $options['li_class'] = $defaults['li_class'];
         }
 
-        if (isset($options['skip_current']) && !is_bool($options['skip_current'])) {
-            $options['skip_current'] = $defaults['skip_current'];
+        if (isset($options['omit_current']) && !is_bool($options['omit_current'])) {
+            $options['omit_current'] = $defaults['omit_current'];
         }
 
         if (isset($options['use_display_language']) && !is_bool($options['use_display_language'])) {
             $options['use_display_language'] = $defaults['use_display_language'];
+        }
+
+        if (isset($options['show_region']) && !is_bool($options['show_region'])) {
+            $options['show_region'] = $defaults['show_region'];
+        }
+
+        if (isset($options['show_script']) && !is_bool($options['show_script'])) {
+            $options['show_script'] = $defaults['show_script'];
         }
 
         $options = array_merge($defaults, $options);
@@ -120,7 +128,7 @@ class LocaleMenu extends AbstractHelper
         $html = sprintf('<ul%s>', strlen($options['ul_class']) ? sprintf(' class="%s"', $options['ul_class']) : '');
 
         foreach($model->supported as $supported) {
-            if ($options['skip_current'] && $model->default === $supported) {
+            if ($options['omit_current'] && $model->default == $supported) {
                 continue;
             }
 
@@ -128,17 +136,50 @@ class LocaleMenu extends AbstractHelper
 
             $html .= sprintf('<li%s>', strlen($options['li_class']) ? sprintf(' class="%s"', $options['li_class']) : '');
 
+            $parsed = Locale::parseLocale($supported);
+
+            $anchor = Locale::getDisplayLanguage($supported, $options['use_display_language'] ? $default : $supported);
+            $title = Locale::getDisplayLanguage($supported, !$options['use_display_language'] ? $default : $supported);
+
+            if ($options['show_region'] && isset($parsed['region'])) {
+                $title  .= ' (' . Locale::getDisplayRegion($supported, !$options['use_display_language'] ? $default : $supported) . ')';
+                $anchor  .= ' <span class="region">(' . Locale::getDisplayRegion($supported, $options['use_display_language'] ? $default : $supported) . ')</span>';
+            }
+            if ($options['show_script'] && isset($parsed['script'])) {
+                $title  .= ' ' . Locale::getDisplayScript($supported, !$options['use_display_language'] ? $default : $supported);
+                $anchor  .= ' <span class="script">(' . Locale::getDisplayScript($supported, $options['use_display_language'] ? $default : $supported) . ')</span>';
+            }
+
             $html .= sprintf('<a href="%s"%s title="%s">%s</a></li>',
                 $uri,
                 $default === $supported ? ' class="active"' : '',
-                Locale::getDisplayLanguage($supported, $supported),
-                Locale::getDisplayLanguage($supported, \Locale::getDefault()));
+                $this->getView()->escapeHtmlAttr($this->getDescription($supported, !$options['use_display_language'] ? $default : $supported, $options)),
+                $this->getDescription($supported, $options['use_display_language'] ? $default : $supported, $options)
+                );
 
             $html .= '</li>';
         }
+
         $html .= '</ul>';
 
         return $html;
+    }
+
+    protected function getDescription($ofLocale, $inLocale, $options)
+    {
+        $parsed = Locale::parseLocale($ofLocale);
+
+        $label = Locale::getDisplayLanguage($parsed['language'], $inLocale);
+
+        if ($options['show_region'] && isset($parsed['region'])) {
+            $label  .= ' - ' . Locale::getDisplayRegion($ofLocale, $inLocale);
+        }
+
+        if ($options['show_script'] && isset($parsed['script'])) {
+            $label  .= ' - ' . Locale::getDisplayScript($ofLocale, $inLocale);
+        }
+
+        return $label;
     }
 
 }
