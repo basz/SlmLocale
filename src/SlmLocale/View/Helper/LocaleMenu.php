@@ -42,31 +42,103 @@
 
 namespace SlmLocale\View\Helper;
 
+use Locale;
+use SlmLocale\Locale\Detector;
 use Zend\View\Helper\AbstractHelper;
-use Zend\View\Helper\HeadScript;
-use Zend\Mvc\Router\Http\TreeRouteStack;
-use Zend\Http\PhpEnvironment\Request as HttpRequest;
+use Zend\View\Model\ViewModel;
 
 class LocaleMenu extends AbstractHelper
 {
-    protected $supported = array();
+    /**
+     * @var Detector $detector
+     */
+    protected $detector;
 
+    /**
+     * @param Detector $detector
+     */
+    public function setDetector($detector)
+    {
+        $this->detector = $detector;
+    }
+
+    /**
+     * @return Detector $detector
+     */
+    public function getDetector()
+    {
+        return $this->detector;
+    }
+
+    /**
+     * @param array $options
+     * @return string
+     * @throws RuntimeException
+     * @todo add ulClass options
+     * @todo add liClass options
+     * @todo add translate options
+     * @todo add translate options
+     * @todo extend Zend\I18n\View\Helper\AbstractTranslatorHelper to have acces to translator for labels
+     * @todo implement add way to completely default rendering for maximum flexibility (see Zend\View\Helper\Navigation::renderPartial)
+     * $todo create concrete implementation of Zend\Stdlib\AbstractOptions options
+     */
     public function __invoke(array $options=array()) {
-        $html = '<ul class="slm_locale">';
-        foreach($this->supported as $supported) {
+        if (!$this->getDetector()) {
+            throw new RuntimeException('To assemble an url, a detector is required');
+        }
+
+        $defaults = array('ul_class' => '', 'liClass' => '', 'skip_current' => false, 'use_display_language' => false);
+
+        if (isset($options['ul_class']) && !is_string($options['ul_class'])) {
+            $options['ul_class'] = $defaults['ul_class'];
+        }
+
+        if (isset($options['li_class']) && !is_string($options['li_class'])) {
+            $options['li_class'] = $defaults['li_class'];
+        }
+
+        if (isset($options['skip_current']) && !is_bool($options['skip_current'])) {
+            $options['skip_current'] = $defaults['skip_current'];
+        }
+
+        if (isset($options['use_display_language']) && !is_bool($options['use_display_language'])) {
+            $options['use_display_language'] = $defaults['use_display_language'];
+        }
+
+        $options = array_merge($defaults, $options);
+
+        $model = new ViewModel;
+        $model->default = Locale::getDefault();
+        $model->supported = $this->getDetector()->getSupported();
+
+        return $this->render($model, $options);
+    }
+
+    protected function render(ViewModel $model, array $options) {
+        $default = Locale::getDefault();
+
+        $html = sprintf('<ul%s>', strlen($options['ul_class']) ? sprintf(' class="%s"', $options['ul_class']) : '');
+
+        foreach($model->supported as $supported) {
+            if ($options['skip_current'] && $model->default === $supported) {
+                continue;
+            }
+
             $uri = $this->getView()->localeUri($supported, null);
-            $html .= sprintf('<li class="slm_locale_"><a href="%s"%s title="%s">%s</a></li>',
+
+            $html = sprintf('<li%s>', strlen($options['li_class']) ? sprintf(' class="%s"', $options['li_class']) : '');
+
+            $html .= sprintf('<a href="%s"%s title="%s">%s</a></li>',
                 $uri,
-                \Locale::getDefault() == $supported ? ' class="active"' : '',
-                \Locale::getDisplayLanguage($supported, $supported),
-                \Locale::getDisplayLanguage($supported, \Locale::getDefault()));
+                $default === $supported ? ' class="active"' : '',
+                Locale::getDisplayLanguage($supported, $supported),
+                Locale::getDisplayLanguage($supported, \Locale::getDefault()));
+
+            $html .= '</li>';
         }
         $html .= '</ul>';
 
         return $html;
-    }
-    public function setSupported($supported) {
-        $this->supported = $supported;
     }
 
 }

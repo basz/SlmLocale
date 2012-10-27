@@ -53,8 +53,7 @@ class LocaleMenuFactory implements FactoryInterface
         $serviceLocator = $serviceLocator->getServiceLocator();
 
         $helper = new LocaleMenu();
-        $config = $serviceLocator->get('config');
-        $helper->setSupported(isset($config['slm_locale']['supported']) ? $config['slm_locale']['supported'] : array());
+        $helper->setDetector($serviceLocator->get('SlmLocale\Locale\Detector'));
         return $helper;
     }
 

@@ -48,14 +48,6 @@ use Zend\ServiceManager\ServiceManager;
 class LocaleMenuTest extends TestCase
 {
 
-    public function testFactoryInstantiatesViewHelper()
-    {
-        $sl = $this->getMvcConfiguredServiceLocator();
-        $viewhelper = $sl->get('viewhelpermanager')->get('SlmLocale\ViewHelper\LocaleMenu');
-
-        $this->assertInstanceOf('SlmLocale\View\Helper\LocaleMenu', $viewhelper);
-    }
-
     public function getMvcConfiguredServiceLocator(array $config = array())
     {
         $config = array(
