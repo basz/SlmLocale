@@ -87,7 +87,7 @@ class LocaleMenu extends AbstractHelper
             throw new RuntimeException('To assemble an url, a detector is required');
         }
 
-        $defaults = array('ul_class' => '', 'liClass' => '', 'skip_current' => false, 'use_display_language' => false);
+        $defaults = array('ul_class' => '', 'li_class' => '', 'skip_current' => false, 'use_display_language' => false);
 
         if (isset($options['ul_class']) && !is_string($options['ul_class'])) {
             $options['ul_class'] = $defaults['ul_class'];
