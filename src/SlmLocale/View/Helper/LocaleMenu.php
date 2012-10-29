@@ -263,7 +263,7 @@ class LocaleMenu extends AbstractHelper
             $item['label'] = $this->callLocale($this->getItemLabelMethod(), $locale, $inLocale) ?: false;
 
             $inLocale = !$this->getLabelInCurrentLocale() ? $locale : $current;
-            $item['info'] = $this->callLocale($this->getItemLabelMethod(), $locale, $current) ?: false;
+            $item['info'] = $this->callLocale($this->getItemInfoMethod(), $locale, $current) ?: false;
             $item['class'] = $this->callLocale($this->getItemClassMethod(), $locale, $inLocale) ?: false;
 
             $model['supported'][] = $item;
