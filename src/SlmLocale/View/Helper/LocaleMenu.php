@@ -55,6 +55,48 @@ class LocaleMenu extends AbstractHelper
     protected $detector;
 
     /**
+     * Set the class to be used on the list container
+     *
+     * @var string || null
+     */
+    protected $class;
+
+    /**
+     * method used to construct a label for each item
+     *
+     * @var string || null
+     */
+    protected $itemLabelMethod = 'displayName';
+
+    /**
+     * method used to construct an info class for each item
+     *
+     * @var string || null
+     */
+    protected $itemInfoMethod = 'displayName';
+
+    /**
+     * method used to construct a class for each item
+     *
+     * @var string || null
+     */
+    protected $itemClassMethod;
+
+    /**
+     * Flag to specify specifies whether the label should be in the current locale
+     *
+     * @var boolean default false
+     */
+    protected $labelInCurrentLocale = 'false';
+
+    /**
+     * Flag to specify the current locale should be omitted from the menu
+     *
+     * @var boolean default false
+     */
+    protected $omitCurrent = false;
+
+    /**
      * @param Detector $detector
      */
     public function setDetector($detector)
@@ -71,115 +113,194 @@ class LocaleMenu extends AbstractHelper
     }
 
     /**
+     * @param string $class
+     */
+    public function setClass($class)
+    {
+        $this->class = $class;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getClass()
+    {
+        return $this->class;
+    }
+
+    /**
+     * @param string $itemClassMethod
+     */
+    public function setItemClassMethod($itemClassMethod = null)
+    {
+        if ($itemClassMethod && !in_array($itemClassMethod, array('displayLanguage', 'displayName', 'displayRegion', 'displayScript', 'displayVariant', 'primaryLanguage', 'region', 'script'))) {
+            throw new RuntimeException('Unknown method "%s" for "%s" option.', $itemClassMethod, 'itemClassMethod');
+        }
+
+        $this->itemClassMethod = $itemClassMethod;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getItemClassMethod()
+    {
+        return $this->itemClassMethod;
+    }
+
+    /**
+     * @param string $itemInfoMethod
+     */
+    public function setItemInfoMethod($itemInfoMethod)
+    {
+        if ($itemInfoMethod !== null && !in_array($itemInfoMethod, array('displayLanguage', 'displayName', 'displayRegion', 'displayScript', 'displayVariant', 'primaryLanguage', 'region', 'script'))) {
+            throw new RuntimeException('Unknown method "%s" for "%s" option.', $itemInfoMethod, 'itemInfoMethod');
+        }
+
+        $this->itemInfoMethod = $itemInfoMethod;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getItemInfoMethod()
+    {
+        return $this->itemInfoMethod;
+    }
+
+    /**
+     * @param string $itemLabelMethod
+     */
+    public function setItemLabelMethod($itemLabelMethod)
+    {
+        if ($itemLabelMethod !== null && !in_array($itemLabelMethod, array('displayLanguage', 'displayName', 'displayRegion', 'displayScript', 'displayVariant', 'primaryLanguage', 'region', 'script'))) {
+            throw new RuntimeException('Unknown method "%s" for "%s" option.', $itemLabelMethod, 'itemLabelMethod');
+        }
+
+        $this->itemLabelMethod = $itemLabelMethod;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getItemLabelMethod()
+    {
+        return $this->itemLabelMethod;
+    }
+
+    /**
+     * @param boolean $labelInCurrentLocale
+     */
+    public function setLabelInCurrentLocale($labelInCurrentLocale)
+    {
+        $this->labelInCurrentLocale = (bool) $labelInCurrentLocale;
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getLabelInCurrentLocale()
+    {
+        return $this->labelInCurrentLocale;
+    }
+
+    /**
+     * @param boolean $omitCurrent
+     */
+    public function setOmitCurrent($omitCurrent)
+    {
+        $this->omitCurrent = (bool) $omitCurrent;
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getOmitCurrent()
+    {
+        return $this->omitCurrent;
+    }
+
+    /**
      * @param array $options
      * @return string
      * @throws RuntimeException
-     * @todo add ulClass options
-     * @todo add liClass options
-     * @todo add translate options
-     * @todo add translate options
-     * @todo extend Zend\I18n\View\Helper\AbstractTranslatorHelper to have acces to translator for labels
      * @todo implement add way to completely default rendering for maximum flexibility (see Zend\View\Helper\Navigation::renderPartial)
-     * $todo create concrete implementation of Zend\Stdlib\AbstractOptions options
      */
     public function __invoke(array $options=array()) {
-        if (!$this->getDetector()) {
+        if (!($detector = $this->getDetector())) {
             throw new RuntimeException('To assemble an url, a detector is required');
         }
 
-        $defaults = array('ul_class' => '', 'li_class' => '', 'omit_current' => false, 'use_display_language' => false, 'show_region' => true, 'show_script' => true);
-
-        if (isset($options['ul_class']) && !is_string($options['ul_class'])) {
-            $options['ul_class'] = $defaults['ul_class'];
+        foreach ($options as $key => $value) {
+            $setter = 'set' . str_replace(' ', '', ucwords(str_replace('_', ' ', $key)));
+            if (!method_exists($this, $setter)) {
+                throw new \RuntimeException('The option "' . $key . '" does not exist for the locale menu helper.');
+            }
+            $this->{$setter}($value);
         }
 
-        if (isset($options['li_class']) && !is_string($options['li_class'])) {
-            $options['li_class'] = $defaults['li_class'];
-        }
+        $model = array();
+        $model['current'] = $current = Locale::getDefault();
+        $model['class'] = $this->getClass() ?: false;
+        $model['supported'] = array();
 
-        if (isset($options['omit_current']) && !is_bool($options['omit_current'])) {
-            $options['omit_current'] = $defaults['omit_current'];
-        }
-
-        if (isset($options['use_display_language']) && !is_bool($options['use_display_language'])) {
-            $options['use_display_language'] = $defaults['use_display_language'];
-        }
-
-        if (isset($options['show_region']) && !is_bool($options['show_region'])) {
-            $options['show_region'] = $defaults['show_region'];
-        }
-
-        if (isset($options['show_script']) && !is_bool($options['show_script'])) {
-            $options['show_script'] = $defaults['show_script'];
-        }
-
-        $options = array_merge($defaults, $options);
-
-        $model = new ViewModel;
-        $model->default = Locale::getDefault();
-        $model->supported = $this->getDetector()->getSupported();
-
-        return $this->render($model, $options);
-    }
-
-    protected function render(ViewModel $model, array $options) {
-        $default = Locale::getDefault();
-
-        $html = sprintf('<ul%s>', strlen($options['ul_class']) ? sprintf(' class="%s"', $options['ul_class']) : '');
-
-        foreach($model->supported as $supported) {
-            if ($options['omit_current'] && $model->default == $supported) {
+        foreach($detector->getSupported() as $locale) {
+            if ($this->getOmitCurrent() && $current == $locale) {
                 continue;
             }
 
-            $uri = $this->getView()->localeUri($supported, null);
+            $item = array();
+            $item['locale'] = $locale;
+            $item['uri'] = $this->getView()->localeUri($locale);
 
-            $html .= sprintf('<li%s>', strlen($options['li_class']) ? sprintf(' class="%s"', $options['li_class']) : '');
+            $inLocale = $this->getLabelInCurrentLocale() ? $locale : $current;
+            $item['label'] = $this->callLocale($this->getItemLabelMethod(), $locale, $inLocale) ?: false;
 
-            $parsed = Locale::parseLocale($supported);
+            $inLocale = !$this->getLabelInCurrentLocale() ? $locale : $current;
+            $item['info'] = $this->callLocale($this->getItemLabelMethod(), $locale, $current) ?: false;
+            $item['class'] = $this->callLocale($this->getItemClassMethod(), $locale, $inLocale) ?: false;
 
-            $anchor = Locale::getDisplayLanguage($supported, $options['use_display_language'] ? $default : $supported);
-            $title = Locale::getDisplayLanguage($supported, !$options['use_display_language'] ? $default : $supported);
-
-            if ($options['show_region'] && isset($parsed['region'])) {
-                $title  .= ' (' . Locale::getDisplayRegion($supported, !$options['use_display_language'] ? $default : $supported) . ')';
-                $anchor  .= ' <span class="region">(' . Locale::getDisplayRegion($supported, $options['use_display_language'] ? $default : $supported) . ')</span>';
-            }
-            if ($options['show_script'] && isset($parsed['script'])) {
-                $title  .= ' ' . Locale::getDisplayScript($supported, !$options['use_display_language'] ? $default : $supported);
-                $anchor  .= ' <span class="script">(' . Locale::getDisplayScript($supported, $options['use_display_language'] ? $default : $supported) . ')</span>';
-            }
-
-            $html .= sprintf('<a href="%s"%s title="%s">%s</a></li>',
-                $uri,
-                $default === $supported ? ' class="active"' : '',
-                $this->getView()->escapeHtmlAttr($this->getDescription($supported, !$options['use_display_language'] ? $default : $supported, $options)),
-                $this->getDescription($supported, $options['use_display_language'] ? $default : $supported, $options)
-                );
-
-            $html .= '</li>';
+            $model['supported'][] = $item;
         }
 
-        $html .= '</ul>';
+        return $this->render($model);
+    }
+
+    protected function callLocale($method, $locale, $in_locale = null) {
+        $callback = sprintf('\Locale::get%s', ucfirst($method));
+
+        $callback_args = array($locale);
+
+        if ($in_locale && !in_array($method, array('region', 'script'))) {
+            $callback_args[] = $in_locale;
+        }
+
+        return call_user_func_array($callback, $callback_args);
+    }
+
+    protected function render(array $model) {
+        $html = sprintf('<ul%s>', $model['class'] ? sprintf(' class="%s"', $model['class']) : '');
+        foreach($model['supported'] as $item) {
+            $html .= sprintf('<li%s>', $item['class'] ? sprintf(' class="%s"', $item['class']) : '');
+
+            $html .= sprintf('<a href="%s"%s title="%s">%s</a>',
+                $item['uri'],
+                $model['current'] == $item['locale'] ? ' class="active"' : '',
+                $this->getView()->escapeHtmlAttr($item['info']),
+                $item['label']
+            );
+
+            $html .= '</li>' . PHP_EOL;
+        }
+
+        $html .= '</ul>' . PHP_EOL;
 
         return $html;
     }
-
-    protected function getDescription($ofLocale, $inLocale, $options)
-    {
-        $parsed = Locale::parseLocale($ofLocale);
-
-        $label = Locale::getDisplayLanguage($parsed['language'], $inLocale);
-
-        if ($options['show_region'] && isset($parsed['region'])) {
-            $label  .= ' - ' . Locale::getDisplayRegion($ofLocale, $inLocale);
-        }
-
-        if ($options['show_script'] && isset($parsed['script'])) {
-            $label  .= ' - ' . Locale::getDisplayScript($ofLocale, $inLocale);
-        }
-
-        return $label;
-    }
-
 }
