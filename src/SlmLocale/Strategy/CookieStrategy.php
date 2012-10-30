@@ -79,6 +79,11 @@ class CookieStrategy extends AbstractStrategy
     {
         $locale   = $event->getLocale();
         $request  = $event->getRequest();
+        
+        if (!$request instanceof HttpRequest) {
+            return;
+        }
+        
         $cookie   = $request->getCookie();
 
         // Omit Set-Cookie header when cookie is present
