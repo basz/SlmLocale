@@ -46,7 +46,6 @@ use SlmLocale\Exception\LocaleNotFoundException;
 use SlmLocale\Locale\Detector;
 use Zend\ModuleManager\Feature;
 use Zend\EventManager\EventInterface;
-use Zend\EventManager\EventManagerInterface;
 
 class Module implements
     Feature\AutoloaderProviderInterface,
@@ -81,6 +80,7 @@ class Module implements
                 'SlmLocale\Strategy\HostStrategy'               => 'SlmLocale\Strategy\HostStrategy',
                 'SlmLocale\Strategy\HttpAcceptLanguageStrategy' => 'SlmLocale\Strategy\HttpAcceptLanguageStrategy',
                 'SlmLocale\Strategy\UriPathStrategy'            => 'SlmLocale\Strategy\UriPathStrategy',
+                'SlmLocale\Strategy\QueryStrategy'              => 'SlmLocale\Strategy\QueryStrategy',
             ),
             'factories' => array(
                 'SlmLocale\Locale\Detector' => 'SlmLocale\Service\DetectorFactory',
@@ -98,6 +98,7 @@ class Module implements
 
         if (null !== $locale) {
             Locale::setDefault($locale);
+
             return;
         }
 
