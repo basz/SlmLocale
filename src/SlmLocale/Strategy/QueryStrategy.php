@@ -40,88 +40,70 @@
  * @link        http://ensemble.github.com
  */
 
-namespace SlmLocale;
+namespace SlmLocale\Strategy;
 
-use Zend\EventManager\Event;
-use Zend\Stdlib\RequestInterface;
-use Zend\Stdlib\ResponseInterface;
+use SlmLocale\LocaleEvent;
+use Zend\Http\Request as HttpRequest;
 use Zend\Uri\Uri;
 
-class LocaleEvent extends Event
+class QueryStrategy extends AbstractStrategy
 {
-    const EVENT_DETECT   = 'detect';
-    const EVENT_FOUND    = 'found';
-    const EVENT_ASSEMBLE = 'assemble';
+    /**
+     * Query key use in uri
+     *
+     * @var string $query_key
+     */
+    protected $query_key = 'lang';
 
-    protected $request;
-    protected $response;
-    protected $locale;
-    protected $supported;
-    protected $uri;
-
-    public function getRequest()
+    public function setOptions(array $options = array())
     {
-        return $this->request;
+        if (array_key_exists('query_key', $options)) {
+            $this->query_key = (string) $options['query_key'];
+        }
     }
 
-    public function setRequest(RequestInterface $request)
+    /**
+     * {@inheritdoc }
+     */
+    public function detect(LocaleEvent $event)
     {
-        $this->setParam('request', $request);
-        $this->request = $request;
-        return $this;
+        /** @var HttpRequest $request */
+        $request = $event->getRequest();
+
+        if (!$request instanceof HttpRequest) {
+            return;
+        }
+
+        if (!$event->hasSupported()) {
+            return;
+        }
+
+        $locale  = $request->getQuery($this->query_key);
+
+        if ($locale === null) {
+            return;
+        }
+
+        if (!in_array($locale, $event->getSupported())) {
+            return;
+        }
+
+        return $locale;
     }
 
-    public function getResponse()
+    public function assemble(LocaleEvent $event)
     {
-        return $this->response;
-    }
+        if (!$event->hasSupported()) {
+            return;
+        }
 
-    public function setResponse(ResponseInterface $response)
-    {
-        $this->setParam('response', $response);
-        $this->response = $response;
-        return $this;
-    }
+        $uri = $event->getUri();
 
-    public function getSupported()
-    {
-        return $this->supported;
-    }
+        $query = $uri->getQueryAsArray();
+        $query[$this->query_key] = $event->getLocale();
+        $uri->setQuery($query);
 
-    public function setSupported(array $supported)
-    {
-        $this->setParam('supported', $supported);
-        $this->supported = $supported;
-        return $this;
-    }
-
-    public function hasSupported()
-    {
-        return is_array($this->supported) && count($this->supported);
-    }
-
-    public function getLocale()
-    {
-        return $this->locale;
-    }
-
-    public function setLocale($locale)
-    {
-        $this->setParam('locale', $locale);
-        $this->locale = $locale;
-        return $this;
-    }
-
-    public function setUri(Uri $uri)
-    {
-        $this->setParam('uri', $uri);
-        $this->uri = $uri;
-        return $this;
-    }
-
-    public function getUri()
-    {
-        return $this->uri;
+        return $uri->toString();
     }
 
 }

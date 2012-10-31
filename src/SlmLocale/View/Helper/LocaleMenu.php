@@ -40,88 +40,59 @@
  * @link        http://ensemble.github.com
  */
 
-namespace SlmLocale;
+namespace SlmLocale\View\Helper;
 
-use Zend\EventManager\Event;
-use Zend\Stdlib\RequestInterface;
-use Zend\Stdlib\ResponseInterface;
-use Zend\Uri\Uri;
+use Zend\View\Helper\AbstractHelper;
+use Zend\View\Helper\HeadScript;
+use Zend\Mvc\Router\Http\TreeRouteStack;
+use Zend\Http\PhpEnvironment\Request as HttpRequest;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
-class LocaleEvent extends Event
+class LocaleMenu extends AbstractHelper implements ServiceLocatorAwareInterface
 {
-    const EVENT_DETECT   = 'detect';
-    const EVENT_FOUND    = 'found';
-    const EVENT_ASSEMBLE = 'assemble';
+    /**
+     * @var ServiceManager $serviceLocator
+     */
+    protected $serviceLocator;
 
-    protected $request;
-    protected $response;
-    protected $locale;
-    protected $supported;
-    protected $uri;
-
-    public function getRequest()
-    {
-        return $this->request;
+    /**
+     * Set service locator
+     *
+     * @param ServiceLocatorInterface $serviceLocator
+     */
+    public function setServiceLocator(ServiceLocatorInterface $serviceLocator) {
+        $this->serviceLocator = $serviceLocator;
     }
 
-    public function setRequest(RequestInterface $request)
-    {
-        $this->setParam('request', $request);
-        $this->request = $request;
-        return $this;
+    /**
+     * Get service locator
+     *
+     * @return ServiceLocatorInterface
+     */
+    public function getServiceLocator() {
+        return $this->serviceLocator;
     }
 
-    public function getResponse()
-    {
-        return $this->response;
-    }
+    public function __invoke(array $options=array()) {
+        if (!$this->serviceLocator->getServiceLocator()->has('SlmLocale\Locale\Detector')) {
+            return '';
+        }
 
-    public function setResponse(ResponseInterface $response)
-    {
-        $this->setParam('response', $response);
-        $this->response = $response;
-        return $this;
-    }
+        $detector = $this->serviceLocator->getServiceLocator()->get('SlmLocale\Locale\Detector');
 
-    public function getSupported()
-    {
-        return $this->supported;
-    }
+        $html = '<ul class="slm_locale">';
+        foreach($detector->getSupported() as $supported) {
+            $uri = $this->getView()->localeUri($supported, null);
+            $html .= sprintf('<li class="slm_locale_"><a href="%s"%s title="%s">%s</a></li>',
+                $uri,
+                \Locale::getDefault() == $supported ? ' class="active"' : '',
+                \Locale::getDisplayLanguage($supported, \Locale::getDefault()),
+                \Locale::getDisplayLanguage($supported, $supported));
+        }
+        $html .= '</ul>';
 
-    public function setSupported(array $supported)
-    {
-        $this->setParam('supported', $supported);
-        $this->supported = $supported;
-        return $this;
-    }
-
-    public function hasSupported()
-    {
-        return is_array($this->supported) && count($this->supported);
-    }
-
-    public function getLocale()
-    {
-        return $this->locale;
-    }
-
-    public function setLocale($locale)
-    {
-        $this->setParam('locale', $locale);
-        $this->locale = $locale;
-        return $this;
-    }
-
-    public function setUri(Uri $uri)
-    {
-        $this->setParam('uri', $uri);
-        $this->uri = $uri;
-        return $this;
-    }
-
-    public function getUri()
-    {
-        return $this->uri;
+        return $html;
     }
 
 }

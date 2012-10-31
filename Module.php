@@ -46,7 +46,6 @@ use SlmLocale\Exception\LocaleNotFoundException;
 use SlmLocale\Locale\Detector;
 use Zend\ModuleManager\Feature;
 use Zend\EventManager\EventInterface;
-use Zend\EventManager\EventManagerInterface;
 
 class Module implements
     Feature\AutoloaderProviderInterface,
@@ -73,6 +72,20 @@ class Module implements
         return include __DIR__ . '/config/module.config.php';
     }
 
+    public function getViewHelperConfig()
+    {
+        return array(
+            'aliases' => array(
+                'localeUri' => 'SlmLocale\ViewHelper\LocaleUri',
+                'localeMenu' => 'SlmLocale\ViewHelper\LocaleMenu',
+            ),
+            'invokables' => array(
+                'SlmLocale\ViewHelper\LocaleMenu' => 'SlmLocale\View\Helper\LocaleMenu',
+                'SlmLocale\ViewHelper\LocaleUri' => 'SlmLocale\View\Helper\LocaleUri',
+            ),
+        );
+    }
+
     public function getServiceConfig()
     {
         return array(
@@ -81,6 +94,7 @@ class Module implements
                 'SlmLocale\Strategy\HostStrategy'               => 'SlmLocale\Strategy\HostStrategy',
                 'SlmLocale\Strategy\HttpAcceptLanguageStrategy' => 'SlmLocale\Strategy\HttpAcceptLanguageStrategy',
                 'SlmLocale\Strategy\UriPathStrategy'            => 'SlmLocale\Strategy\UriPathStrategy',
+                'SlmLocale\Strategy\QueryStrategy'              => 'SlmLocale\Strategy\QueryStrategy',
             ),
             'factories' => array(
                 'SlmLocale\Locale\Detector' => 'SlmLocale\Service\DetectorFactory',
@@ -98,6 +112,7 @@ class Module implements
 
         if (null !== $locale) {
             Locale::setDefault($locale);
+
             return;
         }
 
