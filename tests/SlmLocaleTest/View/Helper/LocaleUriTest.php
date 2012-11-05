@@ -43,13 +43,11 @@ namespace SlmLocaleTest\Locale\View\Helper;
 use PHPUnit_Framework_TestCase as TestCase;
 
 use SlmLocale\View\Helper\LocaleUri;
-use Zend\EventManager\EventManager;
-use Zend\ServiceManager\ServiceManager;
+use Zend\View\Renderer\PhpRenderer;
 
 class LocaleUriTest extends TestCase
 {
-
-    public function testAssemblesUrlWithDetectorAndUrlHelper()
+    public function testProxiesToUrlHelperAndDetector()
     {
         $url = $this->getMock('Zend\View\Helper\Url', array('__invoke'));
         $url->expects($this->once())
@@ -57,46 +55,20 @@ class LocaleUriTest extends TestCase
             ->with('foo/bar')
             ->will($this->returnValue('baz/bat'));
 
-        $view = $this->getMock('Zend\View\View', array('plugin'));
-        $view->expects($this->once())
-            ->method('plugin')
-            ->with('url')
-            ->will($this->returnValue($url));
+        $renderer = new PhpRenderer;
+        $renderer->getHelperPluginManager()->setService('url', $url);
 
         $detector = $this->getMock('SlmLocale\Locale\Detector', array('assemble'));
         $detector->expects($this->once())
             ->method('assemble')
-            ->with(array('en-GB', 'baz/bat'))
+            ->with('en-GB', 'baz/bat')
             ->will($this->returnValue('/en/baz/bat'));
 
         $helper = new LocaleUri;
-        $helper->setView($view);
+        $helper->setView($renderer);
         $helper->setDetector($detector);
 
+        // foo/bar converts into baz/bat; baz/bat converts into /en/baz/bat
         $this->assertEquals('/en/baz/bat', $helper('en-GB', 'foo/bar'));
-    }
-
-    public function getMvcConfiguredServiceLocator(array $config = array())
-    {
-        $config = array(
-            'slm_locale' => $config + array(
-                'default' => '',
-                'supported' => array(),
-                'strategies' => array()
-            ),
-        );
-
-        $module = new \SlmLocale\Module();
-
-        $serviceLocator = new ServiceManager(new \Zend\ServiceManager\Config($module->getServiceConfig()));
-        $serviceLocator->setService('config', $config);
-        $serviceLocator->setService('EventManager', new EventManager);
-
-        $viewhelpermanager = new \Zend\View\HelperPluginManager(new \Zend\ServiceManager\Config($module->getViewHelperConfig()));
-        $viewhelpermanager->setServiceLocator($serviceLocator);
-
-        $serviceLocator->setService('viewhelpermanager', $viewhelpermanager);
-
-        return $serviceLocator;
     }
 }
