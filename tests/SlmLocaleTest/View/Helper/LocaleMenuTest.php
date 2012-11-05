@@ -42,33 +42,32 @@ namespace SlmLocaleTest\Locale;
 
 use PHPUnit_Framework_TestCase as TestCase;
 
-use Zend\EventManager\EventManager;
-use Zend\ServiceManager\ServiceManager;
+use SlmLocale\Locale\Detector;
+use SlmLocale\View\Helper\LocaleMenu;
+
+use Zend\Dom\Query;
+use Zend\View\Renderer\PhpRenderer;
 
 class LocaleMenuTest extends TestCase
 {
+    protected $detector;
+    protected $helper;
 
-    public function getMvcConfiguredServiceLocator(array $config = array())
+    public function setUp()
     {
-        $config = array(
-            'slm_locale' => $config + array(
-                'default' => '',
-                'supported' => array(),
-                'strategies' => array()
-            ),
-        );
+        $this->detector = new Detector;
+        $this->helper   = new LocaleMenu;
 
-        $module = new \SlmLocale\Module();
+        $this->helper->setDetector($this->detector);
+        $this->helper->setView(new PhpRenderer);
+    }
+    public function testHelperCreatesUl()
+    {
+        $this->detector->setSupported(array());
 
-        $serviceLocator = new ServiceManager(new \Zend\ServiceManager\Config($module->getServiceConfig()));
-        $serviceLocator->setService('config', $config);
-        $serviceLocator->setService('EventManager', new EventManager);
+        $helper = $this->helper;
+        $dom  = new Query($helper());
 
-        $viewhelpermanager = new \Zend\View\HelperPluginManager(new \Zend\ServiceManager\Config($module->getViewHelperConfig()));
-        $viewhelpermanager->setServiceLocator($serviceLocator);
-
-        $serviceLocator->setService('viewhelpermanager', $viewhelpermanager);
-
-        return $serviceLocator;
+        $this->assertEquals(1, count($dom->execute('ul')));
     }
 }
