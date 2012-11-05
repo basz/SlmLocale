@@ -82,7 +82,7 @@ class LocaleMenu extends AbstractHelper
      *
      * @var string || null
      */
-    protected $itemClassMethod;
+    protected $itemClassMethod = 'displayName';
 
     /**
      * Flag to specify specifies whether the label should be in the current locale

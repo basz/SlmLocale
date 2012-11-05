@@ -61,6 +61,7 @@ class LocaleMenuTest extends TestCase
         $this->helper->setDetector($this->detector);
         $this->helper->setView(new PhpRenderer);
     }
+
     public function testHelperCreatesUl()
     {
         $this->detector->setSupported(array());
@@ -69,5 +70,18 @@ class LocaleMenuTest extends TestCase
         $dom  = new Query($helper());
 
         $this->assertEquals(1, count($dom->execute('ul')));
+    }
+
+    public function testHelperUsesSupported()
+    {
+        $mock = $this->getMock('SlmLocale\View\Helper\LocaleUri', array());
+        $this->helper->getView()->getHelperPluginManager()->setService('localeUri', $mock);
+
+        $this->detector->setSupported(array('foo', 'bar'));
+
+        $helper = $this->helper;
+        $dom  = new Query($helper());
+
+        $this->assertEquals(2, count($dom->execute('li')));
     }
 }
