@@ -43,9 +43,11 @@
 namespace SlmLocale\View\Helper;
 
 use Locale;
+
+use SlmLocale\Exception\RuntimeException;
 use SlmLocale\Locale\Detector;
+
 use Zend\View\Helper\AbstractHelper;
-use Zend\View\Model\ViewModel;
 
 class LocaleMenu extends AbstractHelper
 {
