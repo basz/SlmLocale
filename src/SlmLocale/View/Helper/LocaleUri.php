@@ -91,9 +91,13 @@ class LocaleUri extends AbstractHelper
             throw new RuntimeException('To assemble an url, a detector is required');
         }
 
-        $url = $this->getDetector()->assemble($locale,
-            $this->getView()->url($name, $params, $options, $reuseMatchedParams)
-        );
+        try {
+            $url = $this->getDetector()->assemble($locale,
+                $this->getView()->url($name, $params, $options, $reuseMatchedParams)
+            );
+        } catch (\Zend\View\Exception\RuntimeException $e) {
+            $url = $_SERVER['REQUEST_URI'];
+        }
 
         return $url;
     }
