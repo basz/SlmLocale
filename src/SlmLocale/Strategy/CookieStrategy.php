@@ -79,11 +79,11 @@ class CookieStrategy extends AbstractStrategy
     {
         $locale   = $event->getLocale();
         $request  = $event->getRequest();
-        
+
         if (!$request instanceof HttpRequest) {
             return;
         }
-        
+
         $cookie   = $request->getCookie();
 
         // Omit Set-Cookie header when cookie is present
@@ -95,9 +95,8 @@ class CookieStrategy extends AbstractStrategy
         }
 
         $response = $event->getResponse();
-        $cookies  = $response->getCookie();
 
-        $setCookie = new SetCookie(self::COOKIE_NAME, $locale);
+        $setCookie = new SetCookie(self::COOKIE_NAME, $locale, null, '/');
         $response->getHeaders()->addHeader($setCookie);
     }
 }
