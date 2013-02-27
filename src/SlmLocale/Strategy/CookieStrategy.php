@@ -79,11 +79,11 @@ class CookieStrategy extends AbstractStrategy
     {
         $locale   = $event->getLocale();
         $request  = $event->getRequest();
-        
+
         if (!$request instanceof HttpRequest) {
             return;
         }
-        
+
         $cookie   = $request->getCookie();
 
         // Omit Set-Cookie header when cookie is present
@@ -94,10 +94,15 @@ class CookieStrategy extends AbstractStrategy
             return;
         }
 
-        $response = $event->getResponse();
-        $cookies  = $response->getCookie();
+        $path = '/';
 
-        $setCookie = new SetCookie(self::COOKIE_NAME, $locale);
+        if (method_exists($request, 'getBasePath')) {
+            $path = rtrim($request->getBasePath(), '/') . '/';
+        }
+
+        $response  = $event->getResponse();
+        $setCookie = new SetCookie(self::COOKIE_NAME, $locale, null, $path);
+
         $response->getHeaders()->addHeader($setCookie);
     }
 }
