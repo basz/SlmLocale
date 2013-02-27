@@ -94,8 +94,14 @@ class CookieStrategy extends AbstractStrategy
             return;
         }
 
+        $path = '/';
+
+        if (method_exists($request, 'getBasePath')) {
+            $path = rtrim($request->getBasePath(), '/') . '/';
+        }
+
         $response  = $event->getResponse();
-        $setCookie = new SetCookie(self::COOKIE_NAME, $locale, null, rtrim($request->getBasePath(), '/') . '/');
+        $setCookie = new SetCookie(self::COOKIE_NAME, $locale, null, $path);
 
         $response->getHeaders()->addHeader($setCookie);
     }
