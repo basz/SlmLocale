@@ -70,9 +70,11 @@ class CookieStrategy extends AbstractStrategy
         $locale    = $cookie->offsetGet(self::COOKIE_NAME);
         $supported = $event->getSupported();
 
-        if (in_array($locale, $supported)) {
-            return $locale;
+        if (!in_array($locale, $supported)) {
+            return;
         }
+
+        return $locale;
     }
 
     public function found(LocaleEvent $event)
