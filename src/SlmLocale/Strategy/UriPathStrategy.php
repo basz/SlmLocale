@@ -79,7 +79,7 @@ class UriPathStrategy extends AbstractStrategy implements ServiceManagerAwareInt
         }
 
         $router          = $this->serviceManager->get('router');
-        $existingBaseUrl = null; 
+        $existingBaseUrl = null;
         if (method_exists($router, 'getBaseUrl')) {
             $existingBaseUrl = $router->getBaseUrl();
         }
@@ -109,7 +109,7 @@ class UriPathStrategy extends AbstractStrategy implements ServiceManagerAwareInt
         }
 
         $router          = $this->serviceManager->get('router');
-        $existingBaseUrl = null; 
+        $existingBaseUrl = null;
         if (method_exists($router, 'getBaseUrl')) {
             $existingBaseUrl = $router->getBaseUrl();
             $router->setBaseUrl($existingBaseUrl . '/' . $locale);
@@ -144,11 +144,11 @@ class UriPathStrategy extends AbstractStrategy implements ServiceManagerAwareInt
     {
         $uri    = $request->getUri();
         $path   = $uri->getPath();
-        
+
         if ($baseurl) {
             $path = substr($path, strlen($baseurl));
         }
-        
+
         $parts  = explode("/", trim($path, '/'));
         $locale = array_shift($parts);
 
