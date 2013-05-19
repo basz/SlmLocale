@@ -42,12 +42,13 @@
 
 namespace SlmLocale\Service;
 
-use SlmLocale\Locale\Detector;
-use SlmLocale\Exception\StrategyConfigurationException;
+use SlmLocale\Strategy\StrategyPluginManager;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Zend\ServiceManager\ServiceManagerAwareInterface;
 
-class DetectorFactory implements FactoryInterface
+class StrategyPluginManagerFactory implements FactoryInterface
 {
     /**
      * @param  ServiceLocatorInterface $serviceLocator
@@ -55,63 +56,21 @@ class DetectorFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('config');
-        $config = $config['slm_locale'];
+        $plugins = new StrategyPluginManager;
+        $plugins->setServiceLocator($serviceLocator);
 
-        $detector = new Detector;
-        $events   = $serviceLocator->get('EventManager');
-        $detector->setEventManager($events);
-
-        $this->addStrategies($detector, $config['strategies'], $serviceLocator);
-
-        if (array_key_exists('default', $config)) {
-            $detector->setDefault($config['default']);
-        }
-
-        if (array_key_exists('supported', $config)) {
-            $detector->setSupported($config['supported']);
-        }
-
-        if (array_key_exists('aliases', $config)) {
-            $detector->setAliases($config['aliases']);
-        }
-
-        if (array_key_exists('throw_exception', $config)) {
-            $detector->throwExceptionOnNotFound($config['throw_exception']);
-        }
-
-        return $detector;
-    }
-
-    protected function addStrategies(Detector $detector, array $strategies, ServiceLocatorInterface $serviceLocator)
-    {
-        $plugins = $serviceLocator->get('SlmLocale\Strategy\StrategyPluginManager');
-
-        foreach ($strategies as $strategy) {
-            if (is_string($strategy)) {
-                $class = $plugins->get($strategy);
-                $detector->addStrategy($class);
-
-            } elseif (is_array($strategy)) {
-                $name     = $strategy['name'];
-                $class    = $plugins->get($name);
-
-                if (array_key_exists('options', $strategy) && method_exists($class, 'setOptions')) {
-                    $class->setOptions($strategy['options']);
-                }
-
-                $priority = 1;
-                if (array_key_exists('priority', $strategy)) {
-                    $priority = $strategy['priority'];
-                }
-
-                $detector->addStrategy($class, $priority);
-
-            } else {
-                throw new StrategyConfigurationException(
-                    'Strategy configuration must be a string or an array'
-                );
+        $plugins->addInitializer(function ($instance) use ($serviceLocator) {
+            if ($instance instanceof ServiceManagerAwareInterface) {
+                $instance->setServiceManager($serviceLocator);
             }
-        }
+        });
+
+        $plugins->addInitializer(function ($instance) use ($serviceLocator) {
+            if ($instance instanceof ServiceLocatorAwareInterface) {
+                $instance->setServiceLocator($serviceLocator);
+            }
+        });
+
+        return $plugins;
     }
 }
