@@ -83,7 +83,8 @@ class Module implements
                 'SlmLocale\Strategy\QueryStrategy'              => 'SlmLocale\Strategy\QueryStrategy',
             ),
             'factories' => array(
-                'SlmLocale\Locale\Detector' => 'SlmLocale\Service\DetectorFactory',
+                'SlmLocale\Locale\Detector'                => 'SlmLocale\Service\DetectorFactory',
+                'SlmLocale\Strategy\StrategyPluginManager' => 'SlmLocale\Service\StrategyPluginManagerFactory',
             ),
         );
     }
