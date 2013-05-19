@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2012 Soflomo http://soflomo.com.
+ * Copyright (c) 2012-2013 Soflomo http://soflomo.com.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,7 +35,7 @@
  * @package     SlmLocale
  * @subpackage  Strategy
  * @author      Jurian Sluiman <jurian@soflomo.com>
- * @copyright   2012 Soflomo http://soflomo.com.
+ * @copyright   2012-2013 Soflomo http://soflomo.com.
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link        http://ensemble.github.com
  */

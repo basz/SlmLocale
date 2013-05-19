@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2012 Jurian Sluiman.
+ * Copyright (c) 2012-2013 Jurian Sluiman.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -34,7 +34,7 @@
  *
  * @package     SlmLocaleTest
  * @author      Jurian Sluiman <jurian@juriansluiman.nl>
- * @copyright   2012 Jurian Sluiman.
+ * @copyright   2012-2013 Jurian Sluiman.
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link        http://juriansluiman.nl
  */
