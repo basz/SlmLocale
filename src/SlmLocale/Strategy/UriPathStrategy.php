@@ -43,14 +43,116 @@
 namespace SlmLocale\Strategy;
 
 use SlmLocale\LocaleEvent;
+use Zend\ServiceManager\ServiceManager;
+use Zend\ServiceManager\ServiceManagerAwareInterface;
+use Zend\Stdlib\RequestInterface;
 
-class UriPathStrategy extends AbstractStrategy
+class UriPathStrategy extends AbstractStrategy implements ServiceManagerAwareInterface
 {
+    const REDIRECT_STATUS_CODE = 302;
+
+    protected $redirectWhenFound = true;
+
+    protected $serviceManager;
+
+    public function setOptions(array $options = array())
+    {
+        if (array_key_exists('redirect_when_found', $options)) {
+            $this->redirectWhenFound = filter_var($options['redirect_when_found'], FILTER_VALIDATE_BOOLEAN);
+        }
+    }
+
+    /**
+     * Set service manager instance
+     *
+     * @param ServiceManager $locator
+     */
+    public function setServiceManager(ServiceManager $serviceManager)
+    {
+        $this->serviceManager = $serviceManager;
+    }
+
     public function detect(LocaleEvent $event)
     {
+        if (!method_exists($event->getRequest(), 'getUri')) {
+            return;
+        }
+
+        $router          = $this->serviceManager->get('router');
+        $existingBaseUrl = null; 
+        if (method_exists($router, 'getBaseUrl')) {
+            $existingBaseUrl = $router->getBaseUrl();
+        }
+
+        $locale = $this->detectLocaleInRequest($event->getRequest(), $existingBaseUrl);
+
+        if (!strlen($locale)) {
+            return;
+        }
+
+        if (!$event->hasSupported() || !in_array($locale, $event->getSupported())) {
+            return;
+        }
+
+        return $locale;
     }
 
     public function found(LocaleEvent $event)
     {
+        if (!method_exists($event->getRequest(), 'getUri')) {
+            return;
+        }
+
+        $locale = $event->getLocale();
+        if (null === $locale) {
+            return;
+        }
+
+        $router          = $this->serviceManager->get('router');
+        $existingBaseUrl = null; 
+        if (method_exists($router, 'getBaseUrl')) {
+            $existingBaseUrl = $router->getBaseUrl();
+            $router->setBaseUrl($existingBaseUrl . '/' . $locale);
+        }
+
+        $uri = $event->getRequest()->getUri();
+        if ($locale == $this->detectLocaleInRequest($event->getRequest(), $existingBaseUrl)) {
+            if ($router->getBaseUrl() == $uri->getPath()) {
+                $response = $event->getResponse();
+                $response->setStatusCode(self::REDIRECT_STATUS_CODE);
+                $response->getHeaders()->addHeaderLine('Location', $uri->toString() . '/');
+                $response->send();
+            }
+
+            return;
+        }
+
+
+        $uri->setPath('/' . $locale . $uri->getPath());
+
+        if (!$this->redirectWhenFound) {
+            return;
+        }
+
+        $response = $event->getResponse();
+        $response->setStatusCode(self::REDIRECT_STATUS_CODE);
+        $response->getHeaders()->addHeaderLine('Location', $uri->toString());
+        $response->send();
     }
+
+    protected function detectLocaleInRequest(RequestInterface $request, $baseurl = null)
+    {
+        $uri    = $request->getUri();
+        $path   = $uri->getPath();
+        
+        if ($baseurl) {
+            $path = substr($path, strlen($baseurl));
+        }
+        
+        $parts  = explode("/", trim($path, '/'));
+        $locale = array_shift($parts);
+
+        return $locale;
+    }
+
 }
