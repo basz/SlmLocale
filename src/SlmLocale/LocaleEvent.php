@@ -43,16 +43,19 @@ namespace SlmLocale;
 use Zend\EventManager\Event;
 use Zend\Stdlib\RequestInterface;
 use Zend\Stdlib\ResponseInterface;
+use Zend\Uri\Uri;
 
 class LocaleEvent extends Event
 {
-    const EVENT_DETECT = 'detect';
-    const EVENT_FOUND  = 'found';
+    const EVENT_DETECT   = 'detect';
+    const EVENT_FOUND    = 'found';
+    const EVENT_ASSEMBLE = 'assemble';
 
     protected $request;
     protected $response;
-    protected $supported;
     protected $locale;
+    protected $supported;
+    protected $uri;
 
     public function getRequest()
     {
@@ -106,4 +109,17 @@ class LocaleEvent extends Event
         $this->locale = $locale;
         return $this;
     }
+
+    public function setUri(Uri $uri)
+    {
+        $this->setParam('uri', $uri);
+        $this->uri = $uri;
+        return $this;
+    }
+
+    public function getUri()
+    {
+        return $this->uri;
+    }
+
 }

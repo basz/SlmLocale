@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2012-2013 Jurian Sluiman http://juriansluiman.nl.
+ * Copyright (c) 2012 Soflomo http://soflomo.com.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,62 +32,28 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @author      Jurian Sluiman <jurian@juriansluiman.nl>
- * @copyright   2012-2013 Jurian Sluiman http://juriansluiman.nl.
+ * @package     SlmLocale
+ * @subpackage  Strategy
+ * @author      Jurian Sluiman <jurian@soflomo.com>
+ * @copyright   2012 Soflomo http://soflomo.com.
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @link        http://juriansluiman.nl
+ * @link        http://ensemble.github.com
  */
 
-namespace SlmLocale\Strategy;
+namespace SlmLocale\Service;
 
-use SlmLocale\LocaleEvent;
-use Zend\EventManager\EventManagerInterface;
+use SlmLocale\View\Helper\LocaleUri;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
-abstract class AbstractStrategy implements StrategyInterface
+class LocaleUriFactory implements FactoryInterface
 {
-    /**
-     * Listeners we've registered
-     *
-     * @var array
-     */
-    protected $listeners = array();
-
-    /**
-     * Attach "detect" and "found" listeners
-     *
-     * @param EventManagerInterface $events
-     * @param int                   $priority
-     */
-    public function attach(EventManagerInterface $events, $priority = 1)
+    public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $this->listeners[] = $events->attach(LocaleEvent::EVENT_DETECT, array($this, 'detect'), $priority);
-        $this->listeners[] = $events->attach(LocaleEvent::EVENT_FOUND,  array($this, 'found'),  $priority);
-        $this->listeners[] = $events->attach(LocaleEvent::EVENT_ASSEMBLE, array($this, 'assemble'), $priority);
+        $serviceLocator = $serviceLocator->getServiceLocator();
+        $helper = new LocaleUri();
+        $helper->setDetector($serviceLocator->get('SlmLocale\Locale\Detector'));
+        return $helper;
     }
 
-    /**
-     * Detach all previously attached listeners
-     *
-     * @param EventManagerInterface $events
-     */
-    public function detach(EventManagerInterface $events)
-    {
-        foreach ($this->listeners as $index => $listener) {
-            if ($events->detach($listener)) {
-                unset($this->listeners[$index]);
-            }
-        }
-    }
-
-    public function detect(LocaleEvent $event)
-    {
-    }
-
-    public function found(LocaleEvent $event)
-    {
-    }
-
-    public function assemble(LocaleEvent $event)
-    {
-    }
 }

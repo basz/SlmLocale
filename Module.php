@@ -68,6 +68,20 @@ class Module implements
         return include __DIR__ . '/config/module.config.php';
     }
 
+    public function getViewHelperConfig()
+    {
+        return array(
+            'aliases' => array(
+                'localeUri' => 'SlmLocale\ViewHelper\LocaleUri',
+                'localeMenu' => 'SlmLocale\ViewHelper\LocaleMenu',
+            ),
+            'factories' => array(
+                'SlmLocale\ViewHelper\LocaleUri' => 'SlmLocale\Service\LocaleUriFactory',
+                'SlmLocale\ViewHelper\LocaleMenu' => 'SlmLocale\Service\LocaleMenuFactory',
+            ),
+        );
+    }
+
     public function getServiceConfig()
     {
         return array(

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2012-2013 Jurian Sluiman http://juriansluiman.nl.
+ * Copyright (c) 2012 Jurian Sluiman.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,62 +32,43 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
+ * @package     SlmLocaleTest
  * @author      Jurian Sluiman <jurian@juriansluiman.nl>
- * @copyright   2012-2013 Jurian Sluiman http://juriansluiman.nl.
+ * @copyright   2012 Jurian Sluiman.
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link        http://juriansluiman.nl
  */
+namespace SlmLocaleTest\Locale;
 
-namespace SlmLocale\Strategy;
+use PHPUnit_Framework_TestCase as TestCase;
 
-use SlmLocale\LocaleEvent;
-use Zend\EventManager\EventManagerInterface;
+use Zend\EventManager\EventManager;
+use Zend\ServiceManager\ServiceManager;
 
-abstract class AbstractStrategy implements StrategyInterface
+class LocaleMenuTest extends TestCase
 {
-    /**
-     * Listeners we've registered
-     *
-     * @var array
-     */
-    protected $listeners = array();
 
-    /**
-     * Attach "detect" and "found" listeners
-     *
-     * @param EventManagerInterface $events
-     * @param int                   $priority
-     */
-    public function attach(EventManagerInterface $events, $priority = 1)
+    public function getMvcConfiguredServiceLocator(array $config = array())
     {
-        $this->listeners[] = $events->attach(LocaleEvent::EVENT_DETECT, array($this, 'detect'), $priority);
-        $this->listeners[] = $events->attach(LocaleEvent::EVENT_FOUND,  array($this, 'found'),  $priority);
-        $this->listeners[] = $events->attach(LocaleEvent::EVENT_ASSEMBLE, array($this, 'assemble'), $priority);
-    }
+        $config = array(
+            'slm_locale' => $config + array(
+                'default' => '',
+                'supported' => array(),
+                'strategies' => array()
+            ),
+        );
 
-    /**
-     * Detach all previously attached listeners
-     *
-     * @param EventManagerInterface $events
-     */
-    public function detach(EventManagerInterface $events)
-    {
-        foreach ($this->listeners as $index => $listener) {
-            if ($events->detach($listener)) {
-                unset($this->listeners[$index]);
-            }
-        }
-    }
+        $module = new \SlmLocale\Module();
 
-    public function detect(LocaleEvent $event)
-    {
-    }
+        $serviceLocator = new ServiceManager(new \Zend\ServiceManager\Config($module->getServiceConfig()));
+        $serviceLocator->setService('config', $config);
+        $serviceLocator->setService('EventManager', new EventManager);
 
-    public function found(LocaleEvent $event)
-    {
-    }
+        $viewhelpermanager = new \Zend\View\HelperPluginManager(new \Zend\ServiceManager\Config($module->getViewHelperConfig()));
+        $viewhelpermanager->setServiceLocator($serviceLocator);
 
-    public function assemble(LocaleEvent $event)
-    {
+        $serviceLocator->setService('viewhelpermanager', $viewhelpermanager);
+
+        return $serviceLocator;
     }
 }
