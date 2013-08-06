@@ -35,7 +35,7 @@
  * @author      Jurian Sluiman <jurian@juriansluiman.nl>
  * @copyright   2012-2013 Jurian Sluiman http://juriansluiman.nl.
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @link        http://ensemble.github.com
+ * @link        http://juriansluiman.nl
  */
 
 namespace SlmLocale\Service;
