@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2012-2013 Soflomo http://soflomo.com.
+ * Copyright (c) 2012-2013 Jurian Sluiman http://juriansluiman.nl.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,11 +32,10 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @package     SlmLocale
- * @author      Jurian Sluiman <jurian@soflomo.com>
- * @copyright   2012-2013 Soflomo http://soflomo.com.
+ * @author      Jurian Sluiman <jurian@juriansluiman.nl>
+ * @copyright   2012-2013 Jurian Sluiman http://juriansluiman.nl.
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @link        http://ensemble.github.com
+ * @link        http://juriansluiman.nl
  */
 
 return array(
