@@ -41,17 +41,17 @@
 namespace SlmLocale\Strategy;
 
 use SlmLocale\LocaleEvent;
-use Zend\ServiceManager\ServiceManager;
-use Zend\ServiceManager\ServiceManagerAwareInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\Stdlib\RequestInterface;
 
-class UriPathStrategy extends AbstractStrategy implements ServiceManagerAwareInterface
+class UriPathStrategy extends AbstractStrategy implements ServiceLocatorAwareInterface
 {
     const REDIRECT_STATUS_CODE = 302;
 
     protected $redirectWhenFound = true;
 
-    protected $serviceManager;
+    protected $serviceLocator;
 
     public function setOptions(array $options = array())
     {
@@ -63,11 +63,16 @@ class UriPathStrategy extends AbstractStrategy implements ServiceManagerAwareInt
     /**
      * Set service manager instance
      *
-     * @param ServiceManager $locator
+     * @param serviceLocator $locator
      */
-    public function setServiceManager(ServiceManager $serviceManager)
+    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
     {
-        $this->serviceManager = $serviceManager;
+        $this->serviceLocator = $serviceLocator;
+    }
+
+    public function getServiceLocator()
+    {
+        return $this->serviceLocator;
     }
 
     public function detect(LocaleEvent $event)
@@ -76,7 +81,7 @@ class UriPathStrategy extends AbstractStrategy implements ServiceManagerAwareInt
             return;
         }
 
-        $router          = $this->serviceManager->get('router');
+        $router          = $this->getServiceLocator()->getServiceLocator()->get('router');
         $existingBaseUrl = null;
         if (method_exists($router, 'getBaseUrl')) {
             $existingBaseUrl = $router->getBaseUrl();
@@ -106,7 +111,7 @@ class UriPathStrategy extends AbstractStrategy implements ServiceManagerAwareInt
             return;
         }
 
-        $router          = $this->serviceManager->get('router');
+        $router          = $this->getServiceLocator()->getServiceLocator()->get('router');
         $existingBaseUrl = null;
         if (method_exists($router, 'getBaseUrl')) {
             $existingBaseUrl = $router->getBaseUrl();
