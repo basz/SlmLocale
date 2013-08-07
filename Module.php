@@ -71,13 +71,6 @@ class Module implements
     public function getServiceConfig()
     {
         return array(
-            'invokables' => array(
-                'SlmLocale\Strategy\CookieStrategy'             => 'SlmLocale\Strategy\CookieStrategy',
-                'SlmLocale\Strategy\HostStrategy'               => 'SlmLocale\Strategy\HostStrategy',
-                'SlmLocale\Strategy\HttpAcceptLanguageStrategy' => 'SlmLocale\Strategy\HttpAcceptLanguageStrategy',
-                'SlmLocale\Strategy\UriPathStrategy'            => 'SlmLocale\Strategy\UriPathStrategy',
-                'SlmLocale\Strategy\QueryStrategy'              => 'SlmLocale\Strategy\QueryStrategy',
-            ),
             'factories' => array(
                 'SlmLocale\Locale\Detector'                => 'SlmLocale\Service\DetectorFactory',
                 'SlmLocale\Strategy\StrategyPluginManager' => 'SlmLocale\Service\StrategyPluginManagerFactory',
