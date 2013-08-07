@@ -42,4 +42,13 @@ return array(
     'slm_locale' => array(
         'strategies' => array()
     ),
+
+    'service_manager' => array(
+        'invokables' => array(
+            'SlmLocale\Strategy\StrategyPluginManager' => 'SlmLocale\Strategy\StrategyPluginManager',
+        ),
+        'factories'  => array(
+            'SlmLocale\Locale\Detector' => 'SlmLocale\Service\DetectorFactory',
+        ),
+    ),
 );

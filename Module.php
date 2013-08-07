@@ -49,7 +49,6 @@ use Zend\EventManager\EventInterface;
 class Module implements
     Feature\AutoloaderProviderInterface,
     Feature\ConfigProviderInterface,
-    Feature\ServiceProviderInterface,
     Feature\BootstrapListenerInterface
 {
     public function getAutoloaderConfig()
@@ -66,16 +65,6 @@ class Module implements
     public function getConfig()
     {
         return include __DIR__ . '/config/module.config.php';
-    }
-
-    public function getServiceConfig()
-    {
-        return array(
-            'factories' => array(
-                'SlmLocale\Locale\Detector'                => 'SlmLocale\Service\DetectorFactory',
-                'SlmLocale\Strategy\StrategyPluginManager' => 'SlmLocale\Service\StrategyPluginManagerFactory',
-            ),
-        );
     }
 
     public function onBootstrap(EventInterface $event)
