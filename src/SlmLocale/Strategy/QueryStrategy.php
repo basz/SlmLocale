@@ -45,11 +45,18 @@ use SlmLocale\LocaleEvent;
 class QueryStrategy extends AbstractStrategy
 {
     /**
-     * Query key use in uri
+     * Default query key
      *
-     * @var string $query_key
+     * @var string
      */
-    protected $query_key = 'lang';
+    const QUERY_KEY = 'lang';
+
+    /**
+     * Query key to use for request
+     *
+     * @var string
+     */
+    protected $query_key;
 
     public function setOptions(array $options = array())
     {
@@ -58,13 +65,21 @@ class QueryStrategy extends AbstractStrategy
         }
     }
 
+    protected function getQueryKey()
+    {
+        if (null === $this->query_key) {
+            $this->query_key = self::QUERY_KEY;
+        }
+
+        return $this->query_key;
+    }
+
     /**
      * {@inheritdoc }
      */
     public function detect(LocaleEvent $event)
     {
         $request = $event->getRequest();
-
         if (!$this->isHttpRequest($request)) {
             return;
         }
@@ -73,8 +88,7 @@ class QueryStrategy extends AbstractStrategy
             return;
         }
 
-        $locale  = $request->getQuery($this->query_key);
-
+        $locale = $request->getQuery($this->getQueryKey());
         if ($locale === null) {
             return;
         }
