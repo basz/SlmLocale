@@ -92,12 +92,12 @@ class HostStrategy extends AbstractStrategy
 
         $domain = $this->getDomain();
         if (!null === $domain) {
-            throw new Exception\StrategyConfigurationException(
+            throw new Exception\InvalidArgumentException(
                 'The strategy must be configured with a domain option'
             );
         }
         if (strpos($domain, self::LOCALE_KEY)) {
-            throw new Exception\StrategyConfigurationException(sprintf(
+            throw new Exception\InvalidArgumentException(sprintf(
                 'The domain %s must contain a locale key part "%s"', $domain, self::LOCALE_KEY
             ));
         }

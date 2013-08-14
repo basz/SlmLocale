@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2012-2013 Jurian Sluiman http://juriansluiman.nl.
+ * Copyright (c) 2013 Jurian Sluiman.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,8 +38,14 @@
  * @link        http://juriansluiman.nl
  */
 
-namespace SlmLocale\Exception;
+namespace SlmLocale\Strategy\Exception;
 
-class StrategyConfigurationException extends \Exception
+use InvalidArgumentException;
+use SlmLocale\Exception\ExceptionInterface;
+
+class InvalidArgumentException
+    extends InvalidArgumentException
+    implements ExceptionInterface
 {
+
 }

@@ -38,8 +38,13 @@
  * @link        http://juriansluiman.nl
  */
 
-namespace SlmLocale\Exception;
+namespace SlmLocale\Service\Exception;
 
-class LocaleNotFoundException extends \Exception
+use RuntimeException;
+use SlmLocale\Exception\ExceptionInterface;
+
+class StrategyConfigurationException
+    extends RuntimeException
+    implements ExceptionInterface
 {
 }

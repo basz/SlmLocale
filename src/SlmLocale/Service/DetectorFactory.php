@@ -41,7 +41,6 @@
 namespace SlmLocale\Service;
 
 use SlmLocale\Locale\Detector;
-use SlmLocale\Exception\StrategyConfigurationException;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -98,7 +97,7 @@ class DetectorFactory implements FactoryInterface
                 $detector->addStrategy($class, $priority);
 
             } else {
-                throw new StrategyConfigurationException(
+                throw new Exception\StrategyConfigurationException(
                     'Strategy configuration must be a string or an array'
                 );
             }
