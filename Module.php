@@ -41,9 +41,11 @@
 namespace SlmLocale;
 
 use Locale;
+
 use Zend\ModuleManager\Feature;
 use Zend\EventManager\EventInterface;
 use Zend\Mvc\MvcEvent;
+use Zend\Stdlib\ResponseInterface;
 
 class Module implements
     Feature\AutoloaderProviderInterface,
