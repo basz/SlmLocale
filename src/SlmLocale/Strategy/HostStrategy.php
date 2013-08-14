@@ -41,7 +41,6 @@
 namespace SlmLocale\Strategy;
 
 use SlmLocale\LocaleEvent;
-use Zend\Http\PhpEnvironment\Response;
 
 class HostStrategy extends AbstractStrategy
 {
@@ -49,35 +48,77 @@ class HostStrategy extends AbstractStrategy
     const REDIRECT_STATUS_CODE = 302;
 
     protected $domain;
+    protected $aliases;
+    protected $redirect_to_canonical;
 
     public function setOptions(array $options = array())
     {
         if (array_key_exists('domain', $options)) {
-            $this->domain = $options['domain'];
+            $this->domain = (string) $options['domain'];
         }
+        if (array_key_exists('aliases', $options)) {
+            $this->aliases = (array) $options['aliases'];
+        }
+        if (array_key_exists('redirect_to_canonical', $options)) {
+            $this->redirect_to_canonical = (bool) $options['redirect_to_canonical'];
+        }
+    }
+
+    protected function getDomain()
+    {
+        return $this->domain;
+    }
+
+    protected function getAliases()
+    {
+        return $this->aliases;
+    }
+
+    protected function redirectToCanonical()
+    {
+        return $this->redirect_to_canonical;
     }
 
     public function detect(LocaleEvent $event)
     {
         $request = $event->getRequest();
-
         if (!$this->isHttpRequest($request)) {
             return;
         }
-        $host    = $request->getUri()->getHost();
 
-        $pattern = str_replace(self::LOCALE_KEY, '([a-zA-Z-_]+)', $this->domain);
-        $pattern = sprintf('@%s@', $pattern);
-        preg_match($pattern, $host, $matches);
-
-        if (!array_key_exists(1, $matches)) {
+        if (!$event->hasSupported()) {
             return;
         }
+
+        $domain = $this->getDomain();
+        if (!null === $domain) {
+            throw new Exception\StrategyConfigurationException(
+                'The strategy must be configured with a domain option'
+            );
+        }
+        if (strpos($domain, self::LOCALE_KEY)) {
+            throw new Exception\StrategyConfigurationException(sprintf(
+                'The domain %s must contain a locale key part "%s"', $domain, self::LOCALE_KEY
+            ));
+        }
+
+        $host    = $request->getUri()->getHost();
+        $pattern = str_replace(self::LOCALE_KEY, '([a-zA-Z-_.]+)', $domain);
+        $pattern = sprintf('@%s@', $pattern);
+        $result  = preg_match($pattern, $host, $matches);
+
+        if (!$result) {
+            return;
+        }
+
         $locale = $matches[1];
 
-        if ($event->hasSupported()
-            && ($supported = $event->getSupported())
-            && !array_key_exists($locale, $supported)) {
+        $aliases = $this->getAliases();
+        if (null !== $aliases && array_key_exists($locale, $aliases)) {
+            $locale = $aliases[$locale];
+        }
+
+        if (!in_array($locale, $event->getSupported())) {
             return;
         }
 
@@ -86,27 +127,46 @@ class HostStrategy extends AbstractStrategy
 
     public function found(LocaleEvent $event)
     {
-        $uri     = $event->getRequest()->getUri();
-        $locale  = $event->getLocale();
+        $request = $event->getRequest();
+        if (!$this->isHttpRequest($request)) {
+            return;
+        }
 
+        if (!$event->hasSupported()) {
+            return;
+        }
+
+        $locale  = $event->getLocale();
         if (null === $locale) {
             return;
         }
 
-        $host = str_replace(self::LOCALE_KEY, $locale, $this->domain);
+        // By default, use the alias to redirect to
+        if (!$this->redirectToCanonical()) {
+            $locale = $this->getAliasForLocale($locale);
+        }
 
+        $host = str_replace(self::LOCALE_KEY, $locale, $this->getDomain());
+        $uri  = $request->getUri();
         if ($host === $uri->getHost()) {
             return;
         }
 
-        /**
-         * @todo Use factory or something? Port can be non-default, user/password can be set, query parameters are missing now
-         */
-        $location = $uri->getScheme() . '://' . $host . $uri->getPath();
+        $uri->setHost($host);
+
         $response = $event->getResponse();
         $response->setStatusCode(self::REDIRECT_STATUS_CODE);
-        $response->getHeaders()->addHeaderLine('Location', $location);
+        $response->getHeaders()->addHeaderLine('Location', $uri->toString());
 
-        $response->send();
+        return $response;
+    }
+
+    protected function getAliasForLocale($locale)
+    {
+        foreach ($this->getAliases() as $alias => $item) {
+            if ($item === $locale) {
+                return $alias;
+            }
+        }
     }
 }
