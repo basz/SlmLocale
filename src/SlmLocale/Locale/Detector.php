@@ -133,16 +133,11 @@ class Detector implements EventManagerAwareInterface
             return is_string($r);
         });
 
-        $locale = null;
-        // There are no strategies who returned a locale
-        if (!$results->stopped()) {
+        if ($results->stopped()) {
+            $locale = $results->last();
+        } else {
             $locale = $this->getDefault();
-            goto finish;
         }
-
-        $locale = $results->last();
-
-        finish:
 
         // Trigger FOUND event only when a response is given
         if ($response instanceof ResponseInterface) {
