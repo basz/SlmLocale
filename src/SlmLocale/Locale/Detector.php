@@ -152,7 +152,7 @@ class Detector implements EventManagerAwareInterface
         return $this->throwException;
     }
 
-    public function detect(RequestInterface $request, ResponseInterface $response)
+    public function detect(RequestInterface $request, ResponseInterface $response = null)
     {
         $event = new LocaleEvent(LocaleEvent::EVENT_DETECT, $this);
         $event->setRequest($request);
@@ -167,33 +167,40 @@ class Detector implements EventManagerAwareInterface
             return is_string($r);
         });
 
+        $locale = null;
+        // There are no strategies who returned a locale
         if (!$results->stopped()) {
-            return $this->found($this->getDefault(), $event);
+            $locale = $this->getDefault();
+            goto finish;
         }
 
         $locale = $results->last();
 
-        if ($this->hasAlias($locale)) {
-            $locale = $this->getCanonical($locale);
+        finish:
+
+        // Trigger FOUND event only when a response is given
+        if ($response instanceof ResponseInterface) {
+            $event->setName(LocaleEvent::EVENT_FOUND);
+            $event->setLocale($locale);
+
+            $return = false;
+            /**
+             * The response will be returned instead of the found locale
+             * only in case a strategy returned the response. This is an
+             * indication the strategy has updated the response (e.g. with
+             * a Location header) and as such, the response must be returned
+             * instead of the locale.
+             */
+            $events->trigger($event, function ($r) use (&$return) {
+                if ($r instanceof ResponseInterface) {
+                    $return = true;
+                }
+            });
+
+            if ($return) {
+                return $response;
+            }
         }
-
-        if (!$this->hasSupported()) {
-            return $this->found($locale, $event);
-        }
-        if (in_array($locale, $this->getSupported())) {
-            return $this->found($locale, $event);
-        }
-
-        return $this->found($this->getDefault(), $event);
-    }
-
-    public function found($locale, LocaleEvent $event)
-    {
-        $event->setName(LocaleEvent::EVENT_FOUND);
-        $event->setLocale($locale);
-
-        $events  = $this->getEventManager();
-        $events->trigger($event);
 
         return $locale;
     }

@@ -41,10 +41,9 @@
 namespace SlmLocale;
 
 use Locale;
-use SlmLocale\Exception\LocaleNotFoundException;
-use SlmLocale\Locale\Detector;
 use Zend\ModuleManager\Feature;
 use Zend\EventManager\EventInterface;
+use Zend\Mvc\MvcEvent;
 
 class Module implements
     Feature\AutoloaderProviderInterface,
@@ -67,24 +66,32 @@ class Module implements
         return include __DIR__ . '/config/module.config.php';
     }
 
-    public function onBootstrap(EventInterface $event)
+    public function onBootstrap(EventInterface $e)
     {
-        $app = $event->getParam('application');
+        $app = $e->getApplication();
         $sm  = $app->getServiceManager();
 
         $detector = $sm->get('SlmLocale\Locale\Detector');
-        $locale   = $detector->detect($app->getRequest(), $app->getResponse());
+        $result   = $detector->detect($app->getRequest(), $app->getResponse());
 
-        if (null !== $locale) {
-            Locale::setDefault($locale);
-
-            return;
+        if ($result instanceof ResponseInterface) {
+            /**
+             * When the detector returns a response, a strategy has updated the response
+             * to reflect the found locale.
+             *
+             * To redirect the user to this new URI, we short-circuit the route event. There
+             * is no option to short-circuit the bootstrap event, so we attach a listener to
+             * the route and let the application finish the bootstrap first.
+             *
+             * The listener is attached at PHP_INT_MAX to return the response as early as
+             * possible.
+             */
+            $em = $app->getEventManager();
+            $em->attach(MvcEvent::EVENT_ROUTE, function($e) use ($result) {
+                return $result;
+            }, PHP_INT_MAX);
         }
 
-        if ($detector->throwExceptionOnNotFound()) {
-            throw new LocaleNotFoundException(
-                'No locale found in locale detection'
-            );
-        }
+        Locale::setDefault($result);
     }
 }
