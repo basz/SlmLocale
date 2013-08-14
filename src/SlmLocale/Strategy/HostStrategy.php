@@ -60,6 +60,10 @@ class HostStrategy extends AbstractStrategy
     public function detect(LocaleEvent $event)
     {
         $request = $event->getRequest();
+
+        if (!$this->isHttpRequest($request)) {
+            return;
+        }
         $host    = $request->getUri()->getHost();
 
         $pattern = str_replace(self::LOCALE_KEY, '([a-zA-Z-_]+)', $this->domain);

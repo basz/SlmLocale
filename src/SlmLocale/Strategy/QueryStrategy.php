@@ -41,7 +41,6 @@
 namespace SlmLocale\Strategy;
 
 use SlmLocale\LocaleEvent;
-use Zend\Http\Request as HttpRequest;
 
 class QueryStrategy extends AbstractStrategy
 {
@@ -64,10 +63,9 @@ class QueryStrategy extends AbstractStrategy
      */
     public function detect(LocaleEvent $event)
     {
-        /** @var HttpRequest $request */
         $request = $event->getRequest();
 
-        if (!$request instanceof HttpRequest) {
+        if (!$this->isHttpRequest($request)) {
             return;
         }
 

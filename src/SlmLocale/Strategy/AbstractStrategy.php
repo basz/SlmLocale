@@ -42,6 +42,8 @@ namespace SlmLocale\Strategy;
 
 use SlmLocale\LocaleEvent;
 use Zend\EventManager\EventManagerInterface;
+use Zend\Http\Request as HttpRequest;
+use Zend\Stdlib\RequestInterface;
 
 abstract class AbstractStrategy implements StrategyInterface
 {
@@ -84,5 +86,10 @@ abstract class AbstractStrategy implements StrategyInterface
 
     public function found(LocaleEvent $event)
     {
+    }
+
+    protected function isHttpRequest(RequestInterface $request)
+    {
+        return $request instanceof HttpRequest;
     }
 }

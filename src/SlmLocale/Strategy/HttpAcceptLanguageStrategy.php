@@ -42,7 +42,6 @@ namespace SlmLocale\Strategy;
 
 use Locale;
 use SlmLocale\LocaleEvent;
-use Zend\Http\Request as HttpRequest;
 
 class HttpAcceptLanguageStrategy extends AbstractStrategy
 {
@@ -50,7 +49,7 @@ class HttpAcceptLanguageStrategy extends AbstractStrategy
     {
         $request = $event->getRequest();
 
-        if (!$request instanceof HttpRequest) {
+        if (!$this->isHttpRequest($request)) {
             return;
         }
 

@@ -77,7 +77,7 @@ class UriPathStrategy extends AbstractStrategy implements ServiceLocatorAwareInt
 
     public function detect(LocaleEvent $event)
     {
-        if (!method_exists($event->getRequest(), 'getUri')) {
+        if (!$this->isHttpRequest($event->getRequest())) {
             return;
         }
 
@@ -102,7 +102,7 @@ class UriPathStrategy extends AbstractStrategy implements ServiceLocatorAwareInt
 
     public function found(LocaleEvent $event)
     {
-        if (!method_exists($event->getRequest(), 'getUri')) {
+        if (!$this->isHttpRequest($event->getRequest())) {
             return;
         }
 
