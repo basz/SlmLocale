@@ -48,17 +48,15 @@ class HttpAcceptLanguageStrategy extends AbstractStrategy
     public function detect(LocaleEvent $event)
     {
         $request = $event->getRequest();
-
         if (!$this->isHttpRequest($request)) {
             return;
         }
-
-        $headers = $request->getHeaders();
 
         if ($lookup = $event->hasSupported()) {
             $supported = $event->getSupported();
         }
 
+        $headers = $request->getHeaders();
         if ($headers->has('Accept-Language')) {
             $locales = $headers->get('Accept-Language')->getPrioritized();
 
@@ -69,7 +67,7 @@ class HttpAcceptLanguageStrategy extends AbstractStrategy
                     return $locale;
                 }
 
-                if ($match = Locale::lookup($supported, $locale)) {
+                if (Locale::lookup($supported, $locale)) {
                     return $locale;
                 }
             }
