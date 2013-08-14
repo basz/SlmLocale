@@ -70,10 +70,6 @@ class Detector implements EventManagerAwareInterface
      */
     protected $supported;
 
-    protected $aliases;
-
-    protected $throwException = false;
-
     public function getEventManager()
     {
         return $this->events;
@@ -120,36 +116,6 @@ class Detector implements EventManagerAwareInterface
     public function hasSupported()
     {
         return (is_array($this->supported) && count($this->supported));
-    }
-
-    public function getAliases()
-    {
-        return $this->aliases;
-    }
-
-    public function setAliases(array $aliases)
-    {
-        $this->aliases = $aliases;
-        return $this;
-    }
-
-    public function hasAlias($locale)
-    {
-        return (is_array($this->aliases) && array_key_exists($locale, $this->aliases));
-    }
-
-    public function getCanonical($locale)
-    {
-        return $this->aliases[$locale];
-    }
-
-    public function throwExceptionOnNotFound($flag = null)
-    {
-        if (null !== $flag) {
-            $this->throwException = (bool) $flag;
-        }
-
-        return $this->throwException;
     }
 
     public function detect(RequestInterface $request, ResponseInterface $response = null)

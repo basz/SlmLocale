@@ -70,14 +70,6 @@ class DetectorFactory implements FactoryInterface
             $detector->setSupported($config['supported']);
         }
 
-        if (array_key_exists('aliases', $config)) {
-            $detector->setAliases($config['aliases']);
-        }
-
-        if (array_key_exists('throw_exception', $config)) {
-            $detector->throwExceptionOnNotFound($config['throw_exception']);
-        }
-
         return $detector;
     }
 
