@@ -139,6 +139,10 @@ class Detector implements EventManagerAwareInterface
             $locale = $this->getDefault();
         }
 
+        if ($this->hasSupported() && !in_array($locale, $this->getSupported())) {
+            $locale = $this->getDefault();
+        }
+
         // Trigger FOUND event only when a response is given
         if ($response instanceof ResponseInterface) {
             $event->setName(LocaleEvent::EVENT_FOUND);
