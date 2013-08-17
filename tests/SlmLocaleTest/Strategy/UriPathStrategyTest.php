@@ -56,7 +56,7 @@ class UriPathStrategyTest extends TestCase
     public function setup()
     {
         $this->strategy = new UriPathStrategy;
-        $this->strategy->setServiceManager($this->getServiceLocator());
+        $this->strategy->setServiceLocator($this->getServiceLocator());
 
         $this->event = new LocaleEvent();
         $this->event->setSupported(array('nl', 'de', 'en'));
@@ -313,10 +313,17 @@ class UriPathStrategyTest extends TestCase
 
     protected function getServiceLocator($withConsoleRouter = false)
     {
-        $serviceLocator = new ServiceManager;
-        $serviceLocator->setService('router', $withConsoleRouter ? new ConsoleRouter : new HttpRouter);
+        $sl = new ServiceManager;
+        $sl->setService('router', $withConsoleRouter ? new ConsoleRouter : new HttpRouter);
 
-        return $serviceLocator;
+        $pluginManager = $this->getMock('SlmLocale\Strategy\StrategyPluginManager', array(
+            'getServiceLocator'
+        ));
+        $pluginManager->expects($this->any())
+                      ->method('getServiceLocator')
+                      ->will($this->returnValue($sl));
+
+        return $pluginManager;
     }
 
 }

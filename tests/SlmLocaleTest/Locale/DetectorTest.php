@@ -167,40 +167,6 @@ class DetectorTest extends TestCase
         $this->assertFalse($detector->hasSupported());
     }
 
-    public function testAliasedLocaleReturnsCanonical()
-    {
-        $detector  = new Detector;
-        $aliases   = array('Foo' => 'FooBar');
-        $detector->setAliases($aliases);
-
-        $self = $this;
-        $this->setEventManager($detector, LocaleEvent::EVENT_DETECT, function($e) {
-            return 'Foo';
-        });
-
-        $locale = $detector->detect(new Request, new Response);
-        $this->assertEquals('FooBar', $locale);
-    }
-
-    public function testAliasWillReturnCanonical()
-    {
-        $detector = new Detector;
-        $aliases  = array('Foo' => 'FooBar');
-        $detector->setAliases($aliases);
-
-        $this->assertEquals('FooBar', $detector->getCanonical('Foo'));
-    }
-
-    public function testAliasOnlyHasAliasWhenCanonicalIsKnown()
-    {
-        $detector = new Detector;
-        $aliases  = array('Foo' => 'FooBar', 'Bar' => 'BarBaz');
-        $detector->setAliases($aliases);
-
-        $this->assertTrue($detector->hasAlias('Foo'));
-        $this->assertFalse($detector->hasAlias('Bat'));
-    }
-
     public function testStrategyAttachesToEventManager()
     {
         $detector = new Detector;

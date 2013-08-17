@@ -91,24 +91,6 @@ class DetectorFactoryTest extends TestCase
         $this->assertEquals(array('Foo', 'Bar'), $detector->getSupported());
     }
 
-    public function testAliasedLocalesAreOptional()
-    {
-        $sl = $this->getServiceLocator();
-        $detector = $sl->get('SlmLocale\Locale\Detector');
-
-        $this->assertNull($detector->getAliases());
-    }
-
-    public function testAliasedLocalesAreSet()
-    {
-        $sl = $this->getServiceLocator(array(
-            'aliases' => array('Foo', 'Bar')
-        ));
-        $detector = $sl->get('SlmLocale\Locale\Detector');
-
-        $this->assertEquals(array('Foo', 'Bar'), $detector->getAliases());
-    }
-
     public function testUseServiceLocatorToInstantiateStrategy()
     {
         $sl = $this->getServiceLocator(array(
