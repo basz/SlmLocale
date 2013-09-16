@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2012-2013 Jurian Sluiman http://juriansluiman.nl.
+ * Copyright (c) 2012-2013 Jurian Sluiman.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @author      Jurian Sluiman <jurian@juriansluiman.nl>
- * @copyright   2012-2013 Jurian Sluiman http://juriansluiman.nl.
+ * @copyright   2012-2013 Jurian Sluiman.
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link        http://juriansluiman.nl
  */
@@ -41,15 +41,15 @@
 namespace SlmLocale;
 
 use Locale;
-use SlmLocale\Exception\LocaleNotFoundException;
-use SlmLocale\Locale\Detector;
+
 use Zend\ModuleManager\Feature;
 use Zend\EventManager\EventInterface;
+use Zend\Mvc\MvcEvent;
+use Zend\Stdlib\ResponseInterface;
 
 class Module implements
     Feature\AutoloaderProviderInterface,
     Feature\ConfigProviderInterface,
-    Feature\ServiceProviderInterface,
     Feature\BootstrapListenerInterface
 {
     public function getAutoloaderConfig()
@@ -68,41 +68,32 @@ class Module implements
         return include __DIR__ . '/config/module.config.php';
     }
 
-    public function getServiceConfig()
+    public function onBootstrap(EventInterface $e)
     {
-        return array(
-            'invokables' => array(
-                'SlmLocale\Strategy\CookieStrategy'             => 'SlmLocale\Strategy\CookieStrategy',
-                'SlmLocale\Strategy\HostStrategy'               => 'SlmLocale\Strategy\HostStrategy',
-                'SlmLocale\Strategy\HttpAcceptLanguageStrategy' => 'SlmLocale\Strategy\HttpAcceptLanguageStrategy',
-                'SlmLocale\Strategy\UriPathStrategy'            => 'SlmLocale\Strategy\UriPathStrategy',
-                'SlmLocale\Strategy\QueryStrategy'              => 'SlmLocale\Strategy\QueryStrategy',
-            ),
-            'factories' => array(
-                'SlmLocale\Locale\Detector'                => 'SlmLocale\Service\DetectorFactory',
-                'SlmLocale\Strategy\StrategyPluginManager' => 'SlmLocale\Service\StrategyPluginManagerFactory',
-            ),
-        );
-    }
-
-    public function onBootstrap(EventInterface $event)
-    {
-        $app = $event->getParam('application');
+        $app = $e->getApplication();
         $sm  = $app->getServiceManager();
 
         $detector = $sm->get('SlmLocale\Locale\Detector');
-        $locale   = $detector->detect($app->getRequest(), $app->getResponse());
+        $result   = $detector->detect($app->getRequest(), $app->getResponse());
 
-        if (null !== $locale) {
-            Locale::setDefault($locale);
-
-            return;
+        if ($result instanceof ResponseInterface) {
+            /**
+             * When the detector returns a response, a strategy has updated the response
+             * to reflect the found locale.
+             *
+             * To redirect the user to this new URI, we short-circuit the route event. There
+             * is no option to short-circuit the bootstrap event, so we attach a listener to
+             * the route and let the application finish the bootstrap first.
+             *
+             * The listener is attached at PHP_INT_MAX to return the response as early as
+             * possible.
+             */
+            $em = $app->getEventManager();
+            $em->attach(MvcEvent::EVENT_ROUTE, function($e) use ($result) {
+                return $result;
+            }, PHP_INT_MAX);
         }
 
-        if ($detector->throwExceptionOnNotFound()) {
-            throw new LocaleNotFoundException(
-                'No locale found in locale detection'
-            );
-        }
+        Locale::setDefault($result);
     }
 }

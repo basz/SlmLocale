@@ -32,7 +32,6 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @package     SlmLocaleTest
  * @author      Jurian Sluiman <jurian@juriansluiman.nl>
  * @copyright   2012-2013 Jurian Sluiman.
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
@@ -89,24 +88,6 @@ class DetectorFactoryTest extends TestCase
         $detector = $sl->get('SlmLocale\Locale\Detector');
 
         $this->assertEquals(array('Foo', 'Bar'), $detector->getSupported());
-    }
-
-    public function testAliasedLocalesAreOptional()
-    {
-        $sl = $this->getServiceLocator();
-        $detector = $sl->get('SlmLocale\Locale\Detector');
-
-        $this->assertNull($detector->getAliases());
-    }
-
-    public function testAliasedLocalesAreSet()
-    {
-        $sl = $this->getServiceLocator(array(
-            'aliases' => array('Foo', 'Bar')
-        ));
-        $detector = $sl->get('SlmLocale\Locale\Detector');
-
-        $this->assertEquals(array('Foo', 'Bar'), $detector->getAliases());
     }
 
     public function testUseServiceLocatorToInstantiateStrategy()
@@ -217,7 +198,7 @@ class DetectorFactoryTest extends TestCase
         );
         $serviceLocator = new ServiceManager;
         $serviceLocator->setFactory('SlmLocale\Locale\Detector', 'SlmLocale\Service\DetectorFactory');
-        $serviceLocator->setFactory('SlmLocale\Strategy\StrategyPluginManager', 'SlmLocale\Service\StrategyPluginManagerFactory');
+        $serviceLocator->setInvokableClass('SlmLocale\Strategy\StrategyPluginManager', 'SlmLocale\Strategy\StrategyPluginManager');
         $serviceLocator->setService('EventManager', new EventManager);
         $serviceLocator->setService('config', $config);
 

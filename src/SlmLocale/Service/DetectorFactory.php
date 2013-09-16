@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2012-2013 Jurian Sluiman http://juriansluiman.nl.
+ * Copyright (c) 2012-2013 Jurian Sluiman.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @author      Jurian Sluiman <jurian@juriansluiman.nl>
- * @copyright   2012-2013 Jurian Sluiman http://juriansluiman.nl.
+ * @copyright   2012-2013 Jurian Sluiman.
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link        http://juriansluiman.nl
  */
@@ -41,7 +41,6 @@
 namespace SlmLocale\Service;
 
 use SlmLocale\Locale\Detector;
-use SlmLocale\Exception\StrategyConfigurationException;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -68,14 +67,6 @@ class DetectorFactory implements FactoryInterface
 
         if (array_key_exists('supported', $config)) {
             $detector->setSupported($config['supported']);
-        }
-
-        if (array_key_exists('aliases', $config)) {
-            $detector->setAliases($config['aliases']);
-        }
-
-        if (array_key_exists('throw_exception', $config)) {
-            $detector->throwExceptionOnNotFound($config['throw_exception']);
         }
 
         return $detector;
@@ -106,7 +97,7 @@ class DetectorFactory implements FactoryInterface
                 $detector->addStrategy($class, $priority);
 
             } else {
-                throw new StrategyConfigurationException(
+                throw new Exception\StrategyConfigurationException(
                     'Strategy configuration must be a string or an array'
                 );
             }

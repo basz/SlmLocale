@@ -33,15 +33,19 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @author      Jurian Sluiman <jurian@juriansluiman.nl>
- * @copyright   2013 Jurian Sluiman.
+ * @copyright   2012-2013 Jurian Sluiman http://juriansluiman.nl.
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link        http://juriansluiman.nl
  */
+
 namespace SlmLocale\Strategy\Exception;
 
+use InvalidArgumentException;
 use SlmLocale\Exception\ExceptionInterface;
 
-class InvalidStrategyException extends \InvalidArgumentException implements ExceptionInterface
+class InvalidStrategyException
+    extends InvalidArgumentException
+    implements ExceptionInterface
 {
 
 }

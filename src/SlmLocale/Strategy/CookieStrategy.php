@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2012-2013 Jurian Sluiman http://juriansluiman.nl.
+ * Copyright (c) 2012-2013 Jurian Sluiman.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @author      Jurian Sluiman <jurian@juriansluiman.nl>
- * @copyright   2012-2013 Jurian Sluiman http://juriansluiman.nl.
+ * @copyright   2012-2013 Jurian Sluiman.
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link        http://juriansluiman.nl
  */
@@ -43,7 +43,6 @@ namespace SlmLocale\Strategy;
 use SlmLocale\LocaleEvent;
 use Zend\Http\Header\Cookie;
 use Zend\Http\Header\SetCookie;
-use Zend\Http\Request as HttpRequest;
 
 class CookieStrategy extends AbstractStrategy
 {
@@ -53,7 +52,7 @@ class CookieStrategy extends AbstractStrategy
     {
         $request = $event->getRequest();
 
-        if (!$request instanceof HttpRequest) {
+        if (!$this->isHttpRequest($request)) {
             return;
         }
         if (!$event->hasSupported()) {
@@ -80,7 +79,7 @@ class CookieStrategy extends AbstractStrategy
         $locale   = $event->getLocale();
         $request  = $event->getRequest();
 
-        if (!$request instanceof HttpRequest) {
+        if (!$this->isHttpRequest($request)) {
             return;
         }
 

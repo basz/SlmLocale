@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2012-2013 Jurian Sluiman http://juriansluiman.nl.
+ * Copyright (c) 2012-2013 Jurian Sluiman.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @author      Jurian Sluiman <jurian@juriansluiman.nl>
- * @copyright   2012-2013 Jurian Sluiman http://juriansluiman.nl.
+ * @copyright   2012-2013 Jurian Sluiman.
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link        http://juriansluiman.nl
  */
@@ -41,16 +41,22 @@
 namespace SlmLocale\Strategy;
 
 use SlmLocale\LocaleEvent;
-use Zend\Http\Request as HttpRequest;
 
 class QueryStrategy extends AbstractStrategy
 {
     /**
-     * Query key use in uri
+     * Default query key
      *
-     * @var string $query_key
+     * @var string
      */
-    protected $query_key = 'lang';
+    const QUERY_KEY = 'lang';
+
+    /**
+     * Query key to use for request
+     *
+     * @var string
+     */
+    protected $query_key;
 
     public function setOptions(array $options = array())
     {
@@ -59,15 +65,22 @@ class QueryStrategy extends AbstractStrategy
         }
     }
 
+    protected function getQueryKey()
+    {
+        if (null === $this->query_key) {
+            $this->query_key = self::QUERY_KEY;
+        }
+
+        return $this->query_key;
+    }
+
     /**
      * {@inheritdoc }
      */
     public function detect(LocaleEvent $event)
     {
-        /** @var HttpRequest $request */
         $request = $event->getRequest();
-
-        if (!$request instanceof HttpRequest) {
+        if (!$this->isHttpRequest($request)) {
             return;
         }
 
@@ -75,8 +88,7 @@ class QueryStrategy extends AbstractStrategy
             return;
         }
 
-        $locale  = $request->getQuery($this->query_key);
-
+        $locale = $request->getQuery($this->getQueryKey());
         if ($locale === null) {
             return;
         }

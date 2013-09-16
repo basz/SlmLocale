@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2012-2013 Jurian Sluiman http://juriansluiman.nl.
+ * Copyright (c) 2012-2013 Jurian Sluiman.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @author      Jurian Sluiman <jurian@juriansluiman.nl>
- * @copyright   2012-2013 Jurian Sluiman http://juriansluiman.nl.
+ * @copyright   2012-2013 Jurian Sluiman.
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link        http://juriansluiman.nl
  */
@@ -69,10 +69,6 @@ class Detector implements EventManagerAwareInterface
      * @var array
      */
     protected $supported;
-
-    protected $aliases;
-
-    protected $throwException = false;
 
     public function getEventManager()
     {
@@ -122,37 +118,7 @@ class Detector implements EventManagerAwareInterface
         return (is_array($this->supported) && count($this->supported));
     }
 
-    public function getAliases()
-    {
-        return $this->aliases;
-    }
-
-    public function setAliases(array $aliases)
-    {
-        $this->aliases = $aliases;
-        return $this;
-    }
-
-    public function hasAlias($locale)
-    {
-        return (is_array($this->aliases) && array_key_exists($locale, $this->aliases));
-    }
-
-    public function getCanonical($locale)
-    {
-        return $this->aliases[$locale];
-    }
-
-    public function throwExceptionOnNotFound($flag = null)
-    {
-        if (null !== $flag) {
-            $this->throwException = (bool) $flag;
-        }
-
-        return $this->throwException;
-    }
-
-    public function detect(RequestInterface $request, ResponseInterface $response)
+    public function detect(RequestInterface $request, ResponseInterface $response = null)
     {
         $event = new LocaleEvent(LocaleEvent::EVENT_DETECT, $this);
         $event->setRequest($request);
@@ -167,33 +133,39 @@ class Detector implements EventManagerAwareInterface
             return is_string($r);
         });
 
-        if (!$results->stopped()) {
-            return $this->found($this->getDefault(), $event);
+        if ($results->stopped()) {
+            $locale = $results->last();
+        } else {
+            $locale = $this->getDefault();
         }
 
-        $locale = $results->last();
-
-        if ($this->hasAlias($locale)) {
-            $locale = $this->getCanonical($locale);
+        if ($this->hasSupported() && !in_array($locale, $this->getSupported())) {
+            $locale = $this->getDefault();
         }
 
-        if (!$this->hasSupported()) {
-            return $this->found($locale, $event);
+        // Trigger FOUND event only when a response is given
+        if ($response instanceof ResponseInterface) {
+            $event->setName(LocaleEvent::EVENT_FOUND);
+            $event->setLocale($locale);
+
+            $return = false;
+            /**
+             * The response will be returned instead of the found locale
+             * only in case a strategy returned the response. This is an
+             * indication the strategy has updated the response (e.g. with
+             * a Location header) and as such, the response must be returned
+             * instead of the locale.
+             */
+            $events->trigger($event, function ($r) use (&$return) {
+                if ($r instanceof ResponseInterface) {
+                    $return = true;
+                }
+            });
+
+            if ($return) {
+                return $response;
+            }
         }
-        if (in_array($locale, $this->getSupported())) {
-            return $this->found($locale, $event);
-        }
-
-        return $this->found($this->getDefault(), $event);
-    }
-
-    public function found($locale, LocaleEvent $event)
-    {
-        $event->setName(LocaleEvent::EVENT_FOUND);
-        $event->setLocale($locale);
-
-        $events  = $this->getEventManager();
-        $events->trigger($event);
 
         return $locale;
     }

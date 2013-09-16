@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2012-2013 Jurian Sluiman http://juriansluiman.nl.
+ * Copyright (c) 2012-2013 Jurian Sluiman.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @author      Jurian Sluiman <jurian@juriansluiman.nl>
- * @copyright   2012-2013 Jurian Sluiman http://juriansluiman.nl.
+ * @copyright   2012-2013 Jurian Sluiman.
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link        http://juriansluiman.nl
  */
@@ -42,6 +42,8 @@ namespace SlmLocale\Strategy;
 
 use SlmLocale\LocaleEvent;
 use Zend\EventManager\EventManagerInterface;
+use Zend\Http\Request as HttpRequest;
+use Zend\Stdlib\RequestInterface;
 
 abstract class AbstractStrategy implements StrategyInterface
 {
@@ -84,5 +86,10 @@ abstract class AbstractStrategy implements StrategyInterface
 
     public function found(LocaleEvent $event)
     {
+    }
+
+    protected function isHttpRequest(RequestInterface $request)
+    {
+        return $request instanceof HttpRequest;
     }
 }

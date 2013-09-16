@@ -49,6 +49,7 @@ class StrategyPluginManager extends AbstractPluginManager
      */
     protected $invokableClasses = array(
         'cookie'         => 'SlmLocale\Strategy\CookieStrategy',
+        'host'           => 'SlmLocale\Strategy\HostStrategy',
         'acceptlanguage' => 'SlmLocale\Strategy\HttpAcceptLanguageStrategy',
         'query'          => 'SlmLocale\Strategy\QueryStrategy',
         'uripath'        => 'SlmLocale\Strategy\UriPathStrategy',
