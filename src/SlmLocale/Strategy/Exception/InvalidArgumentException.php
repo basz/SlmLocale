@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2012-2013 Jurian Sluiman http://juriansluiman.nl.
+ * Copyright (c) 2013 Jurian Sluiman.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,37 +38,14 @@
  * @link        http://juriansluiman.nl
  */
 
-namespace SlmLocale\Service;
+namespace SlmLocale\Strategy\Exception;
 
-use SlmLocale\Strategy\StrategyPluginManager;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceManagerAwareInterface;
+use InvalidArgumentException;
+use SlmLocale\Exception\ExceptionInterface;
 
-class StrategyPluginManagerFactory implements FactoryInterface
+class InvalidArgumentException
+    extends InvalidArgumentException
+    implements ExceptionInterface
 {
-    /**
-     * @param  ServiceLocatorInterface $serviceLocator
-     * @return Detector
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        $plugins = new StrategyPluginManager;
-        $plugins->setServiceLocator($serviceLocator);
 
-        $plugins->addInitializer(function ($instance) use ($serviceLocator) {
-            if ($instance instanceof ServiceManagerAwareInterface) {
-                $instance->setServiceManager($serviceLocator);
-            }
-        });
-
-        $plugins->addInitializer(function ($instance) use ($serviceLocator) {
-            if ($instance instanceof ServiceLocatorAwareInterface) {
-                $instance->setServiceLocator($serviceLocator);
-            }
-        });
-
-        return $plugins;
-    }
 }

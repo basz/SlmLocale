@@ -32,7 +32,6 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @package     SlmLocaleTest
  * @author      Jurian Sluiman <jurian@juriansluiman.nl>
  * @copyright   2012-2013 Jurian Sluiman.
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
@@ -165,40 +164,6 @@ class DetectorTest extends TestCase
         $detector->setSupported($supported);
 
         $this->assertFalse($detector->hasSupported());
-    }
-
-    public function testAliasedLocaleReturnsCanonical()
-    {
-        $detector  = new Detector;
-        $aliases   = array('Foo' => 'FooBar');
-        $detector->setAliases($aliases);
-
-        $self = $this;
-        $this->setEventManager($detector, LocaleEvent::EVENT_DETECT, function($e) {
-            return 'Foo';
-        });
-
-        $locale = $detector->detect(new Request, new Response);
-        $this->assertEquals('FooBar', $locale);
-    }
-
-    public function testAliasWillReturnCanonical()
-    {
-        $detector = new Detector;
-        $aliases  = array('Foo' => 'FooBar');
-        $detector->setAliases($aliases);
-
-        $this->assertEquals('FooBar', $detector->getCanonical('Foo'));
-    }
-
-    public function testAliasOnlyHasAliasWhenCanonicalIsKnown()
-    {
-        $detector = new Detector;
-        $aliases  = array('Foo' => 'FooBar', 'Bar' => 'BarBaz');
-        $detector->setAliases($aliases);
-
-        $this->assertTrue($detector->hasAlias('Foo'));
-        $this->assertFalse($detector->hasAlias('Bat'));
     }
 
     public function testStrategyAttachesToEventManager()

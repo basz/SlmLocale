@@ -25,15 +25,6 @@ $settings = array(
     //'supported' => array('en-US', 'en-GB'),
 
     /**
-     * Aliases for locales
-     *
-     * Some good description here. Default is something
-     *
-     * Accepted is something else
-     */
-    //'aliases' => array('en' => 'en-US'),
-
-    /**
      * Strategies
      *
      * Some good description here. Default is something
@@ -41,15 +32,6 @@ $settings = array(
      * Accepted is something else
      */
     //'strategies' => array(),
-
-    /**
-     * Throw exception when no locale is found
-     *
-     * Some good description here. Default is something
-     *
-     * Accepted is something else
-     */
-    //'throw_exception' => false,
 
     /**
      * End of SlmLocale configuration

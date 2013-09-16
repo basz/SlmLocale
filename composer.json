@@ -2,6 +2,7 @@
     "name": "slm/locale",
     "description": "Automatic detection of locales for Zend Framework 2",
     "type": "library",
+    "license": "BSD-3-Clause",
     "keywords": [
         "zf2",
         "i18n",
@@ -18,11 +19,22 @@
     "require": {
         "php": ">=5.3.3.",
         "ext-intl": "*",
-        "zendframework/zendframework": "2.*"
+        "zendframework/zend-eventmanager": ">=2.1.0,<2.3.0-dev",
+        "zendframework/zend-http": ">=2.1.0,<2.3.0-dev",
+        "zendframework/zend-servicemanager": ">=2.1.0,<2.3.0-dev",
+        "zendframework/zend-stdlib": ">=2.1.0,<2.3.0-dev"
+    },
+    "require-dev": {
+        "zendframework/zend-console": ">=2.1.0,<2.3.0-dev",
+        "zendframework/zend-mvc": ">=2.1.0,<2.3.0-dev"
+    },
+    "suggest": {
+        "zendframework/zend-mvc": "For using the router in the UriPath strategy"
     },
     "autoload": {
         "psr-0": {
-            "SlmLocale": "src/"
+            "SlmLocale": "src/",
+            "SlmLocaleTest": "tests/"
         },
         "classmap": [
             "./Module.php"

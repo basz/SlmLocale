@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2012-2013 Jurian Sluiman http://juriansluiman.nl.
+ * Copyright (c) 2012-2013 Jurian Sluiman.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @author      Jurian Sluiman <jurian@juriansluiman.nl>
- * @copyright   2012-2013 Jurian Sluiman http://juriansluiman.nl.
+ * @copyright   2012-2013 Jurian Sluiman.
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link        http://juriansluiman.nl
  */
@@ -42,24 +42,21 @@ namespace SlmLocale\Strategy;
 
 use Locale;
 use SlmLocale\LocaleEvent;
-use Zend\Http\Request as HttpRequest;
 
 class HttpAcceptLanguageStrategy extends AbstractStrategy
 {
     public function detect(LocaleEvent $event)
     {
         $request = $event->getRequest();
-
-        if (!$request instanceof HttpRequest) {
+        if (!$this->isHttpRequest($request)) {
             return;
         }
-
-        $headers = $request->getHeaders();
 
         if ($lookup = $event->hasSupported()) {
             $supported = $event->getSupported();
         }
 
+        $headers = $request->getHeaders();
         if ($headers->has('Accept-Language')) {
             $locales = $headers->get('Accept-Language')->getPrioritized();
 
@@ -70,7 +67,7 @@ class HttpAcceptLanguageStrategy extends AbstractStrategy
                     return $locale;
                 }
 
-                if ($match = Locale::lookup($supported, $locale)) {
+                if (Locale::lookup($supported, $locale)) {
                     return $locale;
                 }
             }
