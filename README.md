@@ -77,7 +77,7 @@ Set all your supported locales in the configuration:
 
 And enable some strategies. The naming is made via the following list:
 
- * **cookie**: `SlmLocale\Strategy\CookieStrategy
+ * **cookie**: `SlmLocale\Strategy\CookieStrategy`
  * **host**: `SlmLocale\Strategy\HostStrategy`
  * **acceptlanguage**: `SlmLocale\Strategy\HttpAcceptLanguageStrategy`
  * **query**: `SlmLocale\Strategy\QueryStrategy`
