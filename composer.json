@@ -25,6 +25,7 @@
         "zendframework/zend-stdlib": ">=2.1.0,<2.3.0-dev"
     },
     "require-dev": {
+        "zendframework/zend-console": ">=2.1.0,<2.3.0-dev",
         "zendframework/zend-mvc": ">=2.1.0,<2.3.0-dev"
     },
     "suggest": {
