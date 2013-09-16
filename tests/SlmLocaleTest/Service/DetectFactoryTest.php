@@ -199,7 +199,7 @@ class DetectorFactoryTest extends TestCase
         );
         $serviceLocator = new ServiceManager;
         $serviceLocator->setFactory('SlmLocale\Locale\Detector', 'SlmLocale\Service\DetectorFactory');
-        $serviceLocator->setFactory('SlmLocale\Strategy\StrategyPluginManager', 'SlmLocale\Service\StrategyPluginManagerFactory');
+        $serviceLocator->setInvokableClass('SlmLocale\Strategy\StrategyPluginManager', 'SlmLocale\Strategy\StrategyPluginManager');
         $serviceLocator->setService('EventManager', new EventManager);
         $serviceLocator->setService('config', $config);
 
