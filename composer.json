@@ -2,6 +2,7 @@
     "name": "slm/locale",
     "description": "Automatic detection of locales for Zend Framework 2",
     "type": "library",
+    "license": "BSD-3-Clause",
     "keywords": [
         "zf2",
         "i18n",
