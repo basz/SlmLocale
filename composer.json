@@ -24,6 +24,12 @@
         "zendframework/zend-servicemanager": ">=2.1.0,<2.3.0-dev",
         "zendframework/zend-stdlib": ">=2.1.0,<2.3.0-dev"
     },
+    "require-dev": {
+        "zendframework/zend-mvc": ">=2.1.0,<2.3.0-dev"
+    },
+    "suggest": {
+        "zendframework/zend-mvc": "For using the router in the UriPath strategy"
+    },
     "autoload": {
         "psr-0": {
             "SlmLocale": "src/",
