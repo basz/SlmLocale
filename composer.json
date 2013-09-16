@@ -23,7 +23,8 @@
     },
     "autoload": {
         "psr-0": {
-            "SlmLocale": "src/"
+            "SlmLocale": "src/",
+            "SlmLocaleTest": "tests/"
         },
         "classmap": [
             "./Module.php"
