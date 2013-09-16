@@ -20,6 +20,7 @@
         "php": ">=5.3.3.",
         "ext-intl": "*",
         "zendframework/zend-eventmanager": ">=2.1.0,<2.3.0-dev",
+        "zendframework/zend-http": ">=2.1.0,<2.3.0-dev",
         "zendframework/zend-servicemanager": ">=2.1.0,<2.3.0-dev",
         "zendframework/zend-stdlib": ">=2.1.0,<2.3.0-dev"
     },
