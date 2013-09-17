@@ -46,6 +46,7 @@ use Zend\EventManager\EventManagerAwareInterface;
 use Zend\EventManager\EventManagerInterface;
 use Zend\Stdlib\RequestInterface;
 use Zend\Stdlib\ResponseInterface;
+use Zend\Uri\Uri;
 
 class Detector implements EventManagerAwareInterface
 {
@@ -168,5 +169,29 @@ class Detector implements EventManagerAwareInterface
         }
 
         return $locale;
+    }
+
+    public function assemble($locale, $uri)
+    {
+        $event = new LocaleEvent(LocaleEvent::EVENT_ASSEMBLE, $this);
+        $event->setLocale($locale);
+
+        if ($this->hasSupported()) {
+            $event->setSupported($this->getSupported());
+        }
+
+        if (!$uri instanceof Uri) {
+            $uri = new Uri($uri);
+        }
+        $event->setUri($uri);
+
+        $events  = $this->getEventManager();
+        $results = $events->trigger($event);
+
+        if (!$results->stopped()) {
+            return $uri;
+        }
+
+        return $results->last();
     }
 }
