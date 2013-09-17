@@ -55,15 +55,16 @@ abstract class AbstractStrategy implements StrategyInterface
     protected $listeners = array();
 
     /**
-     * Attach "detect" and "found" listeners
+     * Attach "detect", "found" and "assemble" listeners
      *
      * @param EventManagerInterface $events
      * @param int                   $priority
      */
     public function attach(EventManagerInterface $events, $priority = 1)
     {
-        $this->listeners[] = $events->attach(LocaleEvent::EVENT_DETECT, array($this, 'detect'), $priority);
-        $this->listeners[] = $events->attach(LocaleEvent::EVENT_FOUND,  array($this, 'found'),  $priority);
+        $this->listeners[] = $events->attach(LocaleEvent::EVENT_DETECT,    array($this, 'detect'), $priority);
+        $this->listeners[] = $events->attach(LocaleEvent::EVENT_FOUND,     array($this, 'found'),  $priority);
+        $this->listeners[] = $events->attach(LocaleEvent::EVENT_ASSEMBLE,  array($this, 'assemble'),  $priority);
     }
 
     /**
@@ -85,6 +86,10 @@ abstract class AbstractStrategy implements StrategyInterface
     }
 
     public function found(LocaleEvent $event)
+    {
+    }
+
+    public function assemble(LocaleEvent $event)
     {
     }
 

@@ -40,6 +40,7 @@
 
 namespace SlmLocale\Strategy;
 
+use Locale;
 use SlmLocale\LocaleEvent;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
@@ -186,6 +187,19 @@ class UriPathStrategy extends AbstractStrategy implements ServiceLocatorAwareInt
         $response->getHeaders()->addHeaderLine('Location', $uri->toString());
 
         return $response;
+    }
+
+    public function assemble(LocaleEvent $event)
+    {
+        $current = Locale::getDefault();
+        $locale  = $event->getLocale();
+        $uri     = $event->getUri();
+        $path    = $uri->getPath();
+
+        $path = str_replace($current, $locale, $path);
+        $uri->setPath($path);
+
+        return $uri;
     }
 
     protected function getFirstSegmentInPath(RequestInterface $request, $base = null)

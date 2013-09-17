@@ -38,28 +38,25 @@
  * @link        http://juriansluiman.nl
  */
 
-return array(
-    'slm_locale' => array(
-        'strategies' => array()
-    ),
+namespace SlmLocale\Service;
 
-    'service_manager' => array(
-        'invokables' => array(
-            'SlmLocale\Strategy\StrategyPluginManager' => 'SlmLocale\Strategy\StrategyPluginManager',
-        ),
-        'factories'  => array(
-            'SlmLocale\Locale\Detector' => 'SlmLocale\Service\DetectorFactory',
-        ),
-    ),
+use SlmLocale\View\Helper\LocaleMenu;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
-    'view_helpers' => array(
-        'aliases' => array(
-            'localeUrl'  => 'SlmLocale\View\Helper\LocaleUrl',
-            'localeMenu' => 'SlmLocale\View\Helper\LocaleMenu',
-        ),
-        'factories' => array(
-            'SlmLocale\View\Helper\LocaleUrl'  => 'SlmLocale\Service\LocaleUrlViewHelperFactory',
-            'SlmLocale\View\Helper\LocaleMenu' => 'SlmLocale\Service\LocaleMenuViewHelperFactory',
-        ),
-    ),
-);
+class LocaleMenuViewHelperFactory implements FactoryInterface
+{
+    /**
+     * @param  ServiceLocatorInterface $serviceLocator
+     * @return LocaleMenu
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $detector = $serviceLocator->getServiceLocator()->get('SlmLocale\Locale\Detector');
+
+        $helper = new LocaleMenu;
+        $helper->setDetector($detector);
+
+        return $helper;
+    }
+}

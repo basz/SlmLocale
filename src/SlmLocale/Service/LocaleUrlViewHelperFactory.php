@@ -38,28 +38,28 @@
  * @link        http://juriansluiman.nl
  */
 
-return array(
-    'slm_locale' => array(
-        'strategies' => array()
-    ),
+namespace SlmLocale\Service;
 
-    'service_manager' => array(
-        'invokables' => array(
-            'SlmLocale\Strategy\StrategyPluginManager' => 'SlmLocale\Strategy\StrategyPluginManager',
-        ),
-        'factories'  => array(
-            'SlmLocale\Locale\Detector' => 'SlmLocale\Service\DetectorFactory',
-        ),
-    ),
+use SlmLocale\View\Helper\LocaleUrl;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
-    'view_helpers' => array(
-        'aliases' => array(
-            'localeUrl'  => 'SlmLocale\View\Helper\LocaleUrl',
-            'localeMenu' => 'SlmLocale\View\Helper\LocaleMenu',
-        ),
-        'factories' => array(
-            'SlmLocale\View\Helper\LocaleUrl'  => 'SlmLocale\Service\LocaleUrlViewHelperFactory',
-            'SlmLocale\View\Helper\LocaleMenu' => 'SlmLocale\Service\LocaleMenuViewHelperFactory',
-        ),
-    ),
-);
+class LocaleUrlViewHelperFactory implements FactoryInterface
+{
+    /**
+     * @param  ServiceLocatorInterface $serviceLocator
+     * @return LocaleUrl
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $sl = $serviceLocator->getServiceLocator();
+
+        $detector = $sl->get('SlmLocale\Locale\Detector');
+        $request  = $sl->get('Request');
+        $app      = $sl->get('Application');
+
+        $match  = $app->getMvcEvent()->getRouteMatch();
+        $helper = new LocaleUrl($detector, $request, $match);
+        return $helper;
+    }
+}
