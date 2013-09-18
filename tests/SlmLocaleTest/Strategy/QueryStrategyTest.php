@@ -46,6 +46,7 @@ use SlmLocale\LocaleEvent;
 
 use Zend\Http\Request  as HttpRequest;
 use Zend\Http\Response as HttpResponse;
+use Zend\Uri\Uri;
 
 class QueryStrategyTest extends TestCase
 {
@@ -125,4 +126,49 @@ class QueryStrategyTest extends TestCase
         $this->assertEquals('locale', $locale);
     }
 
+    public function testAssemblingAddsQueryParameter()
+    {
+        $strategy = $this->strategy;
+        $event    = $this->event;
+        $uri      = new Uri('/');
+
+        $event->setLocale('en-US');
+        $event->setUri($uri);
+        $strategy->assemble($event);
+
+        $query    = $event->getUri()->getQuery();
+        $expected = 'lang=en-US';
+        $this->assertEquals($expected, $query);
+    }
+
+    public function testAssemblingReplacesExistingQueryParameter()
+    {
+        $strategy = $this->strategy;
+        $event    = $this->event;
+        $uri      = new Uri('/?lang=nl-NL');
+
+        $event->setLocale('en-US');
+        $event->setUri($uri);
+        $strategy->assemble($event);
+
+        $query    = $event->getUri()->getQuery();
+        $expected = 'lang=en-US';
+        $this->assertEquals($expected, $query);
+    }
+
+    public function testAsssemblingUsesQueryKeyParamter()
+    {
+        $strategy = $this->strategy;
+        $event    = $this->event;
+        $uri      = new Uri('/');
+
+        $event->setLocale('en-US');
+        $event->setUri($uri);
+        $strategy->setOptions(array('query_key' => 'language'));
+        $strategy->assemble($event);
+
+        $query    = $event->getUri()->getQuery();
+        $expected = 'language=en-US';
+        $this->assertEquals($expected, $query);
+    }
 }
