@@ -49,6 +49,7 @@ use Zend\Http\PhpEnvironment\Request as HttpRequest;
 use Zend\Mvc\Router\Http\TreeRouteStack as HttpRouter;
 use Zend\Mvc\Router\Console\SimpleRouteStack as ConsoleRouter;
 use Zend\ServiceManager\ServiceManager;
+use Zend\Uri\Uri;
 
 class UriPathStrategyTest extends TestCase
 {
@@ -275,6 +276,77 @@ class UriPathStrategyTest extends TestCase
         $header     = $this->event->getResponse()->getHeaders()->has('Location');
         $this->assertNotEquals(302, $statusCode);
         $this->assertFalse($header);
+    }
+
+    public function testAssembleReplacesLocaleInPath()
+    {
+        $uri = new Uri('/en-US/');
+
+        $this->event->setLocale('en-GB');
+        $this->event->setUri($uri);
+
+        $this->strategy->assemble($this->event);
+
+        $expected = '/en-GB/';
+        $actual   = $this->event->getUri()->getPath();
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testAssembleReplacesLocaleInDeepPath()
+    {
+        $uri = new Uri('/en-US/foo/bar/baz');
+
+        $this->event->setLocale('en-GB');
+        $this->event->setUri($uri);
+
+        $this->strategy->assemble($this->event);
+
+        $expected = '/en-GB/foo/bar/baz';
+        $actual   = $this->event->getUri()->getPath();
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @todo Is this a bug in the strategy?
+     */
+    // public function testAssembleRespectsRouterBasePath()
+    // {
+    //     $manager = $this->getPluginManager();
+    //     $router  = $manager->getServiceLocator()->get('router');
+    //     $router->setBaseUrl('/some/deep/installation/path');
+    //     $this->strategy->setServiceLocator($manager);
+
+    //     $uri = new Uri('/some/deep/installation/path/en-US/foo/bar/baz');
+
+    //     $this->event->setLocale('en-GB');
+    //     $this->event->setUri($uri);
+
+    //     $this->strategy->assemble($this->event);
+
+    //     $expected = 'some/deep/installation/path/en-GB/foo/bar/baz';
+    //     $actual   = $this->event->getUri()->getPath();
+
+    //     $this->assertEquals($expected, $actual);
+    // }
+
+    public function testAssembleWorksWithAliasesToo()
+    {
+        $uri = new Uri('/nl/foo/bar/baz');
+
+        $this->event->setLocale('en-US');
+        $this->event->setUri($uri);
+
+        $this->strategy->setOptions(array(
+            'aliases' => array('nl' => 'nl-NL', 'en' => 'en-US'),
+        ));
+        $this->strategy->assemble($this->event);
+
+        $expected = '/en/foo/bar/baz';
+        $actual   = $this->event->getUri()->getPath();
+
+        $this->assertEquals($expected, $actual);
     }
 
     protected function getPluginManager($console = false)
