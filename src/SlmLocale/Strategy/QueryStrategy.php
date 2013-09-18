@@ -100,4 +100,20 @@ class QueryStrategy extends AbstractStrategy
         return $locale;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function assemble(LocaleEvent $event)
+    {
+        $uri     = $event->getUri();
+        $locale  = $event->getLocale();
+
+        $query = $uri->getQueryAsArray();
+        $key   = $this->getQueryKey();
+
+        $query[$key] = $locale;
+
+        $uri->setQuery($query);
+        return $uri;
+    }
 }
