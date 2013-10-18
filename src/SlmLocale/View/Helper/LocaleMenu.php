@@ -299,7 +299,7 @@ class LocaleMenu extends AbstractHelper
 
     protected function callLocale($method, $locale, $in_locale = false)
     {
-        $call = sprintf('\Locale::get%s', ucfirst($method));
+        $function = sprintf('\Locale::get%s', ucfirst($method));
 
         $args = array($locale);
 
@@ -307,6 +307,6 @@ class LocaleMenu extends AbstractHelper
             $args[] = $in_locale;
         }
 
-        return call_user_func_array($call, $args);
+        return call_user_func_array($function, $args);
     }
 }
