@@ -106,6 +106,11 @@ class LocaleUrl extends AbstractHelper
          * route match is present, we've a 404 and grab the path from the request object.
          */
         if ($this->getRouteMatch()) {
+
+            if (!isset($options['locale'])) {
+                $options['locale'] = $locale;
+            }
+
             $url = $this->getView()->url($name, $params, $options, $reuseMatchedParams);
         } else {
             $url = $this->getRequest()->getUri()->getPath();
