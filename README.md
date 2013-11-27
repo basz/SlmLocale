@@ -88,7 +88,7 @@ is important! You usually want the `acceptlanguage` as last for a fallback:
 
 ```
 'slm_locale' => array(
-    'supported' => array('uripath', 'acceptlanguage'),
+    'strategies' => array('uripath', 'acceptlanguage'),
 ),
 ```
 
