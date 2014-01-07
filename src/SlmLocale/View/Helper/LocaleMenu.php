@@ -244,8 +244,8 @@ class LocaleMenu extends AbstractHelper
             $labelLocale = $this->getLabelInCurrentLocale() ? $locale : $current;
 
             $url   = $this->getView()->localeUrl($locale);
-            $title = $this->callLocale($this->getTitleMethod(), $locale, $titleLocale);
-            $label = $this->callLocale($this->getLabelMethod(), $locale, $labelLocale);
+            $title = $this->getLocaleProperty($this->getTitleMethod(), $locale, $titleLocale);
+            $label = $this->getLocaleProperty($this->getLabelMethod(), $locale, $labelLocale);
 
             $item = sprintf(
                 '<li><a href="%s" title="%s"%s>%s</a></li>' . "\n",
@@ -297,16 +297,24 @@ class LocaleMenu extends AbstractHelper
         }
     }
 
-    protected function callLocale($method, $locale, $in_locale = false)
+    /**
+     * Retrieves a value by property from Locale
+     *
+     * @param $property
+     * @param $locale
+     * @param bool $in_locale
+     * @return mixed
+     */
+    protected function getLocaleProperty($property, $locale, $in_locale = false)
     {
-        $method = sprintf('\Locale::get%s', ucfirst($method));
+        $callback = sprintf('\Locale::get%s', ucfirst($property));
 
         $args = array($locale);
 
-        if ($in_locale && !in_array($method, array('primaryLanguage', 'region', 'script'))) {
+        if ($in_locale && !in_array($property, array('primaryLanguage', 'region', 'script'))) {
             $args[] = $in_locale;
         }
 
-        return call_user_func_array($method, $args);
+        return call_user_func_array($callback, $args);
     }
 }
