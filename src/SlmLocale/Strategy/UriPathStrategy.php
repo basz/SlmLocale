@@ -142,6 +142,7 @@ class UriPathStrategy extends AbstractStrategy implements ServiceLocatorAwareInt
             return;
         }
 
+        $alias = null;
         if (!$this->redirectToCanonical() && null !== $this->getAliases()) {
             $alias = $this->getAliasForLocale($locale);
             if (null !== $alias) {
@@ -165,7 +166,7 @@ class UriPathStrategy extends AbstractStrategy implements ServiceLocatorAwareInt
         $uri  = $request->getUri();
         $path = $uri->getPath();
 
-        if (!$found || ($event->hasSupported() && !in_array($found, $event->getSupported()))) {
+        if (!$found || ($event->hasSupported() && !in_array($found, $event->getSupported()) && null === $alias)) {
             $path = '/' . $locale . $path;
         } else {
             $path = str_replace($found, $locale, $path);

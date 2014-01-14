@@ -349,6 +349,28 @@ class UriPathStrategyTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    public function testFoundWorksWithAliasesToo()
+    {
+        $request = new HttpRequest;
+        $request->setUri('http://example.com/en/foo/bar/baz');
+
+        $this->event->setRequest($request);
+        $this->event->setResponse(new HttpResponse);
+        $this->event->setLocale('fr-FR');
+        $this->event->setSupported(array('en-US', 'fr-FR'));
+        $this->strategy->setOptions(array(
+                'aliases' => array('fr' => 'fr-FR', 'en' => 'en-US'),
+            ));
+
+        $this->strategy->found($this->event);
+
+        $header = $this->event->getResponse()->getHeaders()->get('Location');
+        $expected = 'Location: http://example.com/fr/foo/bar/baz';
+
+        $this->assertEquals('fr-FR', $this->event->getLocale());
+        $this->assertContains($expected, (string) $header);
+    }
+
     protected function getPluginManager($console = false)
     {
         $sl = new ServiceManager;
