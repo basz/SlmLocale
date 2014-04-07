@@ -48,6 +48,20 @@ class CookieStrategy extends AbstractStrategy
 {
     const COOKIE_NAME = 'slm_locale';
 
+    /**
+     * The name of the cookie.
+     *
+     * @var string
+     */
+    protected $cookie;
+
+    public function setOptions(array $options = array())
+    {
+        if (array_key_exists('cookie', $options)) {
+            $this->cookie = (string) $options['cookie'];
+        }
+    }
+
     public function detect(LocaleEvent $event)
     {
         $request = $event->getRequest();
@@ -87,8 +101,8 @@ class CookieStrategy extends AbstractStrategy
 
         // Omit Set-Cookie header when cookie is present
         if ($cookie instanceof Cookie
-            && $cookie->offsetExists(self::COOKIE_NAME)
-            && $locale === $cookie->offsetGet(self::COOKIE_NAME)
+            && $cookie->offsetExists($this->getCookie())
+            && $locale === $cookie->offsetGet($this->getCookie())
         ) {
             return;
         }
@@ -103,5 +117,25 @@ class CookieStrategy extends AbstractStrategy
         $setCookie = new SetCookie(self::COOKIE_NAME, $locale, null, $path);
 
         $response->getHeaders()->addHeader($setCookie);
+    }
+
+    /**
+     * @return string
+     */
+    public function getCookie()
+    {
+        if (null === $this->cookie) {
+            return self::COOKIE_NAME;
+        }
+
+        return $this->cookie;
+    }
+
+    /**
+     * @param string $cookieName
+     */
+    public function setCookie($cookieName)
+    {
+        $this->cookie = $cookieName;
     }
 }
