@@ -114,7 +114,7 @@ class CookieStrategy extends AbstractStrategy
         }
 
         $response  = $event->getResponse();
-        $setCookie = new SetCookie(self::COOKIE_NAME, $locale, null, $path);
+        $setCookie = new SetCookie($this->getCookie(), $locale, null, $path);
 
         $response->getHeaders()->addHeader($setCookie);
     }
