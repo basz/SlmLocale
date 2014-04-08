@@ -41,6 +41,7 @@
 namespace SlmLocale\Strategy;
 
 use SlmLocale\LocaleEvent;
+use SlmLocale\Strategy\Exception\InvalidArgumentException;
 use Zend\Http\Header\Cookie;
 use Zend\Http\Header\SetCookie;
 
@@ -135,9 +136,14 @@ class CookieStrategy extends AbstractStrategy
 
     /**
      * @param string $cookieName
+     * @throws InvalidArgumentException
      */
     public function setCookie($cookieName)
     {
+        if(!preg_match("/^(?!\\$)[!-~]+$/", $cookieName)) {
+            throw new InvalidArgumentException($cookieName . " is not a vaild cookie name.");
+        }
+
         $this->cookie = $cookieName;
     }
 }

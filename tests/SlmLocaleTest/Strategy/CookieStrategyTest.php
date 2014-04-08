@@ -176,4 +176,12 @@ class CookieStrategyTest extends TestCase
         $locale   = $strategy->detect($event);
         $this->assertEquals('foo', $locale);
     }
+
+    public function testInvalidCookieNameFails()
+    {
+        $strategy = $this->strategy;
+        $strategy->setCookie('$ThisIsAnInvalidCookieName');
+
+        $this->
+    }
 }
