@@ -159,4 +159,30 @@ class CookieStrategyTest extends TestCase
         $this->assertEquals($name, $cookie->getName());
         $this->assertEquals('bar', $cookie->getValue());
     }
+
+    public function testLocaleInCookieIsReturnedIfNameChanged()
+    {
+        $cookie = new Cookie;
+        $cookie->offsetSet('foo_cookie', 'foo');
+
+        $event = $this->event;
+        $event->setSupported(array('foo'));
+        $event->getRequest()
+            ->getHeaders()->addHeader($cookie);
+
+        $strategy = $this->strategy;
+        $strategy->setCookieName('foo_cookie');
+
+        $locale   = $strategy->detect($event);
+        $this->assertEquals('foo', $locale);
+    }
+
+    /**
+     * @expectedException \SlmLocale\Strategy\Exception\InvalidArgumentException
+     */
+    public function testInvalidCookieNameFails()
+    {
+        $strategy = $this->strategy;
+        $strategy->setCookieName('$ThisIsAnInvalidCookieName');
+    }
 }

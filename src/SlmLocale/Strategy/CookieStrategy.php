@@ -41,6 +41,7 @@
 namespace SlmLocale\Strategy;
 
 use SlmLocale\LocaleEvent;
+use SlmLocale\Strategy\Exception\InvalidArgumentException;
 use Zend\Http\Header\Cookie;
 use Zend\Http\Header\SetCookie;
 
@@ -48,9 +49,24 @@ class CookieStrategy extends AbstractStrategy
 {
     const COOKIE_NAME = 'slm_locale';
 
+    /**
+     * The name of the cookie.
+     *
+     * @var string
+     */
+    protected $cookieName;
+
+    public function setOptions(array $options = array())
+    {
+        if (array_key_exists('cookie_name', $options)) {
+            $this->setCookieName($options['cookie_name']);
+        }
+    }
+
     public function detect(LocaleEvent $event)
     {
-        $request = $event->getRequest();
+        $request    = $event->getRequest();
+        $cookieName = $this->getCookieName();
 
         if (!$this->isHttpRequest($request)) {
             return;
@@ -60,11 +76,11 @@ class CookieStrategy extends AbstractStrategy
         }
 
         $cookie = $request->getCookie();
-        if (!$cookie || !$cookie->offsetExists(self::COOKIE_NAME)) {
+        if (!$cookie || !$cookie->offsetExists($cookieName)) {
             return;
         }
 
-        $locale    = $cookie->offsetGet(self::COOKIE_NAME);
+        $locale    = $cookie->offsetGet($cookieName);
         $supported = $event->getSupported();
 
         if (!in_array($locale, $supported)) {
@@ -76,8 +92,9 @@ class CookieStrategy extends AbstractStrategy
 
     public function found(LocaleEvent $event)
     {
-        $locale   = $event->getLocale();
-        $request  = $event->getRequest();
+        $locale     = $event->getLocale();
+        $request    = $event->getRequest();
+        $cookieName = $this->getCookieName();
 
         if (!$this->isHttpRequest($request)) {
             return;
@@ -87,8 +104,8 @@ class CookieStrategy extends AbstractStrategy
 
         // Omit Set-Cookie header when cookie is present
         if ($cookie instanceof Cookie
-            && $cookie->offsetExists(self::COOKIE_NAME)
-            && $locale === $cookie->offsetGet(self::COOKIE_NAME)
+            && $cookie->offsetExists($cookieName)
+            && $locale === $cookie->offsetGet($cookieName)
         ) {
             return;
         }
@@ -100,8 +117,33 @@ class CookieStrategy extends AbstractStrategy
         }
 
         $response  = $event->getResponse();
-        $setCookie = new SetCookie(self::COOKIE_NAME, $locale, null, $path);
+        $setCookie = new SetCookie($cookieName, $locale, null, $path);
 
         $response->getHeaders()->addHeader($setCookie);
+    }
+
+    /**
+     * @return string
+     */
+    public function getCookieName()
+    {
+        if (null === $this->cookieName) {
+            return self::COOKIE_NAME;
+        }
+
+        return (string) $this->cookieName;
+    }
+
+    /**
+     * @param string $cookieName
+     * @throws InvalidArgumentException
+     */
+    public function setCookieName($cookieName)
+    {
+        if(!preg_match("/^(?!\\$)[!-~]+$/", $cookieName)) {
+            throw new InvalidArgumentException($cookieName . " is not a vaild cookie name.");
+        }
+
+        $this->cookieName = $cookieName;
     }
 }
