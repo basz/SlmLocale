@@ -54,7 +54,7 @@ class CookieStrategy extends AbstractStrategy
      *
      * @var string
      */
-    protected $cookie;
+    protected $cookieName;
 
     public function setOptions(array $options = array())
     {
