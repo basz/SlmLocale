@@ -58,13 +58,14 @@ class CookieStrategy extends AbstractStrategy
     public function setOptions(array $options = array())
     {
         if (array_key_exists('cookie', $options)) {
-            $this->cookie = (string) $options['cookie'];
+            $this->setCookie($options['cookie']);
         }
     }
 
     public function detect(LocaleEvent $event)
     {
         $request = $event->getRequest();
+        $name     = $this->getCookie();
 
         if (!$this->isHttpRequest($request)) {
             return;
@@ -74,11 +75,11 @@ class CookieStrategy extends AbstractStrategy
         }
 
         $cookie = $request->getCookie();
-        if (!$cookie || !$cookie->offsetExists($this->getCookie())) {
+        if (!$cookie || !$cookie->offsetExists($name)) {
             return;
         }
 
-        $locale    = $cookie->offsetGet($this->getCookie());
+        $locale    = $cookie->offsetGet($name);
         $supported = $event->getSupported();
 
         if (!in_array($locale, $supported)) {
@@ -92,6 +93,7 @@ class CookieStrategy extends AbstractStrategy
     {
         $locale   = $event->getLocale();
         $request  = $event->getRequest();
+        $name     = $this->getCookie();
 
         if (!$this->isHttpRequest($request)) {
             return;
@@ -101,8 +103,8 @@ class CookieStrategy extends AbstractStrategy
 
         // Omit Set-Cookie header when cookie is present
         if ($cookie instanceof Cookie
-            && $cookie->offsetExists($this->getCookie())
-            && $locale === $cookie->offsetGet($this->getCookie())
+            && $cookie->offsetExists($name)
+            && $locale === $cookie->offsetGet($name)
         ) {
             return;
         }
@@ -114,7 +116,7 @@ class CookieStrategy extends AbstractStrategy
         }
 
         $response  = $event->getResponse();
-        $setCookie = new SetCookie($this->getCookie(), $locale, null, $path);
+        $setCookie = new SetCookie($name, $locale, null, $path);
 
         $response->getHeaders()->addHeader($setCookie);
     }
@@ -128,7 +130,7 @@ class CookieStrategy extends AbstractStrategy
             return self::COOKIE_NAME;
         }
 
-        return $this->cookie;
+        return (string) $this->cookie;
     }
 
     /**
