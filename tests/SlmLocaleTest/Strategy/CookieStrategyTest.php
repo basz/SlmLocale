@@ -171,7 +171,7 @@ class CookieStrategyTest extends TestCase
             ->getHeaders()->addHeader($cookie);
 
         $strategy = $this->strategy;
-        $strategy->setCookie('foo_cookie');
+        $strategy->setCookieName('foo_cookie');
 
         $locale   = $strategy->detect($event);
         $this->assertEquals('foo', $locale);
@@ -180,7 +180,7 @@ class CookieStrategyTest extends TestCase
     public function testInvalidCookieNameFails()
     {
         $strategy = $this->strategy;
-        $strategy->setCookie('$ThisIsAnInvalidCookieName');
+        $strategy->setCookieName('$ThisIsAnInvalidCookieName');
 
         $this->
     }
