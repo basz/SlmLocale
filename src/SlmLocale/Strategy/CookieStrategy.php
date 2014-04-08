@@ -131,7 +131,7 @@ class CookieStrategy extends AbstractStrategy
             return self::COOKIE_NAME;
         }
 
-        return (string) $this->cookie;
+        return (string) $this->cookieName;
     }
 
     /**
