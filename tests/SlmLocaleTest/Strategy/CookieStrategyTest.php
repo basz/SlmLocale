@@ -177,11 +177,12 @@ class CookieStrategyTest extends TestCase
         $this->assertEquals('foo', $locale);
     }
 
+    /**
+     * @expectedException \SlmLocale\Strategy\Exception\InvalidArgumentException
+     */
     public function testInvalidCookieNameFails()
     {
         $strategy = $this->strategy;
         $strategy->setCookieName('$ThisIsAnInvalidCookieName');
-
-        $this->
     }
 }
