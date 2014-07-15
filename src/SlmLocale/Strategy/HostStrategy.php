@@ -96,7 +96,7 @@ class HostStrategy extends AbstractStrategy
                 'The strategy must be configured with a domain option'
             );
         }
-        if (strpos($domain, self::LOCALE_KEY)) {
+        if (strpos($domain, self::LOCALE_KEY) === false) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'The domain %s must contain a locale key part "%s"', $domain, self::LOCALE_KEY
             ));
