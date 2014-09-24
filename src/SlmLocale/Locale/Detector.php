@@ -171,10 +171,11 @@ class Detector implements EventManagerAwareInterface
         return $locale;
     }
 
-    public function assemble($locale, $uri)
+    public function assemble($locale, $uri, RequestInterface $request)
     {
         $event = new LocaleEvent(LocaleEvent::EVENT_ASSEMBLE, $this);
         $event->setLocale($locale);
+        $event->setRequest($request);
 
         if ($this->hasSupported()) {
             $event->setSupported($this->getSupported());
@@ -187,7 +188,6 @@ class Detector implements EventManagerAwareInterface
 
         $events  = $this->getEventManager();
         $results = $events->trigger($event);
-
         if (!$results->stopped()) {
             return $uri;
         }
