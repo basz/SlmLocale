@@ -38,50 +38,28 @@
  * @link        http://juriansluiman.nl
  */
 
-namespace SlmLocale\Strategy;
+namespace SlmLocale\Service;
 
-use Zend\ServiceManager\AbstractPluginManager;
+use SlmLocale\Strategy\HostStrategy;
 use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
-class StrategyPluginManager extends AbstractPluginManager
+class HostStrategyFactory implements FactoryInterface
 {
     /**
-     * {@inheritDocs}
-     */
-    protected $invokableClasses = array(
-        'cookie'         => 'SlmLocale\Strategy\CookieStrategy',
-        'acceptlanguage' => 'SlmLocale\Strategy\HttpAcceptLanguageStrategy',
-        'query'          => 'SlmLocale\Strategy\QueryStrategy',
-        'uripath'        => 'SlmLocale\Strategy\UriPathStrategy',
-    );
-
-    /**
-     * @var string|callable|\Closure|FactoryInterface[]
-     */
-    protected $factories = array(
-        'host'           => 'SlmLocale\Service\HostStrategyFactory',
-    );
-
-    /**
-     * Validate the plugin
+     * Create service
      *
-     * Checks that the helper loaded is an instance of StrategyInterface.
-     *
-     * @param  mixed                            $plugin
-     * @return void
-     * @throws Exception\InvalidStrategyException if invalid
+     * @param ServiceLocatorInterface $serviceLocator
+     * @return mixed
      */
-    public function validatePlugin($plugin)
+    public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        if ($plugin instanceof StrategyInterface) {
-            // we're okay
-            return;
-        }
+        $config = $serviceLocator->getServiceLocator()->get('Config');
+        $slmConfig = $config['slm_locale'];
 
-        throw new Exception\InvalidStrategyException(sprintf(
-            'Plugin of type %s is invalid; must implement %s\StrategyInterface',
-            (is_object($plugin) ? get_class($plugin) : gettype($plugin)),
-            __NAMESPACE__
-        ));
+        $strategy = new HostStrategy();
+        $strategy->setOptions($slmConfig);
+
+        return $strategy;
     }
 }
