@@ -41,6 +41,8 @@
 namespace SlmLocale\Strategy;
 
 use SlmLocale\LocaleEvent;
+use SlmLocale\Strategy\Exception\InvalidArgumentException;
+use Zend\Uri\Uri;
 
 class HostStrategy extends AbstractStrategy
 {
@@ -168,5 +170,35 @@ class HostStrategy extends AbstractStrategy
                 return $alias;
             }
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function assemble(LocaleEvent $event)
+    {
+        $locale = $event->getLocale();
+
+        foreach ($this->getAliases() as $alias => $item) {
+            if ($item == $locale) {
+                $tld = $alias;
+            }
+        }
+
+        if (!isset($tld)) {
+            throw new InvalidArgumentException('No matching tld found for current locale');
+        }
+
+        $port = $event->getRequest()->getServer()->get('SERVER_PORT');
+        $hostname = str_replace(self::LOCALE_KEY, $tld, $this->getDomain());
+
+        if (null !== $port && 80 != $port) {
+            $hostname .= ':' . $port;
+        }
+
+        $uri = $event->getUri();
+        $uri->setHost($hostname);
+
+        return $uri;
     }
 }

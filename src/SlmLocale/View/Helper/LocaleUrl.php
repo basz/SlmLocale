@@ -116,7 +116,6 @@ class LocaleUrl extends AbstractHelper
             $url = $this->getRequest()->getUri()->getPath();
         }
 
-        return $this->getDetector()->assemble($locale, $url);
+        return $this->getDetector()->assemble($locale, $url, $this->getRequest());
     }
-
 }
