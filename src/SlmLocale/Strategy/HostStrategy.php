@@ -192,7 +192,7 @@ class HostStrategy extends AbstractStrategy
         $port = $event->getRequest()->getServer()->get('SERVER_PORT');
         $hostname = str_replace(self::LOCALE_KEY, $tld, $this->getDomain());
 
-        if ($port != 80) {
+        if (null !== $port && 80 != $port) {
             $hostname .= ':' . $port;
         }
 
