@@ -121,4 +121,24 @@ class HttpAcceptLanguageStrategyTest extends TestCase
         $locale = $strategy->detect($event);
         $this->assertEquals('bar', $locale);
     }
+    
+    public function testSelectsLanguageViaLocaleLookup()
+    {
+        $strategy = $this->strategy;
+        $event    = $this->event;
+
+        $header   = new AcceptLanguage;
+        $header->addLanguage('de-DE', 1);
+        $header->addLanguage('en-US', 0.8);
+        $header->addLanguage('en', 0.6);
+
+        $event->getRequest()
+            ->getHeaders()
+            ->addHeader($header);
+
+        $event->setSupported(array('en', 'de'));
+
+        $locale = $strategy->detect($event);
+        $this->assertEquals('de', $locale);
+    }    
 }
