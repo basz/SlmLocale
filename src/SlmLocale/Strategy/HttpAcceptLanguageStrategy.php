@@ -67,8 +67,8 @@ class HttpAcceptLanguageStrategy extends AbstractStrategy
                     return $locale;
                 }
 
-                if (Locale::lookup($supported, $locale)) {
-                    return $locale;
+                if ($match = Locale::lookup($supported, $locale)) {
+                    return $match;
                 }
             }
         }
