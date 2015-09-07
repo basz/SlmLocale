@@ -121,6 +121,10 @@ class Detector implements EventManagerAwareInterface
 
     public function detect(RequestInterface $request, ResponseInterface $response = null)
     {
+        if (!$request->isGet()) {
+            return;
+        }
+
         $event = new LocaleEvent(LocaleEvent::EVENT_DETECT, $this);
         $event->setRequest($request);
         $event->setResponse($response);
