@@ -44,6 +44,7 @@ use SlmLocale\LocaleEvent;
 use SlmLocale\Strategy\StrategyInterface;
 use Zend\EventManager\EventManagerAwareInterface;
 use Zend\EventManager\EventManagerInterface;
+use Zend\Http\Request as HttpRequest;
 use Zend\Stdlib\RequestInterface;
 use Zend\Stdlib\ResponseInterface;
 use Zend\Uri\Uri;
@@ -121,7 +122,7 @@ class Detector implements EventManagerAwareInterface
 
     public function detect(RequestInterface $request, ResponseInterface $response = null)
     {
-        if (!$request->isGet()) {
+        if ($request instanceof HttpRequest && !$request->isGet()) {
             return;
         }
 
