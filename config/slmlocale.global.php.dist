@@ -23,6 +23,14 @@ $settings = array(
      * Accepted is something else
      */
     //'supported' => array('en-US', 'en-GB'),
+    
+    /**
+     * Locale mappings
+     *
+     * An array of mappings to apply where the indexes correspond to the 
+     * detected locale, and the values to the locale to map it to.
+     */
+    //'mappings' => array('en' => 'en-US', 'fr' => 'fr_FR'),
 
     /**
      * Strategies
