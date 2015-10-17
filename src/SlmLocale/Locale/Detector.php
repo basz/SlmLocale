@@ -170,7 +170,7 @@ class Detector implements EventManagerAwareInterface
         }
 
         if ($this->hasMappings() && array_key_exists($locale, $this->getMappings())) {
-        	$mappings = $this->getMappings();
+            $mappings = $this->getMappings();
             $locale   = $mappings[$locale];
         }
 
