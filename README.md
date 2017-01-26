@@ -7,7 +7,7 @@ Created by Jurian Sluiman
 
 Introduction
 ------------
-SlmLocale is a Zend Framework 2 module to automatically detect a locale for your
+SlmLocale is a Zend Framework 3 module to automatically detect a locale for your
 application. It uses a variety of pluggable strategies to search for a valid
 locale. SlmLocale features a default locale, a set of supported locales and
 locale aliases.
@@ -41,7 +41,7 @@ the root of your project:
 ```
 {
     "require": {
-        "slm/locale": ">=0.1.0,<1.2.0-dev"
+        "slm/locale": "^1.0"
     }
 }
 ```
@@ -77,24 +77,24 @@ Set all your supported locales in the configuration:
 
 And enable some strategies. The naming is made via the following list:
 
- * **cookie**: `SlmLocale\Strategy\CookieStrategy`
- * **host**: `SlmLocale\Strategy\HostStrategy`
- * **acceptlanguage**: `SlmLocale\Strategy\HttpAcceptLanguageStrategy`
- * **query**: `SlmLocale\Strategy\QueryStrategy`
- * **uripath**: `SlmLocale\Strategy\UriPathStrategy`
+ * **Cookie**: `SlmLocale\Strategy\CookieStrategy`
+ * **Host**: `SlmLocale\Strategy\HostStrategy`
+ * **AcceptLanguage**: `SlmLocale\Strategy\HttpAcceptLanguageStrategy`
+ * **Query**: `SlmLocale\Strategy\QueryStrategy`
+ * **UriPath**: `SlmLocale\Strategy\UriPathStrategy`
 
 You can enable one or more of them in the `strategies` list. Mind the priority
 is important! You usually want the `acceptlanguage` as last for a fallback:
 
 ```
 'slm_locale' => array(
-    'strategies' => array('uripath', 'acceptlanguage'),
+    'strategies' => array('UriPath', 'AcceptLanguage'),
 ),
 ```
 
 At this moment, the locale should be detected. The locale is stored inside php's
 `Locale` object. Retrieve the locale with `Locale::getDefault()`. This is also
-automated inside Zend Framework 2 translator objects and i18n view helpers (so
+automated inside Zend Framework 3 translator objects and i18n view helpers (so
 you do not need to set the locale yourself there).
 
 ### Set the locale's language in html

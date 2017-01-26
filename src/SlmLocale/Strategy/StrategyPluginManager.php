@@ -40,41 +40,51 @@
 
 namespace SlmLocale\Strategy;
 
+use RuntimeException;
 use Zend\ServiceManager\AbstractPluginManager;
+use Zend\ServiceManager\Exception\InvalidServiceException;
+use Zend\ServiceManager\Factory\InvokableFactory;
 
 class StrategyPluginManager extends AbstractPluginManager
 {
+    protected $instanceOf = StrategyInterface::class;
+
     /**
      * {@inheritDocs}
      */
-    protected $invokableClasses = array(
-        'cookie'         => 'SlmLocale\Strategy\CookieStrategy',
-        'host'           => 'SlmLocale\Strategy\HostStrategy',
-        'acceptlanguage' => 'SlmLocale\Strategy\HttpAcceptLanguageStrategy',
-        'query'          => 'SlmLocale\Strategy\QueryStrategy',
-        'uripath'        => 'SlmLocale\Strategy\UriPathStrategy',
+    protected $aliases = array(
+        'Cookie'         => CookieStrategy::class,
+        'Host'           => HostStrategy::class,
+        'AcceptLanguage' => HttpAcceptLanguageStrategy::class,
+        'Query'          => QueryStrategy::class,
+        'UriPath'        => UriPathStrategy::class,
     );
 
-    /**
-     * Validate the plugin
-     *
-     * Checks that the helper loaded is an instance of StrategyInterface.
-     *
-     * @param  mixed                            $plugin
-     * @return void
-     * @throws Exception\InvalidStrategyException if invalid
-     */
-    public function validatePlugin($plugin)
-    {
-        if ($plugin instanceof StrategyInterface) {
-            // we're okay
-            return;
-        }
+    protected $factories = [
+        CookieStrategy::class             => InvokableFactory::class,
+        HostStrategy::class               => InvokableFactory::class,
+        HttpAcceptLanguageStrategy::class => InvokableFactory::class,
+        QueryStrategy::class              => InvokableFactory::class,
+        UriPathStrategy::class            => UriPathStrategyFactory::class,
+    ];
 
-        throw new Exception\InvalidStrategyException(sprintf(
-            'Plugin of type %s is invalid; must implement %s\StrategyInterface',
-            (is_object($plugin) ? get_class($plugin) : gettype($plugin)),
-            __NAMESPACE__
-        ));
+    public function validate($instance)
+    {
+        if (! $instance instanceof $this->instanceOf) {
+            throw new InvalidServiceException(sprintf(
+                'Invalid plugin "%s" created; not an instance of %s',
+                get_class($instance),
+                $this->instanceOf
+            ));
+        }
+    }
+
+    public function validatePlugin($instance)
+    {
+        try {
+            $this->validate($instance);
+        } catch (InvalidServiceException $e) {
+            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
     }
 }

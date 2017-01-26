@@ -38,28 +38,26 @@
  * @link        http://juriansluiman.nl
  */
 
-return array(
-    'slm_locale' => array(
-        'strategies' => array()
-    ),
+return [
+    'slm_locale' => [
+        'strategies' => []
+    ],
 
-    'service_manager' => array(
-        'invokables' => array(
-            'SlmLocale\Strategy\StrategyPluginManager' => 'SlmLocale\Strategy\StrategyPluginManager',
-        ),
-        'factories'  => array(
-            'SlmLocale\Locale\Detector' => 'SlmLocale\Service\DetectorFactory',
-        ),
-    ),
+    'service_manager' => [
+        'factories'  => [
+            SlmLocale\Locale\Detector::class => SlmLocale\Service\DetectorFactory::class,
+            SlmLocale\Strategy\StrategyPluginManager::class => SlmLocale\Strategy\StrategyPluginManagerFactory::class,
+        ],
+    ],
 
-    'view_helpers' => array(
-        'aliases' => array(
-            'localeUrl'  => 'SlmLocale\View\Helper\LocaleUrl',
-            'localeMenu' => 'SlmLocale\View\Helper\LocaleMenu',
-        ),
-        'factories' => array(
-            'SlmLocale\View\Helper\LocaleUrl'  => 'SlmLocale\Service\LocaleUrlViewHelperFactory',
-            'SlmLocale\View\Helper\LocaleMenu' => 'SlmLocale\Service\LocaleMenuViewHelperFactory',
-        ),
-    ),
-);
+    'view_helpers' => [
+        'aliases' => [
+            'localeUrl'  => SlmLocale\View\Helper\LocaleUrl::class,
+            'localeMenu' => SlmLocale\View\Helper\LocaleMenu::class,
+        ],
+        'factories' => [
+            SlmLocale\View\Helper\LocaleUrl::class  => SlmLocale\Service\LocaleUrlViewHelperFactory::class,
+            SlmLocale\View\Helper\LocaleMenu::class => SlmLocale\Service\LocaleMenuViewHelperFactory::class,
+        ],
+    ],
+];

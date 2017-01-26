@@ -42,7 +42,6 @@ namespace SlmLocale\Strategy;
 
 use SlmLocale\LocaleEvent;
 use SlmLocale\Strategy\Exception\InvalidArgumentException;
-use Zend\Uri\Uri;
 
 class HostStrategy extends AbstractStrategy
 {
