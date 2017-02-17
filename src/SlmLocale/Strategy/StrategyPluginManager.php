@@ -67,6 +67,11 @@ class StrategyPluginManager extends AbstractPluginManager
         'SlmLocale\Strategy\HttpAcceptLanguageStrategy' => InvokableFactory::class,
         'SlmLocale\Strategy\QueryStrategy' => InvokableFactory::class,
         'SlmLocale\Strategy\UriPathStrategy' => InvokableFactory::class,
+        'slmlocalestrategycookiestrategy' => InvokableFactory::class,
+        'slmlocalestrategyhoststrategy' => InvokableFactory::class,
+        'slmlocalestrategyhttpacceptlanguagestrategy' => InvokableFactory::class,
+        'slmlocalestrategyquerystrategy' => InvokableFactory::class,
+        'slmlocalestrategyuripathstrategy' => InvokableFactory::class,
 
     ];
 
