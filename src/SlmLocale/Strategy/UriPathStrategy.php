@@ -40,14 +40,13 @@
 
 namespace SlmLocale\Strategy;
 
+use Interop\Container\ContainerInterface;
 use Locale;
 use SlmLocale\LocaleEvent;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\Uri\Uri;
 use Zend\Mvc\Router\Http\TreeRouteStack;
 
-class UriPathStrategy extends AbstractStrategy implements ServiceLocatorAwareInterface
+class UriPathStrategy extends AbstractStrategy
 {
     const REDIRECT_STATUS_CODE = 302;
 
@@ -55,6 +54,15 @@ class UriPathStrategy extends AbstractStrategy implements ServiceLocatorAwareInt
     protected $aliases;
     protected $redirect_to_canonical;
     protected $sl;
+    /**
+     * @var TreeRouteStack
+     */
+    protected $router;
+
+    public function __construct(TreeRouteStack $router = null)
+    {
+        $this->router = $router;
+    }
 
     public function setOptions(array $options = array())
     {
@@ -72,7 +80,7 @@ class UriPathStrategy extends AbstractStrategy implements ServiceLocatorAwareInt
     /**
      * {@inheritdoc}
      */
-    public function setServiceLocator(ServiceLocatorInterface $sl)
+    public function setServiceLocator(ContainerInterface $sl)
     {
         $this->sl = $sl;
     }
@@ -87,7 +95,11 @@ class UriPathStrategy extends AbstractStrategy implements ServiceLocatorAwareInt
 
     protected function getRouter()
     {
-        return $this->getServiceLocator()->getServiceLocator()->get('router');
+        if (!$this->router instanceof TreeRouteStack) {
+            $this->router = $this->getServiceLocator()->getServiceLocator()->get('router');
+        }
+
+        return $this->router;
     }
 
     protected function redirectWhenFound()

@@ -169,12 +169,12 @@ class DetectorTest extends TestCase
     public function testStrategyAttachesToEventManager()
     {
         $detector = new Detector;
+        $events = $this->getMock('Zend\EventManager\EventManager');
         $strategy = $this->getMock('SlmLocale\Strategy\StrategyInterface');
+        $strategy->expects($this->once())
+            ->method('attach')
+            ->with($events);
 
-        $events = $this->getMock('Zend\EventManager\EventManager', array('attachAggregate'));
-        $events->expects($this->once())
-               ->method('attachAggregate')
-               ->with($strategy);
 
         $detector->setEventManager($events);
         $detector->addStrategy($strategy);

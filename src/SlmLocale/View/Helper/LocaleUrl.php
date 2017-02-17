@@ -59,7 +59,7 @@ class LocaleUrl extends AbstractHelper
      */
     protected $request;
 
-    public function __construct(Detector $detector, Request $request, Routematch $match = null)
+    public function __construct(Detector $detector, Request $request, RouteMatch $match = null)
     {
         $this->detector = $detector;
         $this->match    = $match;
@@ -84,16 +84,16 @@ class LocaleUrl extends AbstractHelper
     /**
      * Generates an localized url
      *
-     * @see    Zend\View\Helpes\Url::__invoke()
+     * @see    \Zend\View\Helper\Url::__invoke()
      * @param  string  $locale             Locale
      * @param  string  $name               Name of the route
      * @param  array   $params             Parameters for the link
      * @param  array   $options            Options for the route
      * @param  boolean $reuseMatchedParams Whether to reuse matched parameters
      * @return string  Url                 For the link href attribute
-     * @throws Exception\RuntimeException  If no RouteStackInterface was provided
-     * @throws Exception\RuntimeException  If no RouteMatch was provided
-     * @throws Exception\RuntimeException  If RouteMatch didn't contain a matched route name
+     * @throws RuntimeException  If no RouteStackInterface was provided
+     * @throws RuntimeException  If no RouteMatch was provided
+     * @throws RuntimeException  If RouteMatch didn't contain a matched route name
      */
     public function __invoke($locale, $name = null, $params = array(), $options = array(), $reuseMatchedParams = true)
     {
