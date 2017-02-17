@@ -44,10 +44,8 @@ return array(
     ),
 
     'service_manager' => array(
-        'invokables' => array(
-            'SlmLocale\Strategy\StrategyPluginManager' => 'SlmLocale\Strategy\StrategyPluginManager',
-        ),
         'factories'  => array(
+            'SlmLocale\Strategy\StrategyPluginManager' => 'SlmLocale\Strategy\Factory\StrategyPluginManagerFactory',
             'SlmLocale\Locale\Detector' => 'SlmLocale\Service\DetectorFactory',
         ),
     ),
