@@ -29,7 +29,8 @@
     "require-dev": {
         "zendframework/zend-console": "~2.1",
         "zendframework/zend-mvc": "~2.1",
-        "phpunit/phpunit": "4.2.*"
+        "phpunit/phpunit": "4.2.*",
+        "friendsofphp/php-cs-fixer": "^2.1"
     },
     "suggest": {
         "zendframework/zend-mvc": "For using the router in the UriPath strategy"

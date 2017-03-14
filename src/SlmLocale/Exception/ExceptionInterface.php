@@ -42,5 +42,4 @@ namespace SlmLocale\Exception;
 
 interface ExceptionInterface
 {
-
 }

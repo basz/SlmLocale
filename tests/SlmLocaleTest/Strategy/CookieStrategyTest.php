@@ -41,11 +41,10 @@ namespace SlmLocaleTest\Locale;
 
 use PHPUnit_Framework_TestCase as TestCase;
 
-use SlmLocale\Strategy\CookieStrategy;
 use SlmLocale\LocaleEvent;
+use SlmLocale\Strategy\CookieStrategy;
 
 use Zend\Http\Header\Cookie;
-use Zend\Http\Header\SetCookie;
 use Zend\Http\Request  as HttpRequest;
 use Zend\Http\Response as HttpResponse;
 
@@ -56,11 +55,11 @@ class CookieStrategyTest extends TestCase
 
     public function setUp()
     {
-        $this->strategy = new CookieStrategy;
-        $this->event    = new LocaleEvent;
+        $this->strategy = new CookieStrategy();
+        $this->event    = new LocaleEvent();
 
-        $request  = new HttpRequest;
-        $response = new HttpResponse;
+        $request  = new HttpRequest();
+        $response = new HttpResponse();
         $this->event->setRequest($request);
         $this->event->setResponse($response);
     }
@@ -78,7 +77,7 @@ class CookieStrategyTest extends TestCase
     {
         $event    = $this->event;
         $strategy = $this->strategy;
-        $event->setSupported(array('foo'));
+        $event->setSupported(['foo']);
 
         $locale = $strategy->detect($event);
         $this->assertNull($locale);
@@ -86,11 +85,11 @@ class CookieStrategyTest extends TestCase
 
     public function testLocaleInCookieIsReturned()
     {
-        $cookie = new Cookie;
+        $cookie = new Cookie();
         $cookie->offsetSet(CookieStrategy::COOKIE_NAME, 'foo');
 
         $event = $this->event;
-        $event->setSupported(array('foo'));
+        $event->setSupported(['foo']);
         $event->getRequest()
               ->getHeaders()->addHeader($cookie);
 
@@ -120,7 +119,7 @@ class CookieStrategyTest extends TestCase
 
     public function testSetCookieHeaderSkippedWhenLocaleInRequestHeader()
     {
-        $cookie = new Cookie;
+        $cookie = new Cookie();
         $cookie->offsetSet(CookieStrategy::COOKIE_NAME, 'foo');
 
         $event = $this->event;
@@ -138,7 +137,7 @@ class CookieStrategyTest extends TestCase
 
     public function testLocaleInSetCookieHeaderWhenLocaleInRequestIsDifferent()
     {
-        $cookie = new Cookie;
+        $cookie = new Cookie();
         $cookie->offsetSet(CookieStrategy::COOKIE_NAME, 'foo');
 
         $event = $this->event;
@@ -162,11 +161,11 @@ class CookieStrategyTest extends TestCase
 
     public function testLocaleInCookieIsReturnedIfNameChanged()
     {
-        $cookie = new Cookie;
+        $cookie = new Cookie();
         $cookie->offsetSet('foo_cookie', 'foo');
 
         $event = $this->event;
-        $event->setSupported(array('foo'));
+        $event->setSupported(['foo']);
         $event->getRequest()
             ->getHeaders()->addHeader($cookie);
 

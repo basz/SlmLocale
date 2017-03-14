@@ -56,7 +56,7 @@ class CookieStrategy extends AbstractStrategy
      */
     protected $cookieName;
 
-    public function setOptions(array $options = array())
+    public function setOptions(array $options = [])
     {
         if (array_key_exists('cookie_name', $options)) {
             $this->setCookieName($options['cookie_name']);
@@ -68,22 +68,22 @@ class CookieStrategy extends AbstractStrategy
         $request    = $event->getRequest();
         $cookieName = $this->getCookieName();
 
-        if (!$this->isHttpRequest($request)) {
+        if (! $this->isHttpRequest($request)) {
             return;
         }
-        if (!$event->hasSupported()) {
+        if (! $event->hasSupported()) {
             return;
         }
 
         $cookie = $request->getCookie();
-        if (!$cookie || !$cookie->offsetExists($cookieName)) {
+        if (! $cookie || ! $cookie->offsetExists($cookieName)) {
             return;
         }
 
         $locale    = $cookie->offsetGet($cookieName);
         $supported = $event->getSupported();
 
-        if (!in_array($locale, $supported)) {
+        if (! in_array($locale, $supported)) {
             return;
         }
 
@@ -96,7 +96,7 @@ class CookieStrategy extends AbstractStrategy
         $request    = $event->getRequest();
         $cookieName = $this->getCookieName();
 
-        if (!$this->isHttpRequest($request)) {
+        if (! $this->isHttpRequest($request)) {
             return;
         }
 
@@ -140,8 +140,8 @@ class CookieStrategy extends AbstractStrategy
      */
     public function setCookieName($cookieName)
     {
-        if(!preg_match("/^(?!\\$)[!-~]+$/", $cookieName)) {
-            throw new InvalidArgumentException($cookieName . " is not a vaild cookie name.");
+        if (! preg_match('/^(?!\$)[!-~]+$/', $cookieName)) {
+            throw new InvalidArgumentException($cookieName . ' is not a vaild cookie name.');
         }
 
         $this->cookieName = $cookieName;

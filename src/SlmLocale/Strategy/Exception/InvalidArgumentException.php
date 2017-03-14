@@ -43,9 +43,6 @@ namespace SlmLocale\Strategy\Exception;
 use InvalidArgumentException as StdInvalidArgumentException;
 use SlmLocale\Exception\ExceptionInterface;
 
-class InvalidArgumentException
-    extends StdInvalidArgumentException
-    implements ExceptionInterface
+class InvalidArgumentException extends StdInvalidArgumentException implements ExceptionInterface
 {
-
 }

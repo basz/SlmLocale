@@ -43,9 +43,6 @@ namespace SlmLocale\Strategy\Exception;
 use InvalidArgumentException;
 use SlmLocale\Exception\ExceptionInterface;
 
-class InvalidStrategyException
-    extends InvalidArgumentException
-    implements ExceptionInterface
+class InvalidStrategyException extends InvalidArgumentException implements ExceptionInterface
 {
-
 }

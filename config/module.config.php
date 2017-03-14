@@ -38,26 +38,26 @@
  * @link        http://juriansluiman.nl
  */
 
-return array(
-    'slm_locale' => array(
-        'strategies' => array()
-    ),
+return [
+    'slm_locale' => [
+        'strategies' => [],
+    ],
 
-    'service_manager' => array(
-        'factories'  => array(
+    'service_manager' => [
+        'factories'  => [
             'SlmLocale\Strategy\StrategyPluginManager' => 'SlmLocale\Strategy\Factory\StrategyPluginManagerFactory',
-            'SlmLocale\Locale\Detector' => 'SlmLocale\Service\DetectorFactory',
-        ),
-    ),
+            'SlmLocale\Locale\Detector'                => 'SlmLocale\Service\DetectorFactory',
+        ],
+    ],
 
-    'view_helpers' => array(
-        'aliases' => array(
+    'view_helpers' => [
+        'aliases' => [
             'localeUrl'  => 'SlmLocale\View\Helper\LocaleUrl',
             'localeMenu' => 'SlmLocale\View\Helper\LocaleMenu',
-        ),
-        'factories' => array(
+        ],
+        'factories' => [
             'SlmLocale\View\Helper\LocaleUrl'  => 'SlmLocale\Service\LocaleUrlViewHelperFactory',
             'SlmLocale\View\Helper\LocaleMenu' => 'SlmLocale\Service\LocaleMenuViewHelperFactory',
-        ),
-    ),
-);
+        ],
+    ],
+];

@@ -48,7 +48,7 @@ class HttpAcceptLanguageStrategy extends AbstractStrategy
     public function detect(LocaleEvent $event)
     {
         $request = $event->getRequest();
-        if (!$this->isHttpRequest($request)) {
+        if (! $this->isHttpRequest($request)) {
             return;
         }
 
@@ -63,7 +63,7 @@ class HttpAcceptLanguageStrategy extends AbstractStrategy
             foreach ($locales as $locale) {
                 $locale = $locale->getLanguage();
 
-                if (!$lookup) {
+                if (! $lookup) {
                     return $locale;
                 }
 

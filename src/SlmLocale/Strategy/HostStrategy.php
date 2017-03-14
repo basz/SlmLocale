@@ -42,7 +42,6 @@ namespace SlmLocale\Strategy;
 
 use SlmLocale\LocaleEvent;
 use SlmLocale\Strategy\Exception\InvalidArgumentException;
-use Zend\Uri\Uri;
 
 class HostStrategy extends AbstractStrategy
 {
@@ -53,7 +52,7 @@ class HostStrategy extends AbstractStrategy
     protected $aliases;
     protected $redirect_to_canonical;
 
-    public function setOptions(array $options = array())
+    public function setOptions(array $options = [])
     {
         if (array_key_exists('domain', $options)) {
             $this->domain = (string) $options['domain'];
@@ -84,16 +83,16 @@ class HostStrategy extends AbstractStrategy
     public function detect(LocaleEvent $event)
     {
         $request = $event->getRequest();
-        if (!$this->isHttpRequest($request)) {
+        if (! $this->isHttpRequest($request)) {
             return;
         }
 
-        if (!$event->hasSupported()) {
+        if (! $event->hasSupported()) {
             return;
         }
 
         $domain = $this->getDomain();
-        if (!null === $domain) {
+        if (! null === $domain) {
             throw new Exception\InvalidArgumentException(
                 'The strategy must be configured with a domain option'
             );
@@ -109,7 +108,7 @@ class HostStrategy extends AbstractStrategy
         $pattern = sprintf('@%s@', $pattern);
         $result  = preg_match($pattern, $host, $matches);
 
-        if (!$result) {
+        if (! $result) {
             return;
         }
 
@@ -120,7 +119,7 @@ class HostStrategy extends AbstractStrategy
             $locale = $aliases[$locale];
         }
 
-        if (!in_array($locale, $event->getSupported())) {
+        if (! in_array($locale, $event->getSupported())) {
             return;
         }
 
@@ -130,11 +129,11 @@ class HostStrategy extends AbstractStrategy
     public function found(LocaleEvent $event)
     {
         $request = $event->getRequest();
-        if (!$this->isHttpRequest($request)) {
+        if (! $this->isHttpRequest($request)) {
             return;
         }
 
-        if (!$event->hasSupported()) {
+        if (! $event->hasSupported()) {
             return;
         }
 
@@ -144,7 +143,7 @@ class HostStrategy extends AbstractStrategy
         }
 
         // By default, use the alias to redirect to
-        if (!$this->redirectToCanonical()) {
+        if (! $this->redirectToCanonical()) {
             $locale = $this->getAliasForLocale($locale);
         }
 
@@ -180,19 +179,19 @@ class HostStrategy extends AbstractStrategy
         $locale = $event->getLocale();
 
         foreach ($this->getAliases() as $alias => $item) {
-            if ($item == $locale) {
+            if ($item === $locale) {
                 $tld = $alias;
             }
         }
 
-        if (!isset($tld)) {
+        if (! isset($tld)) {
             throw new InvalidArgumentException('No matching tld found for current locale');
         }
 
-        $port = $event->getRequest()->getServer()->get('SERVER_PORT');
+        $port     = $event->getRequest()->getServer()->get('SERVER_PORT');
         $hostname = str_replace(self::LOCALE_KEY, $tld, $this->getDomain());
 
-        if (null !== $port && 80 != $port) {
+        if (null !== $port && 80 !== $port) {
             $hostname .= ':' . $port;
         }
 

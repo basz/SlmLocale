@@ -58,7 +58,7 @@ class QueryStrategy extends AbstractStrategy
      */
     protected $query_key;
 
-    public function setOptions(array $options = array())
+    public function setOptions(array $options = [])
     {
         if (array_key_exists('query_key', $options)) {
             $this->query_key = (string) $options['query_key'];
@@ -75,16 +75,16 @@ class QueryStrategy extends AbstractStrategy
     }
 
     /**
-     * {@inheritdoc }
+     * {@inheritdoc}
      */
     public function detect(LocaleEvent $event)
     {
         $request = $event->getRequest();
-        if (!$this->isHttpRequest($request)) {
+        if (! $this->isHttpRequest($request)) {
             return;
         }
 
-        if (!$event->hasSupported()) {
+        if (! $event->hasSupported()) {
             return;
         }
 
@@ -93,7 +93,7 @@ class QueryStrategy extends AbstractStrategy
             return;
         }
 
-        if (!in_array($locale, $event->getSupported())) {
+        if (! in_array($locale, $event->getSupported())) {
             return;
         }
 
@@ -114,6 +114,7 @@ class QueryStrategy extends AbstractStrategy
         $query[$key] = $locale;
 
         $uri->setQuery($query);
+
         return $uri;
     }
 }

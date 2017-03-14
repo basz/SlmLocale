@@ -67,7 +67,7 @@ class LocaleMenuViewHelperFactory implements FactoryInterface
     {
         $detector = $container->get('SlmLocale\Locale\Detector');
 
-        $helper = new LocaleMenu;
+        $helper = new LocaleMenu();
         $helper->setDetector($detector);
 
         return $helper;

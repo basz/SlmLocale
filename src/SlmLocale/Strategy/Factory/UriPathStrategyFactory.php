@@ -67,6 +67,7 @@ class UriPathStrategyFactory implements FactoryInterface
     {
         $strategy = new UriPathStrategy($container->get('router'));
         $strategy->setServiceLocator($container);
+
         return $strategy;
     }
 

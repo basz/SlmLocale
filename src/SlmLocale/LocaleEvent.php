@@ -66,6 +66,7 @@ class LocaleEvent extends Event
     {
         $this->setParam('request', $request);
         $this->request = $request;
+
         return $this;
     }
 
@@ -78,6 +79,7 @@ class LocaleEvent extends Event
     {
         $this->setParam('response', $response);
         $this->response = $response;
+
         return $this;
     }
 
@@ -90,6 +92,7 @@ class LocaleEvent extends Event
     {
         $this->setParam('supported', $supported);
         $this->supported = $supported;
+
         return $this;
     }
 
@@ -107,6 +110,7 @@ class LocaleEvent extends Event
     {
         $this->setParam('locale', $locale);
         $this->locale = $locale;
+
         return $this;
     }
 
@@ -130,6 +134,7 @@ class LocaleEvent extends Event
     {
         $this->setParam('uri', $uri);
         $this->uri = $uri;
+
         return $this;
     }
 }

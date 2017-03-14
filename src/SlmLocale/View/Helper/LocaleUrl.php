@@ -42,8 +42,8 @@ namespace SlmLocale\View\Helper;
 use SlmLocale\Locale\Detector;
 use Zend\Http\Request;
 use Zend\Mvc\Router\Http\RouteMatch;
-use Zend\View\Helper\AbstractHelper;
 use Zend\View\Exception\RuntimeException;
+use Zend\View\Helper\AbstractHelper;
 
 class LocaleUrl extends AbstractHelper
 {
@@ -95,9 +95,9 @@ class LocaleUrl extends AbstractHelper
      * @throws RuntimeException  If no RouteMatch was provided
      * @throws RuntimeException  If RouteMatch didn't contain a matched route name
      */
-    public function __invoke($locale, $name = null, $params = array(), $options = array(), $reuseMatchedParams = true)
+    public function __invoke($locale, $name = null, $params = [], $options = [], $reuseMatchedParams = true)
     {
-        if (!$this->getDetector()) {
+        if (! $this->getDetector()) {
             throw new RuntimeException('To assemble an url, a detector is required');
         }
 
@@ -106,8 +106,7 @@ class LocaleUrl extends AbstractHelper
          * route match is present, we've a 404 and grab the path from the request object.
          */
         if ($this->getRouteMatch()) {
-
-            if (!isset($options['locale'])) {
+            if (! isset($options['locale'])) {
                 $options['locale'] = $locale;
             }
 
