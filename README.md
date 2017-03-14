@@ -1,6 +1,6 @@
 SlmLocale
 ===
-[![Build Status](https://travis-ci.org/juriansluiman/SlmLocale.png)](https://travis-ci.org/juriansluiman/SlmLocale)
+[![Build Status](https://travis-ci.org/basz/SlmLocale.svg?branch=master)](https://travis-ci.org/basz/SlmLocale)
 [![Latest Stable Version](https://poser.pugx.org/slm/locale/v/stable.png)](https://packagist.org/packages/slm/locale)
 
 Created by Jurian Sluiman

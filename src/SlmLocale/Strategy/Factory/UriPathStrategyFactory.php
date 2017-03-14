@@ -38,17 +38,17 @@
  * @link        http://juriansluiman.nl
  */
 
-namespace SlmLocale\Service;
+namespace SlmLocale\Strategy\Factory;
 
 use Interop\Container\ContainerInterface;
 use Interop\Container\Exception\ContainerException;
-use SlmLocale\View\Helper\LocaleUrl;
+use SlmLocale\Strategy\UriPathStrategy;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use Zend\ServiceManager\Exception\ServiceNotFoundException;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class LocaleUrlViewHelperFactory implements FactoryInterface
+class UriPathStrategyFactory implements FactoryInterface
 {
     /**
      * Create an object
@@ -65,21 +65,20 @@ class LocaleUrlViewHelperFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $detector = $container->get('SlmLocale\Locale\Detector');
-        $request  = $container->get('Request');
-        $app      = $container->get('Application');
-
-        $match  = $app->getMvcEvent()->getRouteMatch();
-        $helper = new LocaleUrl($detector, $request, $match);
-        return $helper;
+        $strategy = new UriPathStrategy($container->get('router'));
+        $strategy->setServiceLocator($container);
+        return $strategy;
     }
 
     /**
-     * @param  ServiceLocatorInterface $serviceLocator
-     * @return LocaleUrl
+     * Create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator
+     *
+     * @return mixed
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return $this($serviceLocator->getServiceLocator(), LocaleUrl::class);
+        return $this($serviceLocator, UriPathStrategy::class);
     }
 }

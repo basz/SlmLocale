@@ -40,26 +40,26 @@
 
 namespace SlmLocale\Service;
 
+use Interop\Container\ContainerInterface;
 use SlmLocale\Locale\Detector;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
-class DetectorFactory implements FactoryInterface
+class DetectorFactory
 {
     /**
-     * @param  ServiceLocatorInterface $serviceLocator
+     * @param  ContainerInterface $container
+     *
      * @return Detector
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container)
     {
-        $config = $serviceLocator->get('config');
+        $config = $container->get('config');
         $config = $config['slm_locale'];
 
         $detector = new Detector;
-        $events   = $serviceLocator->get('EventManager');
+        $events   = $container->get('EventManager');
         $detector->setEventManager($events);
 
-        $this->addStrategies($detector, $config['strategies'], $serviceLocator);
+        $this->addStrategies($detector, $config['strategies'], $container);
 
         if (array_key_exists('default', $config)) {
             $detector->setDefault($config['default']);
@@ -72,9 +72,9 @@ class DetectorFactory implements FactoryInterface
         return $detector;
     }
 
-    protected function addStrategies(Detector $detector, array $strategies, ServiceLocatorInterface $serviceLocator)
+    protected function addStrategies(Detector $detector, array $strategies, ContainerInterface $container)
     {
-        $plugins = $serviceLocator->get('SlmLocale\Strategy\StrategyPluginManager');
+        $plugins = $container->get('SlmLocale\Strategy\StrategyPluginManager');
 
         foreach ($strategies as $strategy) {
             if (is_string($strategy)) {

@@ -89,7 +89,7 @@ class Detector implements EventManagerAwareInterface
 
     public function addStrategy(StrategyInterface $strategy, $priority = 1)
     {
-        $this->getEventManager()->attachAggregate($strategy, $priority);
+        $strategy->attach($this->getEventManager(), $priority);
     }
 
     public function getDefault()
@@ -130,9 +130,9 @@ class Detector implements EventManagerAwareInterface
         }
 
         $events  = $this->getEventManager();
-        $results = $events->trigger($event, function($r) {
+        $results = $events->triggerEventUntil(function($r) {
             return is_string($r);
-        });
+        }, $event);
 
         if ($results->stopped()) {
             $locale = $results->last();
@@ -157,11 +157,11 @@ class Detector implements EventManagerAwareInterface
              * a Location header) and as such, the response must be returned
              * instead of the locale.
              */
-            $events->trigger($event, function ($r) use (&$return) {
+            $events->triggerEventUntil(function ($r) use (&$return) {
                 if ($r instanceof ResponseInterface) {
                     $return = true;
                 }
-            });
+            }, $event);
 
             if ($return) {
                 return $response;

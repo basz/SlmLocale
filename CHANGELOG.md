@@ -1,5 +1,9 @@
 Changelog
 ===
+dev-master
+---
+
+ * Updated to support Zendframwork Service manager v3 and Zendframwork Event Manager v3
 
 v0.1.0
 ---
