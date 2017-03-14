@@ -1,5 +1,10 @@
 language: php
 
+cache:
+  directories:
+    - $HOME/.composer/cache
+    - $HOME/.php-cs-fixer
+
 matrix:
   include:
     - php: 5.5
@@ -34,4 +39,5 @@ before_script:
   - composer update --prefer-source $DEPENDENCIES
 
 script:
+  - php-cs-fixer fix -v --diff --dry-run
   - phpunit --configuration tests/phpunit.xml
