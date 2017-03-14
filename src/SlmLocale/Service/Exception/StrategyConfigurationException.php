@@ -43,8 +43,6 @@ namespace SlmLocale\Service\Exception;
 use RuntimeException;
 use SlmLocale\Exception\ExceptionInterface;
 
-class StrategyConfigurationException
-    extends RuntimeException
-    implements ExceptionInterface
+class StrategyConfigurationException extends RuntimeException implements ExceptionInterface
 {
 }

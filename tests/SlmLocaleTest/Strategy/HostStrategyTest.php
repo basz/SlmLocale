@@ -24,7 +24,7 @@ class HostStrategyTest extends TestCase
     {
         $event = new LocaleEvent();
         $event->setRequest($this->getMockForAbstractClass('Zend\Http\Request'));
-        $event->setSupported(array());
+        $event->setSupported([]);
 
         $strategy = new HostStrategy();
         $this->assertNull($strategy->detect($event));
@@ -37,10 +37,10 @@ class HostStrategyTest extends TestCase
     {
         $event = new LocaleEvent();
         $event->setRequest($this->getMockForAbstractClass('Zend\Http\Request'));
-        $event->setSupported(array('en_GB', 'de_DE'));
+        $event->setSupported(['en_GB', 'de_DE']);
 
         $strategy = new HostStrategy();
-        $strategy->setOptions(array('domain' => 'test'));
+        $strategy->setOptions(['domain' => 'test']);
         $this->assertNull($strategy->detect($event));
     }
 
@@ -50,13 +50,13 @@ class HostStrategyTest extends TestCase
         $request->setUri('http://test.fr');
         $event = new LocaleEvent();
         $event->setRequest($request);
-        $event->setSupported(array('en_GB', 'de_DE'));
+        $event->setSupported(['en_GB', 'de_DE']);
 
         $strategy = new HostStrategy();
-        $strategy->setOptions(array(
-            'domain' => 'test.:locale',
-            'aliases' => array('de' => 'de_DE', 'co.uk' => 'en_GB')
-        ));
+        $strategy->setOptions([
+            'domain'  => 'test.:locale',
+            'aliases' => ['de' => 'de_DE', 'co.uk' => 'en_GB'],
+        ]);
         $result = $strategy->detect($event);
 
         $this->assertNull($result);
@@ -68,13 +68,13 @@ class HostStrategyTest extends TestCase
         $request->setUri('http://test.de');
         $event = new LocaleEvent();
         $event->setRequest($request);
-        $event->setSupported(array('en_GB', 'de_DE'));
+        $event->setSupported(['en_GB', 'de_DE']);
 
         $strategy = new HostStrategy();
-        $strategy->setOptions(array(
-            'domain' => 'test.:locale',
-            'aliases' => array('de' => 'de_DE', 'co.uk' => 'en_GB')
-        ));
+        $strategy->setOptions([
+            'domain'  => 'test.:locale',
+            'aliases' => ['de' => 'de_DE', 'co.uk' => 'en_GB'],
+        ]);
         $result = $strategy->detect($event);
 
         $this->assertSame('de_DE', $result);
@@ -82,7 +82,7 @@ class HostStrategyTest extends TestCase
 
     public function testAssemble()
     {
-        $params = new Parameters(array('SERVER_NAME' => 'test.co.uk'));
+        $params  = new Parameters(['SERVER_NAME' => 'test.co.uk']);
         $request = new Request();
         $request->setServer($params);
 
@@ -92,10 +92,10 @@ class HostStrategyTest extends TestCase
         $event->setRequest($request);
 
         $strategy = new HostStrategy();
-        $strategy->setOptions(array(
-            'domain' => 'test.:locale',
-            'aliases' => array('de' => 'de_DE', 'co.uk' => 'en_GB')
-        ));
+        $strategy->setOptions([
+            'domain'  => 'test.:locale',
+            'aliases' => ['de' => 'de_DE', 'co.uk' => 'en_GB'],
+        ]);
 
         $result = $strategy->assemble($event)->getHost();
         $this->assertSame('test.de', $result);
@@ -103,7 +103,7 @@ class HostStrategyTest extends TestCase
 
     public function testAssembleWithPort()
     {
-        $params = new Parameters(array('SERVER_NAME' => 'test.co.uk', 'SERVER_PORT' => 8080));
+        $params  = new Parameters(['SERVER_NAME' => 'test.co.uk', 'SERVER_PORT' => 8080]);
         $request = new Request();
         $request->setServer($params);
 
@@ -113,10 +113,10 @@ class HostStrategyTest extends TestCase
         $event->setRequest($request);
 
         $strategy = new HostStrategy();
-        $strategy->setOptions(array(
-            'domain' => 'test.:locale',
-            'aliases' => array('de' => 'de_DE', 'co.uk' => 'en_GB')
-        ));
+        $strategy->setOptions([
+            'domain'  => 'test.:locale',
+            'aliases' => ['de' => 'de_DE', 'co.uk' => 'en_GB'],
+        ]);
 
         $result = $strategy->assemble($event)->getHost();
         $this->assertSame('test.de:8080', $result);

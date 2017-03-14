@@ -42,8 +42,8 @@ namespace SlmLocale;
 
 use Locale;
 
-use Zend\ModuleManager\Feature;
 use Zend\EventManager\EventInterface;
+use Zend\ModuleManager\Feature;
 use Zend\Mvc\MvcEvent;
 use Zend\Stdlib\ResponseInterface;
 
@@ -54,13 +54,13 @@ class Module implements
 {
     public function getAutoloaderConfig()
     {
-        return array(
-            'Zend\Loader\StandardAutoloader' => array(
-                'namespaces' => array(
+        return [
+            'Zend\Loader\StandardAutoloader' => [
+                'namespaces' => [
                     __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
 
     public function getConfig()
@@ -89,7 +89,7 @@ class Module implements
              * possible.
              */
             $em = $app->getEventManager();
-            $em->attach(MvcEvent::EVENT_ROUTE, function($e) use ($result) {
+            $em->attach(MvcEvent::EVENT_ROUTE, function ($e) use ($result) {
                 return $result;
             }, PHP_INT_MAX);
         }

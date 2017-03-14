@@ -56,9 +56,9 @@ abstract class AbstractStrategy extends AbstractListenerAggregate implements Str
      */
     public function attach(EventManagerInterface $events, $priority = 1)
     {
-        $this->listeners[] = $events->attach(LocaleEvent::EVENT_DETECT,    array($this, 'detect'), $priority);
-        $this->listeners[] = $events->attach(LocaleEvent::EVENT_FOUND,     array($this, 'found'),  $priority);
-        $this->listeners[] = $events->attach(LocaleEvent::EVENT_ASSEMBLE,  array($this, 'assemble'),  $priority);
+        $this->listeners[] = $events->attach(LocaleEvent::EVENT_DETECT, [$this, 'detect'], $priority);
+        $this->listeners[] = $events->attach(LocaleEvent::EVENT_FOUND, [$this, 'found'], $priority);
+        $this->listeners[] = $events->attach(LocaleEvent::EVENT_ASSEMBLE, [$this, 'assemble'], $priority);
     }
 
     public function detect(LocaleEvent $event)

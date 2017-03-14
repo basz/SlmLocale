@@ -41,8 +41,8 @@ namespace SlmLocaleTest\Locale;
 
 use PHPUnit_Framework_TestCase as TestCase;
 
-use SlmLocale\Strategy\HttpAcceptLanguageStrategy;
 use SlmLocale\LocaleEvent;
+use SlmLocale\Strategy\HttpAcceptLanguageStrategy;
 
 use Zend\Http\Header\AcceptLanguage;
 use Zend\Http\Request as HttpRequest;
@@ -54,9 +54,9 @@ class HttpAcceptLanguageStrategyTest extends TestCase
 
     public function setUp()
     {
-        $this->strategy = new HttpAcceptLanguageStrategy;
-        $this->event    = new LocaleEvent;
-        $this->event->setRequest(new HttpRequest);
+        $this->strategy = new HttpAcceptLanguageStrategy();
+        $this->event    = new LocaleEvent();
+        $this->event->setRequest(new HttpRequest());
     }
 
     public function testReturnsVoidWhenHeaderIsNotPresent()
@@ -73,7 +73,7 @@ class HttpAcceptLanguageStrategyTest extends TestCase
         $strategy = $this->strategy;
         $event    = $this->event;
 
-        $header   = new AcceptLanguage;
+        $header   = new AcceptLanguage();
         $header->addLanguage('foo');
 
         $event->getRequest()
@@ -89,7 +89,7 @@ class HttpAcceptLanguageStrategyTest extends TestCase
         $strategy = $this->strategy;
         $event    = $this->event;
 
-        $header   = new AcceptLanguage;
+        $header   = new AcceptLanguage();
         $header->addLanguage('foo', 0.6);
         $header->addLanguage('bar', 1);
         $header->addLanguage('baz', 0.8);
@@ -107,7 +107,7 @@ class HttpAcceptLanguageStrategyTest extends TestCase
         $strategy = $this->strategy;
         $event    = $this->event;
 
-        $header   = new AcceptLanguage;
+        $header   = new AcceptLanguage();
         $header->addLanguage('foo', 1);
         $header->addLanguage('bar', 0.8);
         $header->addLanguage('baz', 0.6);
@@ -116,18 +116,18 @@ class HttpAcceptLanguageStrategyTest extends TestCase
               ->getHeaders()
               ->addHeader($header);
 
-        $event->setSupported(array('bar'));
+        $event->setSupported(['bar']);
 
         $locale = $strategy->detect($event);
         $this->assertEquals('bar', $locale);
     }
-    
+
     public function testSelectsLanguageViaLocaleLookup()
     {
         $strategy = $this->strategy;
         $event    = $this->event;
 
-        $header   = new AcceptLanguage;
+        $header   = new AcceptLanguage();
         $header->addLanguage('de-DE', 1);
         $header->addLanguage('en-US', 0.8);
         $header->addLanguage('en', 0.6);
@@ -136,9 +136,9 @@ class HttpAcceptLanguageStrategyTest extends TestCase
             ->getHeaders()
             ->addHeader($header);
 
-        $event->setSupported(array('en', 'de'));
+        $event->setSupported(['en', 'de']);
 
         $locale = $strategy->detect($event);
         $this->assertEquals('de', $locale);
-    }    
+    }
 }

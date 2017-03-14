@@ -44,11 +44,11 @@ use PHPUnit_Framework_TestCase as TestCase;
 use Zend\EventManager\EventManager;
 use Zend\ServiceManager\ServiceManager;
 
-class DetectorFactoryTest extends TestCase
+class DetectFactoryTest extends TestCase
 {
     public function testFactoryInstantiatesDetector()
     {
-        $sl = $this->getServiceLocator();
+        $sl       = $this->getServiceLocator();
         $detector = $sl->get('SlmLocale\Locale\Detector');
 
         $this->assertInstanceOf('SlmLocale\Locale\Detector', $detector);
@@ -56,7 +56,7 @@ class DetectorFactoryTest extends TestCase
 
     public function testDefaultLocaleIsOptional()
     {
-        $sl = $this->getServiceLocator();
+        $sl       = $this->getServiceLocator();
         $detector = $sl->get('SlmLocale\Locale\Detector');
 
         $this->assertNull($detector->getDefault());
@@ -64,9 +64,9 @@ class DetectorFactoryTest extends TestCase
 
     public function testDefaultLocaleIsSet()
     {
-        $sl = $this->getServiceLocator(array(
-            'default' => 'Foo'
-        ));
+        $sl = $this->getServiceLocator([
+            'default' => 'Foo',
+        ]);
         $detector = $sl->get('SlmLocale\Locale\Detector');
 
         $this->assertEquals('Foo', $detector->getDefault());
@@ -74,7 +74,7 @@ class DetectorFactoryTest extends TestCase
 
     public function testSupportedLocalesAreOptional()
     {
-        $sl = $this->getServiceLocator();
+        $sl       = $this->getServiceLocator();
         $detector = $sl->get('SlmLocale\Locale\Detector');
 
         $this->assertNull($detector->getSupported());
@@ -82,25 +82,26 @@ class DetectorFactoryTest extends TestCase
 
     public function testSupportedLocalesAreSet()
     {
-        $sl = $this->getServiceLocator(array(
-            'supported' => array('Foo', 'Bar')
-        ));
+        $sl = $this->getServiceLocator([
+            'supported' => ['Foo', 'Bar'],
+        ]);
         $detector = $sl->get('SlmLocale\Locale\Detector');
 
-        $this->assertEquals(array('Foo', 'Bar'), $detector->getSupported());
+        $this->assertEquals(['Foo', 'Bar'], $detector->getSupported());
     }
 
     public function testUseServiceLocatorToInstantiateStrategy()
     {
-        $sl = $this->getServiceLocator(array(
-            'strategies' => array('TestStrategy')
-        ));
+        $sl = $this->getServiceLocator([
+            'strategies' => ['TestStrategy'],
+        ]);
 
         $self    = $this;
         $called  = false;
         $plugins = $sl->get('SlmLocale\Strategy\StrategyPluginManager');
-        $plugins->setFactory('TestStrategy', function() use ($self, &$called) {
+        $plugins->setFactory('TestStrategy', function () use ($self, &$called) {
             $called = true;
+
             return $self->getMock('SlmLocale\Strategy\StrategyInterface');
         });
 
@@ -110,21 +111,23 @@ class DetectorFactoryTest extends TestCase
 
     public function testConfigurationCanHoldMultipleStrategies()
     {
-        $sl = $this->getServiceLocator(array(
-            'strategies' => array('TestStrategy1', 'TestStrategy2')
-        ));
+        $sl = $this->getServiceLocator([
+            'strategies' => ['TestStrategy1', 'TestStrategy2'],
+        ]);
 
         $self    = $this;
         $called1 = false;
         $plugins = $sl->get('SlmLocale\Strategy\StrategyPluginManager');
-        $plugins->setFactory('TestStrategy1', function() use ($self, &$called1) {
+        $plugins->setFactory('TestStrategy1', function () use ($self, &$called1) {
             $called1 = true;
+
             return $self->getMock('SlmLocale\Strategy\StrategyInterface');
         });
 
         $called2 = false;
-        $plugins->setFactory('TestStrategy2', function() use ($self, &$called2) {
+        $plugins->setFactory('TestStrategy2', function () use ($self, &$called2) {
             $called2 = true;
+
             return $self->getMock('SlmLocale\Strategy\StrategyInterface');
         });
 
@@ -135,17 +138,18 @@ class DetectorFactoryTest extends TestCase
 
     public function testStrategyConfigurationCanBeAnArray()
     {
-        $sl = $this->getServiceLocator(array(
-            'strategies' => array(
-                array('name' => 'TestStrategy')
-            ),
-        ));
+        $sl = $this->getServiceLocator([
+            'strategies' => [
+                ['name' => 'TestStrategy'],
+            ],
+        ]);
 
         $self    = $this;
         $called  = false;
         $plugins = $sl->get('SlmLocale\Strategy\StrategyPluginManager');
-        $plugins->setFactory('TestStrategy', function() use ($self, &$called) {
+        $plugins->setFactory('TestStrategy', function () use ($self, &$called) {
             $called = true;
+
             return $self->getMock('SlmLocale\Strategy\StrategyInterface');
         });
 
@@ -155,14 +159,14 @@ class DetectorFactoryTest extends TestCase
 
     public function testStrategyCanBeAttachedWithPriorities()
     {
-        $sl = $this->getServiceLocator(array(
-            'strategies' => array(
-                array('name' => 'TestStrategy', 'priority' => 100)
-            ),
-        ));
+        $sl = $this->getServiceLocator([
+            'strategies' => [
+                ['name' => 'TestStrategy', 'priority' => 100],
+            ],
+        ]);
         $em = $sl->get('EventManager');
 
-        $strategy = $this->getMock('SlmLocale\Strategy\StrategyInterface', array('attach', 'detach'));
+        $strategy = $this->getMock('SlmLocale\Strategy\StrategyInterface', ['attach', 'detach']);
         $strategy->expects($this->once())
                  ->method('attach')
                  ->with($em, 100);
@@ -174,12 +178,12 @@ class DetectorFactoryTest extends TestCase
 
     public function testStrategyCanBeInstantiatedWithOptions()
     {
-        $sl = $this->getServiceLocator(array(
-            'strategies' => array(
-                array('name' => 'TestStrategy', 'options' => 'Foo')
-            ),
-        ));
-        $strategy = $this->getMock('SlmLocale\Strategy\StrategyInterface', array('attach', 'detach', 'setOptions'));
+        $sl = $this->getServiceLocator([
+            'strategies' => [
+                ['name' => 'TestStrategy', 'options' => 'Foo'],
+            ],
+        ]);
+        $strategy = $this->getMock('SlmLocale\Strategy\StrategyInterface', ['attach', 'detach', 'setOptions']);
         $strategy->expects($this->once())
                  ->method('setOptions')
                  ->with('Foo');
@@ -189,17 +193,17 @@ class DetectorFactoryTest extends TestCase
         $detector = $sl->get('SlmLocale\Locale\Detector');
     }
 
-    public function getServiceLocator(array $config = array())
+    public function getServiceLocator(array $config = [])
     {
-        $config = array(
-            'slm_locale' => $config + array(
-                'strategies' => array()
-            ),
-        );
-        $serviceLocator = new ServiceManager;
+        $config = [
+            'slm_locale' => $config + [
+                'strategies' => [],
+            ],
+        ];
+        $serviceLocator = new ServiceManager();
         $serviceLocator->setFactory('SlmLocale\Locale\Detector', 'SlmLocale\Service\DetectorFactory');
         $serviceLocator->setFactory('SlmLocale\Strategy\StrategyPluginManager', 'SlmLocale\Strategy\Factory\StrategyPluginManagerFactory');
-        $serviceLocator->setService('EventManager', new EventManager);
+        $serviceLocator->setService('EventManager', new EventManager());
         $serviceLocator->setService('config', $config);
 
         return $serviceLocator;

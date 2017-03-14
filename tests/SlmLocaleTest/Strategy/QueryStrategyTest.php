@@ -41,8 +41,8 @@ namespace SlmLocaleTest\Locale;
 
 use PHPUnit_Framework_TestCase as TestCase;
 
-use SlmLocale\Strategy\QueryStrategy;
 use SlmLocale\LocaleEvent;
+use SlmLocale\Strategy\QueryStrategy;
 
 use Zend\Http\Request  as HttpRequest;
 use Zend\Http\Response as HttpResponse;
@@ -61,11 +61,11 @@ class QueryStrategyTest extends TestCase
 
     public function setUp()
     {
-        $this->strategy = new QueryStrategy;
-        $this->event    = new LocaleEvent;
+        $this->strategy = new QueryStrategy();
+        $this->event    = new LocaleEvent();
 
-        $request  = new HttpRequest;
-        $response = new HttpResponse;
+        $request  = new HttpRequest();
+        $response = new HttpResponse();
         $this->event->setRequest($request);
         $this->event->setResponse($response);
     }
@@ -98,10 +98,10 @@ class QueryStrategyTest extends TestCase
         $strategy = $this->strategy;
         $event    = $this->event;
 
-        $event->setSupported(array('locale'));
+        $event->setSupported(['locale']);
 
-        $request = $event->getRequest();
-        $query = $request->getQuery();
+        $request     = $event->getRequest();
+        $query       = $request->getQuery();
         $query->lang = 'locale';
         $request->setQuery($query);
 
@@ -114,11 +114,11 @@ class QueryStrategyTest extends TestCase
         $strategy = $this->strategy;
         $event    = $this->event;
 
-        $strategy->setOptions(array('query_key' => 'language'));
-        $event->setSupported(array('locale'));
+        $strategy->setOptions(['query_key' => 'language']);
+        $event->setSupported(['locale']);
 
-        $request = $event->getRequest();
-        $query = $request->getQuery();
+        $request         = $event->getRequest();
+        $query           = $request->getQuery();
         $query->language = 'locale';
         $request->setQuery($query);
 
@@ -164,7 +164,7 @@ class QueryStrategyTest extends TestCase
 
         $event->setLocale('en-US');
         $event->setUri($uri);
-        $strategy->setOptions(array('query_key' => 'language'));
+        $strategy->setOptions(['query_key' => 'language']);
         $strategy->assemble($event);
 
         $query    = $event->getUri()->getQuery();

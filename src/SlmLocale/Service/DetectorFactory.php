@@ -55,7 +55,7 @@ class DetectorFactory
         $config = $container->get('config');
         $config = $config['slm_locale'];
 
-        $detector = new Detector;
+        $detector = new Detector();
         $events   = $container->get('EventManager');
         $detector->setEventManager($events);
 
@@ -80,7 +80,6 @@ class DetectorFactory
             if (is_string($strategy)) {
                 $class = $plugins->get($strategy);
                 $detector->addStrategy($class);
-
             } elseif (is_array($strategy)) {
                 $name     = $strategy['name'];
                 $class    = $plugins->get($name);
@@ -95,7 +94,6 @@ class DetectorFactory
                 }
 
                 $detector->addStrategy($class, $priority);
-
             } else {
                 throw new Exception\StrategyConfigurationException(
                     'Strategy configuration must be a string or an array'

@@ -42,8 +42,8 @@ namespace SlmLocale\View\Helper;
 
 use Locale;
 use SlmLocale\Locale\Detector;
-use Zend\View\Helper\AbstractHelper;
 use Zend\View\Exception\RuntimeException;
+use Zend\View\Helper\AbstractHelper;
 
 class LocaleMenu extends AbstractHelper
 {
@@ -116,6 +116,7 @@ class LocaleMenu extends AbstractHelper
     public function setUlClass($class)
     {
         $this->class = $class;
+
         return $this;
     }
 
@@ -135,6 +136,7 @@ class LocaleMenu extends AbstractHelper
         $this->checkLocaleMethod($titleMethod);
 
         $this->titleMethod = $titleMethod;
+
         return $this;
     }
 
@@ -152,6 +154,7 @@ class LocaleMenu extends AbstractHelper
     public function setTitleInCurrentLocale($flag)
     {
         $this->titleInCurrentLocale = (bool) $flag;
+
         return $this;
     }
 
@@ -171,6 +174,7 @@ class LocaleMenu extends AbstractHelper
         $this->checkLocaleMethod($labelMethod);
 
         $this->labelMethod = $labelMethod;
+
         return $this;
     }
 
@@ -188,6 +192,7 @@ class LocaleMenu extends AbstractHelper
     public function setLabelInCurrentLocale($flag)
     {
         $this->labelInCurrentLocale = (bool) $flag;
+
         return $this;
     }
 
@@ -205,6 +210,7 @@ class LocaleMenu extends AbstractHelper
     public function setOmitCurrent($omitCurrent)
     {
         $this->omitCurrent = (bool) $omitCurrent;
+
         return $this;
     }
 
@@ -229,13 +235,13 @@ class LocaleMenu extends AbstractHelper
      */
     public function __toString()
     {
-        if (!($detector = $this->getDetector())) {
+        if (! ($detector = $this->getDetector())) {
             throw new RuntimeException('To assemble an url, a detector is required');
         }
 
         $list     = '';
         $current  = Locale::getDefault();
-        foreach($detector->getSupported() as $locale) {
+        foreach ($detector->getSupported() as $locale) {
             if ($this->omitCurrent() && $current === $locale) {
                 continue;
             }
@@ -277,7 +283,7 @@ class LocaleMenu extends AbstractHelper
      */
     protected function checkLocaleMethod($method)
     {
-        $options = array(
+        $options = [
             'displayLanguage',
             'displayName',
             'displayRegion',
@@ -285,10 +291,10 @@ class LocaleMenu extends AbstractHelper
             'displayVariant',
             'primaryLanguage',
             'region',
-            'script'
-        );
+            'script',
+        ];
 
-        if (!in_array($method, $options)) {
+        if (! in_array($method, $options)) {
             throw new RuntimeException(sprintf(
                 'Unknown method "%s" for Locale, expecting one of these: %s.',
                 $method,
@@ -309,9 +315,9 @@ class LocaleMenu extends AbstractHelper
     {
         $callback = sprintf('\Locale::get%s', ucfirst($property));
 
-        $args = array($locale);
+        $args = [$locale];
 
-        if ($in_locale && !in_array($property, array('primaryLanguage', 'region', 'script'))) {
+        if ($in_locale && ! in_array($property, ['primaryLanguage', 'region', 'script'])) {
             $args[] = $in_locale;
         }
 

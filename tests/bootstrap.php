@@ -40,7 +40,7 @@
 
 chdir(__DIR__);
 $previousDir = '.';
-while (!is_dir($previousDir . DIRECTORY_SEPARATOR . 'vendor')) {
+while (! is_dir($previousDir . DIRECTORY_SEPARATOR . 'vendor')) {
     $appRoot = dirname(getcwd());
 
     if ($previousDir === $appRoot) {

@@ -71,6 +71,7 @@ class LocaleUrlViewHelperFactory implements FactoryInterface
 
         $match  = $app->getMvcEvent()->getRouteMatch();
         $helper = new LocaleUrl($detector, $request, $match);
+
         return $helper;
     }
 
