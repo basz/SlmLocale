@@ -230,13 +230,12 @@ class LocaleMenu extends AbstractHelper
     /**
      * @param array $options
      * @return string
-     * @throws RuntimeException
      * @todo implement add way to completely default rendering for maximum flexibility (see Zend\View\Helper\Navigation::renderPartial)
      */
     public function __toString()
     {
         if (! ($detector = $this->getDetector())) {
-            throw new RuntimeException('To assemble an url, a detector is required');
+            return sprintf('<ul%s></ul>', ($this->getUlClass()) ? sprintf(' class="%s"', $this->getUlClass()) : '');
         }
 
         $list     = '';
