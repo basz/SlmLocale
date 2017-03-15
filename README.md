@@ -2,6 +2,7 @@ SlmLocale
 ===
 [![Build Status](https://travis-ci.org/basz/SlmLocale.svg?branch=master)](https://travis-ci.org/basz/SlmLocale)
 [![Latest Stable Version](https://poser.pugx.org/slm/locale/v/stable.png)](https://packagist.org/packages/slm/locale)
+[![Coverage Status](https://coveralls.io/repos/github/basz/SlmLocale/badge.svg?branch=master)](https://coveralls.io/github/basz/SlmLocale?branch=master)
 
 Created by Jurian Sluiman
 
