@@ -42,6 +42,7 @@ namespace SlmLocale\Service;
 
 use Interop\Container\ContainerInterface;
 use Interop\Container\Exception\ContainerException;
+use SlmLocale\Locale\Detector;
 use SlmLocale\View\Helper\LocaleUrl;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use Zend\ServiceManager\Exception\ServiceNotFoundException;
@@ -65,7 +66,7 @@ class LocaleUrlViewHelperFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $detector = $container->get('SlmLocale\Locale\Detector');
+        $detector = $container->get(Detector::class);
         $request  = $container->get('Request');
         $app      = $container->get('Application');
 
