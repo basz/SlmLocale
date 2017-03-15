@@ -42,6 +42,7 @@ namespace SlmLocale;
 
 use Locale;
 
+use SlmLocale\Locale\Detector;
 use Zend\EventManager\EventInterface;
 use Zend\Loader\StandardAutoloader;
 use Zend\ModuleManager\Feature;
@@ -74,7 +75,7 @@ class Module implements
         $app = $e->getApplication();
         $sm  = $app->getServiceManager();
 
-        $detector = $sm->get(Locale\Detector::class);
+        $detector = $sm->get(Detector::class);
         $result   = $detector->detect($app->getRequest(), $app->getResponse());
 
         if ($result instanceof ResponseInterface) {
