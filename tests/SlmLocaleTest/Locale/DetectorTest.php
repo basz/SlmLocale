@@ -43,6 +43,8 @@ use PHPUnit_Framework_TestCase as TestCase;
 use SlmLocale\Locale\Detector;
 use SlmLocale\LocaleEvent;
 
+use SlmLocale\Strategy\AbstractStrategy;
+use SlmLocale\Strategy\StrategyInterface;
 use Zend\EventManager\EventManager;
 use Zend\Stdlib\Request;
 use Zend\Stdlib\Response;
@@ -55,7 +57,7 @@ class DetectorTest extends TestCase
 
         $self = $this;
         $this->setEventManager($detector, LocaleEvent::EVENT_DETECT, function ($e) use ($self) {
-            $self->assertInstanceOf('SlmLocale\LocaleEvent', $e);
+            $self->assertInstanceOf(LocaleEvent::class, $e);
         });
 
         $detector->detect(new Request(), new Response());
@@ -169,8 +171,8 @@ class DetectorTest extends TestCase
     public function testStrategyAttachesToEventManager()
     {
         $detector = new Detector();
-        $events   = $this->getMock('Zend\EventManager\EventManager');
-        $strategy = $this->getMock('SlmLocale\Strategy\StrategyInterface');
+        $events   = $this->getMock(EventManager::class);
+        $strategy = $this->getMock(StrategyInterface::class);
         $strategy->expects($this->once())
             ->method('attach')
             ->with($events);
@@ -184,12 +186,12 @@ class DetectorTest extends TestCase
         $detector  = new Detector();
         $this->setEventManager($detector);
 
-        $strategy1 = $this->getMock('SlmLocale\Strategy\AbstractStrategy', ['detect']);
+        $strategy1 = $this->getMock(AbstractStrategy::class, ['detect']);
         $strategy1->expects($this->once())
                   ->method('detect')
                   ->will($this->returnValue('Foo'));
 
-        $strategy2 = $this->getMock('SlmLocale\Strategy\AbstractStrategy', ['detect']);
+        $strategy2 = $this->getMock(AbstractStrategy::class, ['detect']);
         $strategy2->expects($this->never())
                   ->method('detect');
 
@@ -206,7 +208,7 @@ class DetectorTest extends TestCase
 
         $self = $this;
         $this->setEventManager($detector, LocaleEvent::EVENT_FOUND, function ($e) use ($self) {
-            $self->assertInstanceOf('SlmLocale\LocaleEvent', $e);
+            $self->assertInstanceOf(LocaleEvent::class, $e);
         });
 
         $detector->detect(new Request(), new Response());

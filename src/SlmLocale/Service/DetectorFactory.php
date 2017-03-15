@@ -42,6 +42,7 @@ namespace SlmLocale\Service;
 
 use Interop\Container\ContainerInterface;
 use SlmLocale\Locale\Detector;
+use SlmLocale\Strategy\StrategyPluginManager;
 
 class DetectorFactory
 {
@@ -74,7 +75,7 @@ class DetectorFactory
 
     protected function addStrategies(Detector $detector, array $strategies, ContainerInterface $container)
     {
-        $plugins = $container->get('SlmLocale\Strategy\StrategyPluginManager');
+        $plugins = $container->get(StrategyPluginManager::class);
 
         foreach ($strategies as $strategy) {
             if (is_string($strategy)) {

@@ -51,28 +51,27 @@ class StrategyPluginManager extends AbstractPluginManager
      * {@inheritdoc}
      */
     protected $aliases = [
-        'cookie'         => 'SlmLocale\Strategy\CookieStrategy',
-        'host'           => 'SlmLocale\Strategy\HostStrategy',
-        'acceptlanguage' => 'SlmLocale\Strategy\HttpAcceptLanguageStrategy',
-        'query'          => 'SlmLocale\Strategy\QueryStrategy',
-        'uripath'        => 'SlmLocale\Strategy\UriPathStrategy',
+        'cookie'         => CookieStrategy::class,
+        'host'           => HostStrategy::class,
+        'acceptlanguage' => HttpAcceptLanguageStrategy::class,
+        'query'          => QueryStrategy::class,
+        'uripath'        => UriPathStrategy::class,
     ];
 
     /**
      * {@inheritdoc}
      */
     protected $factories = [
-        'SlmLocale\Strategy\CookieStrategy'             => InvokableFactory::class,
-        'SlmLocale\Strategy\HostStrategy'               => InvokableFactory::class,
-        'SlmLocale\Strategy\HttpAcceptLanguageStrategy' => InvokableFactory::class,
-        'SlmLocale\Strategy\QueryStrategy'              => InvokableFactory::class,
-        'SlmLocale\Strategy\UriPathStrategy'            => InvokableFactory::class,
-        'slmlocalestrategycookiestrategy'               => InvokableFactory::class,
-        'slmlocalestrategyhoststrategy'                 => InvokableFactory::class,
-        'slmlocalestrategyhttpacceptlanguagestrategy'   => InvokableFactory::class,
-        'slmlocalestrategyquerystrategy'                => InvokableFactory::class,
-        'slmlocalestrategyuripathstrategy'              => InvokableFactory::class,
-
+        CookieStrategy::class                         => InvokableFactory::class,
+        HostStrategy::class                           => InvokableFactory::class,
+        HttpAcceptLanguageStrategy::class             => InvokableFactory::class,
+        QueryStrategy::class                          => InvokableFactory::class,
+        UriPathStrategy::class                        => InvokableFactory::class,
+        'slmlocalestrategycookiestrategy'             => InvokableFactory::class,
+        'slmlocalestrategyhoststrategy'               => InvokableFactory::class,
+        'slmlocalestrategyhttpacceptlanguagestrategy' => InvokableFactory::class,
+        'slmlocalestrategyquerystrategy'              => InvokableFactory::class,
+        'slmlocalestrategyuripathstrategy'            => InvokableFactory::class,
     ];
 
     /**
