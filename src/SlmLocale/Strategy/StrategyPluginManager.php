@@ -54,10 +54,15 @@ class StrategyPluginManager extends AbstractPluginManager
      */
     protected $aliases = array(
         'Cookie'         => CookieStrategy::class,
+        'cookie'         => CookieStrategy::class,
         'Host'           => HostStrategy::class,
+        'host'           => HostStrategy::class,
         'AcceptLanguage' => HttpAcceptLanguageStrategy::class,
+        'acceptlanguage' => HttpAcceptLanguageStrategy::class,
         'Query'          => QueryStrategy::class,
+        'query'          => QueryStrategy::class,
         'UriPath'        => UriPathStrategy::class,
+        'uripath'        => UriPathStrategy::class,
     );
 
     protected $factories = [
@@ -76,15 +81,6 @@ class StrategyPluginManager extends AbstractPluginManager
                 get_class($instance),
                 $this->instanceOf
             ));
-        }
-    }
-
-    public function validatePlugin($instance)
-    {
-        try {
-            $this->validate($instance);
-        } catch (InvalidServiceException $e) {
-            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
     }
 }

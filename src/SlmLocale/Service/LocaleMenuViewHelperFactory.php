@@ -53,9 +53,6 @@ class LocaleMenuViewHelperFactory
     {
         $detector = $container->get(SlmLocale\Locale\Detector::class);
 
-        $helper = new LocaleMenu;
-        $helper->setDetector($detector);
-
-        return $helper;
+        return new LocaleMenu($detector);
     }
 }

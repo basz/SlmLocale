@@ -18,7 +18,7 @@ class StrategyPluginManagerMigrationTest extends TestCase
 
     protected function getPluginManager()
     {
-        $serviceLocator = $this->getMock(ServiceManager::class);
+        $serviceLocator = $this->createMock(ServiceManager::class);
         $router = new TreeRouteStack();
         $serviceLocator
             ->method('get')

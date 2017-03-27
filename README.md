@@ -41,7 +41,7 @@ the root of your project:
 ```
 {
     "require": {
-        "slm/locale": "^1.0"
+        "slm/locale": "^2.0"
     }
 }
 ```

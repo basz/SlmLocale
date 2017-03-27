@@ -97,6 +97,14 @@ class LocaleMenu extends AbstractHelper
     /**
      * @param Detector $detector
      */
+    public function __construct(Detector $detector)
+    {
+        $this->detector = $detector;
+    }
+
+    /**
+     * @param Detector $detector
+     */
     public function setDetector($detector)
     {
         $this->detector = $detector;
@@ -112,6 +120,7 @@ class LocaleMenu extends AbstractHelper
 
     /**
      * @param string $class
+     * @return $this
      */
     public function setUlClass($class)
     {
@@ -128,7 +137,8 @@ class LocaleMenu extends AbstractHelper
     }
 
     /**
-     * @param string $itemTitleMethod
+     * @param string $titleMethod
+     * @return $this
      */
     public function setTitleMethod($titleMethod)
     {
@@ -148,6 +158,7 @@ class LocaleMenu extends AbstractHelper
 
     /**
      * @param boolean $flag
+     * @return $this
      */
     public function setTitleInCurrentLocale($flag)
     {
@@ -165,6 +176,7 @@ class LocaleMenu extends AbstractHelper
 
     /**
      * @param string $labelMethod
+     * @return $this
      */
     public function setLabelMethod($labelMethod)
     {
@@ -184,6 +196,7 @@ class LocaleMenu extends AbstractHelper
 
     /**
      * @param boolean $flag
+     * @return $this
      */
     public function setLabelInCurrentLocale($flag)
     {
@@ -201,6 +214,7 @@ class LocaleMenu extends AbstractHelper
 
     /**
      * @param boolean $omitCurrent
+     * @return $this
      */
     public function setOmitCurrent($omitCurrent)
     {
@@ -222,7 +236,6 @@ class LocaleMenu extends AbstractHelper
     }
 
     /**
-     * @param array $options
      * @return string
      * @throws RuntimeException
      * @todo implement add way to completely default rendering for maximum flexibility (see Zend\View\Helper\Navigation::renderPartial)
