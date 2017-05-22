@@ -95,6 +95,24 @@ class DetectFactoryTest extends TestCase
         $this->assertEquals(['Foo', 'Bar'], $detector->getSupported());
     }
 
+    public function testLocaleMappingsAreOptional()
+    {
+        $sl = $this->getServiceLocator();
+        $detector = $sl->get('SlmLocale\Locale\Detector');
+
+        $this->assertNull($detector->getMappings());
+    }
+
+    public function testLocaleMappingsAreSet()
+    {
+        $sl = $this->getServiceLocator(array(
+            'mappings' => array('Foo' => 'Bar')
+        ));
+        $detector = $sl->get('SlmLocale\Locale\Detector');
+
+        $this->assertEquals(array('Foo' => 'Bar'), $detector->getMappings());
+    }
+
     public function testUseServiceLocatorToInstantiateStrategy()
     {
         $sl = $this->getServiceLocator([

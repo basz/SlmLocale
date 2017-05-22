@@ -168,6 +168,30 @@ class DetectorTest extends TestCase
         $this->assertFalse($detector->hasSupported());
     }
 
+    public function testUseMappedLocaleWhenMappingIsDefined()
+    {
+        $detector = new Detector;
+        $mappings = array('Foo' => 'Bar');
+        $detector->setMappings($mappings);
+
+        $self = $this;
+        $this->setEventManager($detector, LocaleEvent::EVENT_DETECT, function($e) {
+            return 'Foo';
+        });
+
+        $locale = $detector->detect(new Request, new Response);
+        $this->assertEquals('Bar', $locale);
+    }
+
+    public function testEmptyMappingsListIndicatesNoMappingsList()
+    {
+        $detector = new Detector;
+        $mappings = array();
+        $detector->setMappings($mappings);
+
+        $this->assertFalse($detector->hasMappings());
+    }
+
     public function testStrategyAttachesToEventManager()
     {
         $detector = new Detector();
