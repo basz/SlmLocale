@@ -171,7 +171,7 @@ class DetectorTest extends TestCase
     public function testUseMappedLocaleWhenMappingIsDefined()
     {
         $detector = new Detector;
-        $mappings = array('Foo' => 'Bar');
+        $mappings = ['Foo' => 'Bar'];
         $detector->setMappings($mappings);
 
         $self = $this;
@@ -186,7 +186,7 @@ class DetectorTest extends TestCase
     public function testEmptyMappingsListIndicatesNoMappingsList()
     {
         $detector = new Detector;
-        $mappings = array();
+        $mappings = [];
         $detector->setMappings($mappings);
 
         $this->assertFalse($detector->hasMappings());

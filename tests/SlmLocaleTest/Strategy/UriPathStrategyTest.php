@@ -172,11 +172,11 @@ class UriPathStrategyTest extends TestCase
 
     // public function testFoundWithDisabledRedirectWhenFoundOptionLocaleShouldStillBeDirectedAnywayWhenPathContainsNothingFurther()
     // {
-    //     $this->strategy->setOptions(array('redirect_when_found' => false));
+    //     $this->strategy->setOptions(['redirect_when_found' => false]);
     //     $this->strategy->setServiceLocator($this->getPluginManager());
 
     //     $this->event->setLocale('en');
-    //     $this->event->setSupported(array('nl', 'de', 'en'));
+    //     $this->event->setSupported(['nl', 'de', 'en']);
 
     //     $request = new HttpRequest;
     //     $request->setUri('http://example.com/en');
@@ -192,11 +192,11 @@ class UriPathStrategyTest extends TestCase
 
     // public function testFoundWithDisabledRedirectWhenFoundOptionLocaleShouldStillBeDirectedAnyway()
     // {
-    //     $this->strategy->setOptions(array('redirect_when_found' => false));
+    //     $this->strategy->setOptions(['redirect_when_found' => false]);
     //     $this->strategy->setServiceLocator($this->getPluginManager());
 
     //     $this->event->setLocale('en');
-    //     $this->event->setSupported(array('nl', 'de', 'en'));
+    //     $this->event->setSupported(['nl', 'de', 'en']);
 
     //     $request = new HttpRequest;
     //     $request->setUri('http://example.com/en/something.ext');

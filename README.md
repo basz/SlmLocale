@@ -63,17 +63,17 @@ Usage
 Set your default locale in the configuration:
 
 ```
-'slm_locale' => array(
+'slm_locale' => [
     'default' => 'nl-NL',
-),
+],
 ```
 
 Set all your supported locales in the configuration:
 
 ```
-'slm_locale' => array(
-    'supported' => array('en-US', 'en-GB'),
-),
+'slm_locale' => [
+    'supported' => ['en-US', 'en-GB'],
+],
 ```
 
 And enable some strategies. The naming is made via the following list:
@@ -88,9 +88,9 @@ You can enable one or more of them in the `strategies` list. Mind the priority
 is important! You usually want the `acceptlanguage` as last for a fallback:
 
 ```
-'slm_locale' => array(
-    'strategies' => array('uripath', 'acceptlanguage'),
-),
+'slm_locale' => [
+    'strategies' => ['uripath', 'acceptlanguage'],
+],
 ```
 
 At this moment, the locale should be detected. The locale is stored inside php's
