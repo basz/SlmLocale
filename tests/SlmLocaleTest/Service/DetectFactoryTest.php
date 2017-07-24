@@ -97,7 +97,7 @@ class DetectFactoryTest extends TestCase
 
     public function testLocaleMappingsAreOptional()
     {
-        $sl = $this->getServiceLocator();
+        $sl       = $this->getServiceLocator();
         $detector = $sl->get('SlmLocale\Locale\Detector');
 
         $this->assertNull($detector->getMappings());
@@ -106,7 +106,7 @@ class DetectFactoryTest extends TestCase
     public function testLocaleMappingsAreSet()
     {
         $sl = $this->getServiceLocator([
-            'mappings' => ['Foo' => 'Bar']
+            'mappings' => ['Foo' => 'Bar'],
         ]);
         $detector = $sl->get('SlmLocale\Locale\Detector');
 

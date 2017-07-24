@@ -136,12 +136,13 @@ class Detector implements EventManagerAwareInterface
     public function setMappings(array $mappings)
     {
         $this->mappings = $mappings;
+
         return $this;
     }
 
     public function hasMappings()
     {
-        return (is_array($this->mappings) && count($this->mappings));
+        return is_array($this->mappings) && count($this->mappings);
     }
 
     public function detect(RequestInterface $request, ResponseInterface $response = null)
