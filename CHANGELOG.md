@@ -1,6 +1,10 @@
 Changelog
 ===
 
+v1.0.0
+---
+ * BC Break: ZF3 compatibility added. ZF2 not supported. 
+
 v0.1.0
 ---
 First public stable release

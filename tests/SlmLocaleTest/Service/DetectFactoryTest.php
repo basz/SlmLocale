@@ -101,7 +101,7 @@ class DetectorFactoryTest extends TestCase
         $plugins = $sl->get('SlmLocale\Strategy\StrategyPluginManager');
         $plugins->setFactory('TestStrategy', function() use ($self, &$called) {
             $called = true;
-            return $self->getMock('SlmLocale\Strategy\StrategyInterface');
+            return $self->createMock('SlmLocale\Strategy\StrategyInterface');
         });
 
         $detector = $sl->get('SlmLocale\Locale\Detector');
@@ -119,13 +119,13 @@ class DetectorFactoryTest extends TestCase
         $plugins = $sl->get('SlmLocale\Strategy\StrategyPluginManager');
         $plugins->setFactory('TestStrategy1', function() use ($self, &$called1) {
             $called1 = true;
-            return $self->getMock('SlmLocale\Strategy\StrategyInterface');
+            return $self->createMock('SlmLocale\Strategy\StrategyInterface');
         });
 
         $called2 = false;
         $plugins->setFactory('TestStrategy2', function() use ($self, &$called2) {
             $called2 = true;
-            return $self->getMock('SlmLocale\Strategy\StrategyInterface');
+            return $self->createMock('SlmLocale\Strategy\StrategyInterface');
         });
 
         $detector = $sl->get('SlmLocale\Locale\Detector');
@@ -146,7 +146,7 @@ class DetectorFactoryTest extends TestCase
         $plugins = $sl->get('SlmLocale\Strategy\StrategyPluginManager');
         $plugins->setFactory('TestStrategy', function() use ($self, &$called) {
             $called = true;
-            return $self->getMock('SlmLocale\Strategy\StrategyInterface');
+            return $self->createMock('SlmLocale\Strategy\StrategyInterface');
         });
 
         $detector = $sl->get('SlmLocale\Locale\Detector');
@@ -162,7 +162,9 @@ class DetectorFactoryTest extends TestCase
         ));
         $em = $sl->get('EventManager');
 
-        $strategy = $this->getMock('SlmLocale\Strategy\StrategyInterface', array('attach', 'detach'));
+        $strategy = $this->getMockBuilder('SlmLocale\Strategy\StrategyInterface')
+            ->setMethods(array('attach', 'detach'))
+            ->getMock();
         $strategy->expects($this->once())
                  ->method('attach')
                  ->with($em, 100);
@@ -179,7 +181,9 @@ class DetectorFactoryTest extends TestCase
                 array('name' => 'TestStrategy', 'options' => 'Foo')
             ),
         ));
-        $strategy = $this->getMock('SlmLocale\Strategy\StrategyInterface', array('attach', 'detach', 'setOptions'));
+        $strategy = $this->getMockBuilder('SlmLocale\Strategy\StrategyInterface')
+            ->setMethods(array('attach', 'detach', 'setOptions'))
+            ->getMock();
         $strategy->expects($this->once())
                  ->method('setOptions')
                  ->with('Foo');
@@ -198,7 +202,8 @@ class DetectorFactoryTest extends TestCase
         );
         $serviceLocator = new ServiceManager;
         $serviceLocator->setFactory('SlmLocale\Locale\Detector', 'SlmLocale\Service\DetectorFactory');
-        $serviceLocator->setInvokableClass('SlmLocale\Strategy\StrategyPluginManager', 'SlmLocale\Strategy\StrategyPluginManager');
+        $serviceLocator->setFactory('SlmLocale\Strategy\StrategyPluginManager',
+            'SlmLocale\Strategy\StrategyPluginManagerFactory');
         $serviceLocator->setService('EventManager', new EventManager);
         $serviceLocator->setService('config', $config);
 

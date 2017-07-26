@@ -169,12 +169,14 @@ class DetectorTest extends TestCase
     public function testStrategyAttachesToEventManager()
     {
         $detector = new Detector;
-        $strategy = $this->getMock('SlmLocale\Strategy\StrategyInterface');
+        $strategy = $this->createMock('SlmLocale\Strategy\StrategyInterface');
 
-        $events = $this->getMock('Zend\EventManager\EventManager', array('attachAggregate'));
-        $events->expects($this->once())
-               ->method('attachAggregate')
-               ->with($strategy);
+        $events = $this->getMockBuilder('Zend\EventManager\EventManager')
+            ->setMethods(array('attachAggregate'))
+            ->getMock();
+        $strategy->expects($this->once())
+               ->method('attach')
+               ->with($events);
 
         $detector->setEventManager($events);
         $detector->addStrategy($strategy);
@@ -185,12 +187,16 @@ class DetectorTest extends TestCase
         $detector  = new Detector;
         $this->setEventManager($detector);
 
-        $strategy1 = $this->getMock('SlmLocale\Strategy\AbstractStrategy', array('detect'));
+        $strategy1 = $this->getMockBuilder('SlmLocale\Strategy\AbstractStrategy')
+            ->setMethods(array('detect'))
+            ->getMock();
         $strategy1->expects($this->once())
                   ->method('detect')
                   ->will($this->returnValue('Foo'));
 
-        $strategy2 = $this->getMock('SlmLocale\Strategy\AbstractStrategy', array('detect'));
+        $strategy2 = $this->getMockBuilder('SlmLocale\Strategy\AbstractStrategy')
+            ->setMethods(array('detect'))
+            ->getMock();
         $strategy2->expects($this->never())
                   ->method('detect');
 

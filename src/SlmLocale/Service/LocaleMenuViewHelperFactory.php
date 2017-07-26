@@ -40,23 +40,19 @@
 
 namespace SlmLocale\Service;
 
+use Interop\Container\ContainerInterface;
 use SlmLocale\View\Helper\LocaleMenu;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
-class LocaleMenuViewHelperFactory implements FactoryInterface
+class LocaleMenuViewHelperFactory
 {
     /**
-     * @param  ServiceLocatorInterface $serviceLocator
+     * @param ContainerInterface $container
      * @return LocaleMenu
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container)
     {
-        $detector = $serviceLocator->getServiceLocator()->get('SlmLocale\Locale\Detector');
+        $detector = $container->get(SlmLocale\Locale\Detector::class);
 
-        $helper = new LocaleMenu;
-        $helper->setDetector($detector);
-
-        return $helper;
+        return new LocaleMenu($detector);
     }
 }
