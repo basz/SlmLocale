@@ -5,7 +5,7 @@
  * If you have a ./config/autoload/ directory set up for your project, you can
  * drop this config file in it and change the values as you wish.
  */
-$settings = array(
+$settings = [
     /**
      * Default locale
      *
@@ -22,7 +22,15 @@ $settings = array(
      *
      * Accepted is something else
      */
-    //'supported' => array('en-US', 'en-GB'),
+    //'supported' => ['en-US', 'en-GB'],
+    
+    /**
+     * Locale mappings
+     *
+     * An array of mappings to apply where the indexes correspond to the 
+     * detected locale, and the values to the locale to map it to.
+     */
+    //'mappings' => ['en' => 'en-US', 'fr' => 'fr_FR'],
 
     /**
      * Strategies
@@ -31,16 +39,16 @@ $settings = array(
      *
      * Accepted is something else
      */
-    //'strategies' => array(),
+    //'strategies' => [],
 
     /**
      * End of SlmLocale configuration
      */
-);
+];
 
 /**
  * You do not need to edit below this line
  */
-return array(
+return [
     'slm_locale' => $settings
-);
+];

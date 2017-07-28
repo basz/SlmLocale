@@ -71,6 +71,13 @@ class Detector implements EventManagerAwareInterface
      */
     protected $supported;
 
+    /**
+     * Optional list of locale mappings
+     *
+     * @var array
+     */
+    protected $mappings;
+
     public function getEventManager()
     {
         return $this->events;
@@ -121,6 +128,23 @@ class Detector implements EventManagerAwareInterface
         return is_array($this->supported) && count($this->supported);
     }
 
+    public function getMappings()
+    {
+        return $this->mappings;
+    }
+
+    public function setMappings(array $mappings)
+    {
+        $this->mappings = $mappings;
+
+        return $this;
+    }
+
+    public function hasMappings()
+    {
+        return is_array($this->mappings) && count($this->mappings);
+    }
+
     public function detect(RequestInterface $request, ResponseInterface $response = null)
     {
         $event = new LocaleEvent(LocaleEvent::EVENT_DETECT, $this);
@@ -144,6 +168,11 @@ class Detector implements EventManagerAwareInterface
 
         if ($this->hasSupported() && ! in_array($locale, $this->getSupported())) {
             $locale = $this->getDefault();
+        }
+
+        if ($this->hasMappings() && array_key_exists($locale, $this->getMappings())) {
+            $mappings = $this->getMappings();
+            $locale   = $mappings[$locale];
         }
 
         // Trigger FOUND event only when a response is given
