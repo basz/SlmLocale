@@ -66,7 +66,7 @@ class UriPathStrategyFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $strategy = new UriPathStrategy($container->get('router'));
-        $strategy->setServiceLocator($container);
+        $strategy->setServiceLocator($container->get(\SlmLocale\Strategy\StrategyPluginManager::class));
 
         return $strategy;
     }
@@ -80,6 +80,6 @@ class UriPathStrategyFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return $this($serviceLocator, UriPathStrategy::class);
+        return $this($serviceLocator->getServiceLocator(), UriPathStrategy::class);
     }
 }

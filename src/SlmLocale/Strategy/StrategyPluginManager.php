@@ -40,6 +40,7 @@
 
 namespace SlmLocale\Strategy;
 
+use SlmLocale\Strategy\Factory\UriPathStrategyFactory;
 use Zend\ServiceManager\AbstractPluginManager;
 use Zend\ServiceManager\Factory\InvokableFactory;
 
@@ -66,12 +67,12 @@ class StrategyPluginManager extends AbstractPluginManager
         HostStrategy::class                           => InvokableFactory::class,
         HttpAcceptLanguageStrategy::class             => InvokableFactory::class,
         QueryStrategy::class                          => InvokableFactory::class,
-        UriPathStrategy::class                        => InvokableFactory::class,
+        UriPathStrategy::class                        => UriPathStrategyFactory::class,
         'slmlocalestrategycookiestrategy'             => InvokableFactory::class,
         'slmlocalestrategyhoststrategy'               => InvokableFactory::class,
         'slmlocalestrategyhttpacceptlanguagestrategy' => InvokableFactory::class,
         'slmlocalestrategyquerystrategy'              => InvokableFactory::class,
-        'slmlocalestrategyuripathstrategy'            => InvokableFactory::class,
+        'slmlocalestrategyuripathstrategy'            => UriPathStrategyFactory::class,
     ];
 
     /**
