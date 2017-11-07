@@ -57,7 +57,7 @@ class StrategyPluginManager extends AbstractPluginManager
         'acceptlanguage' => HttpAcceptLanguageStrategy::class,
         'query'          => QueryStrategy::class,
         'uripath'        => UriPathStrategy::class,
-        'asset'          => AssetStrategy::class
+        'asset'          => AssetStrategy::class,
     ];
 
     /**
@@ -75,7 +75,7 @@ class StrategyPluginManager extends AbstractPluginManager
         'slmlocalestrategyhttpacceptlanguagestrategy' => InvokableFactory::class,
         'slmlocalestrategyquerystrategy'              => InvokableFactory::class,
         'slmlocalestrategyuripathstrategy'            => UriPathStrategyFactory::class,
-        'slmlocalestrategyassetstrategy'              => InvokableFactory::class
+        'slmlocalestrategyassetstrategy'              => InvokableFactory::class,
     ];
 
     /**

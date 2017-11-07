@@ -11,11 +11,10 @@ namespace SlmLocaleTest\Strategy;
 use PHPUnit_Framework_TestCase as TestCase;
 use SlmLocale\LocaleEvent;
 use SlmLocale\Strategy\AssetStrategy;
-use Zend\Http\PhpEnvironment\Request as HttpRequest;
-use Zend\Mvc\Router\Http\TreeRouteStack as HttpRouter;
-use Zend\Http\PhpEnvironment\Response as HttpResponse;
 use Zend\Console\Request as ConsoleRequest;
 use Zend\Console\Response as ConsoleResponse;
+use Zend\Http\PhpEnvironment\Request as HttpRequest;
+use Zend\Http\PhpEnvironment\Response as HttpResponse;
 
 class AssetStrategyTest extends TestCase
 {
