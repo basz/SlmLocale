@@ -1,11 +1,15 @@
 Changelog
 ===
-dev-master
+
+v0.2.1
+---
+ * [#91](https://github.com/basz/SlmLocale/pull/91) Fixed UriPathStrategy factory and StrategyPluginManager config
+
 ---
 
 v0.2.0
 ---
- * Updated to support Zendframwork Service manager v3 and Zendframwork Event Manager v3
+ * Updated to support ZendFramework Service manager v3 and ZendFramework Event Manager v3
 
 v0.1.0
 ---
