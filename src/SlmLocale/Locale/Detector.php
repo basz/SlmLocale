@@ -191,7 +191,7 @@ class Detector implements EventManagerAwareInterface
             $events->triggerEventUntil(function ($r) use (&$return) {
                 if ($r instanceof ResponseInterface) {
                     $return = true;
-                } else if ($r === false) {
+                } elseif ($r === false) {
                     // return true, if a previous listener returned false. So we can stop processing further listeners. This is needed for AssetStrategy to prevent redirects.
                     return true;
                 }

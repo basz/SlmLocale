@@ -1,6 +1,6 @@
 <?php
-namespace SlmLocale\Strategy;
 
+namespace SlmLocale\Strategy;
 
 use SlmLocale\LocaleEvent;
 
@@ -18,14 +18,13 @@ class AssetStrategy extends AbstractStrategy
 
     public function detect(LocaleEvent $event)
     {
-        return;
+        return null;
     }
 
     public function found(LocaleEvent $event)
     {
-        $path = $event->getRequest()->getUri();
-        $path = parse_url($path, PHP_URL_PATH);
-        $extension = pathinfo($path, PATHINFO_EXTENSION);
+        $path      = $event->getRequest()->getUri();
+        $extension = parse_url($path, PHP_URL_PATH);
 
         // if the file extension of the uri is found within the configured file_extensions, we do not rewrite and skip further processing
         if (in_array($extension, $this->file_extensions)) {
@@ -39,5 +38,4 @@ class AssetStrategy extends AbstractStrategy
             $this->file_extensions = (array) $options['file_extensions'];
         }
     }
-
 }

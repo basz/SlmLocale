@@ -57,7 +57,7 @@ class StrategyPluginManager extends AbstractPluginManager
         'acceptlanguage' => HttpAcceptLanguageStrategy::class,
         'query'          => QueryStrategy::class,
         'uripath'        => UriPathStrategy::class,
-        'asset'          => AssetStrategy::class
+        'asset'          => AssetStrategy::class,
     ];
 
     /**
