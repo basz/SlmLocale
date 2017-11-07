@@ -16,14 +16,20 @@ class AssetStrategy extends AbstractStrategy
     /** @var  array */
     protected $file_extensions;
 
+    public function detect(LocaleEvent $event)
+    {
+        return \Locale::getDefault();
+    }
+
     public function found(LocaleEvent $event)
     {
-        $path = $event->getUri()->getPath();
+        $path = $event->getRequest()->getUri();
+        $path = parse_url($path, PHP_URL_PATH);
         $extension = pathinfo($path, PATHINFO_EXTENSION);
 
         // if the file extension is found within the uri, we do not rewrite and skip further processing
         if (in_array($extension, $this->file_extensions)) {
-            return;
+            return false;
         }
     }
 
