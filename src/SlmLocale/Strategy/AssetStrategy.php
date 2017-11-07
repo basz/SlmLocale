@@ -18,7 +18,7 @@ class AssetStrategy extends AbstractStrategy
 
     public function detect(LocaleEvent $event)
     {
-        return \Locale::getDefault();
+        return;
     }
 
     public function found(LocaleEvent $event)
