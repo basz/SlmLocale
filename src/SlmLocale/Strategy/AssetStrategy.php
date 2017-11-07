@@ -1,16 +1,16 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mfuesslin
- * Date: 07.11.17
- * Time: 11:18
- */
-
 namespace SlmLocale\Strategy;
 
 
 use SlmLocale\LocaleEvent;
 
+/**
+ * This class checks whether the requested uri should deliver an asset and should therefore not be redirected.
+ * If it is an asset, we return false to stop further processing of other strategies in SlmLocale\Locale\Detector.
+ *
+ * Class AssetStrategy
+ * @package SlmLocale\Strategy
+ */
 class AssetStrategy extends AbstractStrategy
 {
     /** @var  array */
