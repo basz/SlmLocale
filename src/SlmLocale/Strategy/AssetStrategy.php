@@ -24,7 +24,8 @@ class AssetStrategy extends AbstractStrategy
     public function found(LocaleEvent $event)
     {
         $path      = $event->getRequest()->getUri();
-        $extension = parse_url($path, PHP_URL_PATH);
+        $path      = parse_url($path, PHP_URL_PATH);
+        $extension = pathinfo($path, PATHINFO_EXTENSION);
 
         // if the file extension of the uri is found within the configured file_extensions, we do not rewrite and skip further processing
         if (in_array($extension, $this->file_extensions)) {
