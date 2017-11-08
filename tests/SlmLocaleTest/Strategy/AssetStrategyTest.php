@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mfuesslin
- * Date: 07.11.17
- * Time: 17:14
- */
 
 namespace SlmLocaleTest\Strategy;
 
