@@ -40,10 +40,9 @@
 
 namespace SlmLocale\Strategy;
 
-use Interop\Container\ContainerInterface;
-use Locale;
 use SlmLocale\LocaleEvent;
-use Zend\Mvc\Router\Http\TreeRouteStack;
+use Zend\Router\Http\TreeRouteStack;
+use Zend\Router\SimpleRouteStack;
 use Zend\Uri\Uri;
 
 class UriPathStrategy extends AbstractStrategy
@@ -55,11 +54,11 @@ class UriPathStrategy extends AbstractStrategy
     protected $redirect_to_canonical;
     protected $sl;
     /**
-     * @var TreeRouteStack
+     * @var SimpleRouteStack
      */
     protected $router;
 
-    public function __construct(TreeRouteStack $router = null)
+    public function __construct(SimpleRouteStack $router = null)
     {
         $this->router = $router;
     }
@@ -75,31 +74,6 @@ class UriPathStrategy extends AbstractStrategy
         if (array_key_exists('redirect_to_canonical', $options)) {
             $this->redirect_to_canonical = (bool) $options['redirect_to_canonical'];
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setServiceLocator(ContainerInterface $sl)
-    {
-        $this->sl = $sl;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getServiceLocator()
-    {
-        return $this->sl;
-    }
-
-    protected function getRouter()
-    {
-        if (! $this->router instanceof TreeRouteStack) {
-            $this->router = $this->getServiceLocator()->getServiceLocator()->get('router');
-        }
-
-        return $this->router;
     }
 
     protected function redirectWhenFound()
@@ -164,7 +138,10 @@ class UriPathStrategy extends AbstractStrategy
         $base  = $this->getBasePath();
         $found = $this->getFirstSegmentInPath($request->getUri(), $base);
 
-        $this->getRouter()->setBaseUrl($base . '/' . $locale);
+        if ($this->router instanceof TreeRouteStack) {
+            $this->router->setBaseUrl($base . '/' . $locale);
+        }
+
         if ($locale === $found) {
             return;
         }
@@ -196,8 +173,6 @@ class UriPathStrategy extends AbstractStrategy
         $uri     = $event->getUri();
         $base    = $this->getBasePath();
         $locale  = $event->getLocale();
-
-        $current = $this->getFirstSegmentInPath($uri, $base);
 
         if (! $this->redirectToCanonical() && null !== $this->getAliases()) {
             $alias = $this->getAliasForLocale($locale);
@@ -252,12 +227,10 @@ class UriPathStrategy extends AbstractStrategy
 
     protected function getBasePath()
     {
-        $base   = null;
-        $router = $this->getRouter();
-        if ($router instanceof TreeRouteStack) {
-            $base = $router->getBaseUrl();
+        if ($this->router instanceof TreeRouteStack) {
+            return $this->router->getBaseUrl();
         }
 
-        return $base;
+        return null;
     }
 }
