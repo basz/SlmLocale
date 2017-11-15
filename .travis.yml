@@ -35,7 +35,7 @@ before_script:
 
 script:
   - vendor/bin/php-cs-fixer fix -v --diff --dry-run
-  - if [[ $TEST_COVERAGE == 'true' ]]; then php -dzend_extension=xdebug.so ./vendor/bin/phpunit --coverage-text --coverage-clover ./build/logs/clover.xml --configuration tests/phpunit.xml; else ./vendor/bin/phpunit --configuration tests/phpunit.xml; fi
+  - if [[ $TEST_COVERAGE == 'true' ]]; then php -dzend_extension=xdebug.so ./vendor/bin/phpunit --coverage-text --coverage-clover ./build/logs/clover.xml; else ./vendor/bin/phpunit; fi
 
 after_success:
   - if [[ $TEST_COVERAGE == 'true' ]]; then php vendor/bin/coveralls -v; fi
