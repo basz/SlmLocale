@@ -54,7 +54,7 @@ class Module implements
 {
     public function getConfig()
     {
-        return include dirname(__DIR__, 2) . '/config/module.config.php';
+        return include __DIR__ . '/../../config/module.config.php';
     }
 
     public function onBootstrap(EventInterface $e)
