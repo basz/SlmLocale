@@ -28,10 +28,9 @@ class ModuleTest extends TestCase
         $serviceManager = new ServiceManager();
         $serviceManager->setService(Detector::class, $detector->reveal());
 
-        $eventManager = new EventManager();
-        $app = new Application($serviceManager, $eventManager, $request, $response);
+        $app = new Application($serviceManager, new EventManager(), $request, $response);
 
-        $event = new MvcEvent;
+        $event = new MvcEvent();
         $event->setApplication($app);
 
         $module = new Module();
@@ -51,17 +50,16 @@ class ModuleTest extends TestCase
         $serviceManager = new ServiceManager();
         $serviceManager->setService(Detector::class, $detector->reveal());
 
-        $eventManager = new EventManager();
-        $app = new Application($serviceManager, $eventManager, $request, $response);
+        $app = new Application($serviceManager, $eventManager = new EventManager(), $request, $response);
 
-        $event = new MvcEvent;
+        $event = new MvcEvent();
         $event->setName(MvcEvent::EVENT_ROUTE);
         $event->setApplication($app);
 
         $module = new Module();
         $module->onBootstrap($event);
 
-        $eventManager->attach(MvcEvent::EVENT_ROUTE, function($e) {
+        $eventManager->attach(MvcEvent::EVENT_ROUTE, function ($e) {
             return 'test';
         });
 
