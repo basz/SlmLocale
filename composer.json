@@ -1,10 +1,11 @@
 {
     "name": "slm/locale",
-    "description": "Automatic detection of locales for Zend Framework 2",
+    "description": "Automatic detection of locales for Zend Framework",
     "type": "library",
     "license": "BSD-3-Clause",
     "keywords": [
-        "zf2",
+        "zf",
+        "zend framework",
         "i18n",
         "locale"
     ],
@@ -22,29 +23,41 @@
         "zendframework/zend-eventmanager": "^3.1",
         "zendframework/zend-http": "^2.7",
         "zendframework/zend-modulemanager": "^2.8.1",
+        "zendframework/zend-router": "^3.0",
         "zendframework/zend-servicemanager": "^3.2",
         "zendframework/zend-stdlib": "^3.1",
-        "zendframework/zend-view": "^2.9.0",
-        "zendframework/zend-router": "^3.0.2"
+        "zendframework/zend-view": "^2.9.0"
     },
     "require-dev": {
+        "friendsofphp/php-cs-fixer": "^2.8.1",
+        "phpunit/phpunit": "^4.8.36",
+        "satooshi/php-coveralls": "^1.0.2",
         "zendframework/zend-console": "^2.6",
         "zendframework/zend-mvc": "^3.1",
-        "phpunit/phpunit": "^4.8.36",
-        "friendsofphp/php-cs-fixer": "^2.8.1",
-        "satooshi/php-coveralls": "^1.0.2",
         "zendframework/zend-mvc-console": "^1.1.9"
     },
     "suggest": {
         "zendframework/zend-mvc": "For using the router in the UriPath strategy"
     },
     "autoload": {
-        "psr-0": {
-            "SlmLocale": "src/",
-            "SlmLocaleTest": "tests/"
-        },
-        "classmap": [
-            "./Module.php"
-        ]
+        "psr-4": {
+            "SlmLocale\\": "src/SlmLocale/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "SlmLocaleTest\\": "tests/SlmLocaleTest/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "scripts": {
+        "check": [
+            "@cs-check",
+            "@test"
+        ],
+        "cs-check": "php-cs-fixer fix -v --diff --dry-run",
+        "test": "phpunit --colors=always"
     }
 }
