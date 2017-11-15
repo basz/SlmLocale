@@ -8,7 +8,7 @@ Created by Jurian Sluiman
 
 Introduction
 ------------
-SlmLocale is a Zend Framework 2 module to automatically detect a locale for your
+SlmLocale is a Zend Framework module to automatically detect a locale for your
 application. It uses a variety of pluggable strategies to search for a valid
 locale. SlmLocale features a default locale, a set of supported locales and
 locale aliases.
@@ -95,7 +95,7 @@ is important! You usually want the `acceptlanguage` as last for a fallback:
 
 At this moment, the locale should be detected. The locale is stored inside php's
 `Locale` object. Retrieve the locale with `Locale::getDefault()`. This is also
-automated inside Zend Framework 2 translator objects and i18n view helpers (so
+automated inside Zend Framework translator objects and i18n view helpers (so
 you do not need to set the locale yourself there).
 
 ### Set the locale's language in html

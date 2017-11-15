@@ -41,7 +41,7 @@ namespace SlmLocale\View\Helper;
 
 use SlmLocale\Locale\Detector;
 use Zend\Http\Request;
-use Zend\Mvc\Router\Http\RouteMatch;
+use Zend\Router\Http\RouteMatch;
 use Zend\View\Exception\RuntimeException;
 use Zend\View\Helper\AbstractHelper;
 

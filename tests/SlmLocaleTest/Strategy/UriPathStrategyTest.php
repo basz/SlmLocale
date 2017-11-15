@@ -47,8 +47,8 @@ use Zend\Console\Request as ConsoleRequest;
 use Zend\Console\Response as ConsoleResponse;
 use Zend\Http\PhpEnvironment\Request as HttpRequest;
 use Zend\Http\PhpEnvironment\Response as HttpResponse;
-use Zend\Mvc\Router\Console\SimpleRouteStack as ConsoleRouter;
-use Zend\Mvc\Router\Http\TreeRouteStack as HttpRouter;
+use Zend\Mvc\Console\Router\SimpleRouteStack as ConsoleRouter;
+use Zend\Router\Http\TreeRouteStack as HttpRouter;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Uri\Uri;
 
@@ -66,7 +66,6 @@ class UriPathStrategyTest extends TestCase
         $this->router = new HttpRouter();
 
         $this->strategy = new UriPathStrategy($this->router);
-        $this->strategy->setServiceLocator($this->getPluginManager());
 
         $this->event = new LocaleEvent();
         $this->event->setSupported(['nl', 'de', 'en']);
