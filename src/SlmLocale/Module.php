@@ -54,7 +54,7 @@ class Module implements
 {
     public function getConfig()
     {
-        return include __DIR__ . '/config/module.config.php';
+        return include dirname(__DIR__, 2) . '/config/module.config.php';
     }
 
     public function onBootstrap(EventInterface $e)
@@ -81,8 +81,8 @@ class Module implements
             $em->attach(MvcEvent::EVENT_ROUTE, function ($e) use ($result) {
                 return $result;
             }, PHP_INT_MAX);
+        } else {
+            Locale::setDefault($result);
         }
-
-        Locale::setDefault($result);
     }
 }
