@@ -1,7 +1,9 @@
 Changelog
 ===
-dev-master
+
+v0.3.0 - TBD
 ---
+ * [#95](https://github.com/basz/SlmLocale/pull/95) Added zend-mvc v3 support and removed zf2 support
 
 v0.2.1
 ---
