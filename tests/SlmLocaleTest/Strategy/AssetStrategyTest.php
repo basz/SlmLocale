@@ -3,10 +3,12 @@
 namespace SlmLocaleTest\Strategy;
 
 use PHPUnit_Framework_TestCase as TestCase;
+use SlmLocale\Locale\Detector;
 use SlmLocale\LocaleEvent;
 use SlmLocale\Strategy\AssetStrategy;
 use Zend\Console\Request as ConsoleRequest;
 use Zend\Console\Response as ConsoleResponse;
+use Zend\EventManager\EventManager;
 use Zend\Http\PhpEnvironment\Request as HttpRequest;
 use Zend\Http\PhpEnvironment\Response as HttpResponse;
 
@@ -45,42 +47,67 @@ class AssetStrategyTest extends TestCase
         $this->assertNull($locale);
     }
 
-    public function testFoundShouldReturnFalseIfFileExtensionWasConfigured()
+    /**
+     * @dataProvider uriProvider
+     */
+    public function testDetectShouldStopPropagationIfFileExtensionWasConfigured($uri, $isAsset)
     {
         $request = new HttpRequest();
-        $request->setUri('http://example.com/css/style.css');
+        $request->setUri($uri);
 
         $this->event->setRequest($request);
 
-        // should be false if extension was configured to ignore.
-        $result = $this->strategy->found($this->event);
-        $this->assertFalse($result);
+        // should stop event propagation if extension was configured to ignore.
+        $result = $this->strategy->detect($this->event);
+        $this->assertNull($result);
+        $this->assertEquals($isAsset, $this->event->propagationIsStopped());
+    }
 
+    /**
+     * @dataProvider uriProvider
+     */
+    public function testFoundShouldStopPropagationIfFileExtensionWasConfigured($uri, $isAsset)
+    {
         $request = new HttpRequest();
-        $request->setUri('http://example.com/css/style.css?ver=123456');
+        $request->setUri($uri);
 
         $this->event->setRequest($request);
 
-        // should be false if extension was configured to ignore.
-        $result = $this->strategy->found($this->event);
-        $this->assertFalse($result);
-
-        $request = new HttpRequest();
-        $request->setUri('http://example.com/css/script.js');
-
-        $this->event->setRequest($request);
-
-        // should be false if extension was configured to ignore.
-        $result = $this->strategy->found($this->event);
-        $this->assertFalse($result);
-
-        $request = new HttpRequest();
-        $request->setUri('http://example.com/image/image.jpg');
-
-        $this->event->setRequest($request);
-
-        // should be null if extension was NOT configured to ignore (the next strategy will take care of locale extraction).
+        // should stop event propagation if extension was configured to ignore.
         $result = $this->strategy->found($this->event);
         $this->assertNull($result);
+        $this->assertEquals($isAsset, $this->event->propagationIsStopped());
+    }
+
+    public function uriProvider()
+    {
+        return [
+            ['http://example.com/css/style.css', true],
+            ['http://example.com/css/style.css?ver=123456', true],
+            ['http://example.com/css/script.js', true],
+            ['http://example.com/image/image.jpg', false],
+            ['http://example.com/article/new-asset-strategy', false],
+        ];
+    }
+
+    public function testAssetStrategyCanPreventOtherStrategiesExecution()
+    {
+        $request     = new HttpRequest();
+        $request->setUri('http://example.com/css/style.css');
+        $query       = $request->getQuery();
+        $query->lang = 'de';
+        $request->setQuery($query);
+        $this->event->setRequest($request);
+
+        $detector = new Detector();
+        $detector->setEventManager(new EventManager());
+        $detector->setSupported(['nl', 'de', 'en']);
+        $detector->setDefault('en');
+        $detector->addStrategy($this->strategy);
+        $detector->addStrategy(new \SlmLocale\Strategy\QueryStrategy());
+        $response = new HttpResponse();
+
+        $result = $detector->detect($request, $response);
+        $this->assertEquals('en', $result);
     }
 }

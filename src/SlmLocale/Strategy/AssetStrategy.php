@@ -41,15 +41,29 @@ class AssetStrategy extends AbstractStrategy
     /** @var  array */
     protected $file_extensions = [];
 
+    public function detect(LocaleEvent $event)
+    {
+        $this->stopPropagationIfAsset($event);
+    }
+
     public function found(LocaleEvent $event)
     {
+        $this->stopPropagationIfAsset($event);
+    }
+
+    private function stopPropagationIfAsset(LocaleEvent $event)
+    {
+        if (! $this->isHttpRequest($event->getRequest())) {
+            return;
+        }
+
         $path      = $event->getRequest()->getUri();
         $path      = parse_url($path, PHP_URL_PATH);
         $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
 
         // if the file extension of the uri is found within the configured file_extensions, we do not rewrite and skip further processing
         if (in_array($extension, $this->file_extensions)) {
-            return false;
+            $event->stopPropagation();
         }
     }
 
