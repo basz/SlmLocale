@@ -218,7 +218,7 @@ class Detector implements EventManagerAwareInterface
         $event->setUri($uri);
 
         $events  = $this->getEventManager();
-        $results = $events->trigger($event);
+        $results = $events->triggerEvent($event);
         if (! $results->stopped()) {
             return $uri;
         }

@@ -44,30 +44,17 @@ use Locale;
 
 use SlmLocale\Locale\Detector;
 use Zend\EventManager\EventInterface;
-use Zend\Loader\StandardAutoloader;
 use Zend\ModuleManager\Feature;
 use Zend\Mvc\MvcEvent;
 use Zend\Stdlib\ResponseInterface;
 
 class Module implements
-    Feature\AutoloaderProviderInterface,
     Feature\ConfigProviderInterface,
     Feature\BootstrapListenerInterface
 {
-    public function getAutoloaderConfig()
-    {
-        return [
-            StandardAutoloader::class => [
-                'namespaces' => [
-                    __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
-                ],
-            ],
-        ];
-    }
-
     public function getConfig()
     {
-        return include __DIR__ . '/config/module.config.php';
+        return include __DIR__ . '/../../config/module.config.php';
     }
 
     public function onBootstrap(EventInterface $e)
@@ -94,8 +81,8 @@ class Module implements
             $em->attach(MvcEvent::EVENT_ROUTE, function ($e) use ($result) {
                 return $result;
             }, PHP_INT_MAX);
+        } else {
+            Locale::setDefault($result);
         }
-
-        Locale::setDefault($result);
     }
 }

@@ -57,53 +57,18 @@ class StrategyPluginManager extends AbstractPluginManager
         'acceptlanguage' => HttpAcceptLanguageStrategy::class,
         'query'          => QueryStrategy::class,
         'uripath'        => UriPathStrategy::class,
+        'asset'          => AssetStrategy::class,
     ];
 
     /**
      * {@inheritdoc}
      */
     protected $factories = [
-        CookieStrategy::class                         => InvokableFactory::class,
-        HostStrategy::class                           => InvokableFactory::class,
-        HttpAcceptLanguageStrategy::class             => InvokableFactory::class,
-        QueryStrategy::class                          => InvokableFactory::class,
-        UriPathStrategy::class                        => UriPathStrategyFactory::class,
-        'slmlocalestrategycookiestrategy'             => InvokableFactory::class,
-        'slmlocalestrategyhoststrategy'               => InvokableFactory::class,
-        'slmlocalestrategyhttpacceptlanguagestrategy' => InvokableFactory::class,
-        'slmlocalestrategyquerystrategy'              => InvokableFactory::class,
-        'slmlocalestrategyuripathstrategy'            => UriPathStrategyFactory::class,
+        CookieStrategy::class             => InvokableFactory::class,
+        HostStrategy::class               => InvokableFactory::class,
+        HttpAcceptLanguageStrategy::class => InvokableFactory::class,
+        QueryStrategy::class              => InvokableFactory::class,
+        UriPathStrategy::class            => UriPathStrategyFactory::class,
+        AssetStrategy::class              => InvokableFactory::class,
     ];
-
-    /**
-     * Validate the plugin
-     *
-     * Checks that the helper loaded is an instance of StrategyInterface.
-     *
-     * @param  mixed $instance
-     * @return void
-     * @throws Exception\InvalidStrategyException if invalid
-     */
-    public function validate($instance)
-    {
-        if ($instance instanceof $this->instanceOf) {
-            // we're okay
-            return;
-        }
-
-        // fixme: should throw Zend\ServiceManager\Exception\InvalidServiceException but we can't because of BC
-        throw new Exception\InvalidStrategyException(sprintf(
-            'Plugin of type %s is invalid; must implement %s\StrategyInterface',
-            (is_object($instance) ? get_class($instance) : gettype($instance)),
-            __NAMESPACE__
-        ));
-    }
-
-    /**
-     * @deprecated to support ServiceManager v2
-     */
-    public function validatePlugin($instance)
-    {
-        $this->validate($instance);
-    }
 }
