@@ -1,7 +1,7 @@
 Changelog
 ===
 
-v0.3.0 - TBD
+v0.3.0
 ---
  * [#95](https://github.com/basz/SlmLocale/pull/95) Added zend-mvc v3 support and removed zf2 support
  * [#97](https://github.com/basz/SlmLocale/pull/97) Added new AssetStrategy to disable localization for assets
