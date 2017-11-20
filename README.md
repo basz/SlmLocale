@@ -83,6 +83,7 @@ And enable some strategies. The naming is made via the following list:
  * **acceptlanguage**: `SlmLocale\Strategy\HttpAcceptLanguageStrategy`
  * **query**: `SlmLocale\Strategy\QueryStrategy`
  * **uripath**: `SlmLocale\Strategy\UriPathStrategy`
+ * **asset**: `SlmLocale\Strategy\AssetStrategy`
 
 You can enable one or more of them in the `strategies` list. Mind the priority
 is important! You usually want the `acceptlanguage` as last for a fallback:

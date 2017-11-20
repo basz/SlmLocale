@@ -51,6 +51,13 @@ use Zend\Stdlib\Response;
 
 class DetectorTest extends TestCase
 {
+    private $events;
+
+    public function setUp()
+    {
+        $this->events = new EventManager();
+    }
+
     public function testDetectEventUsesLocaleEventObject()
     {
         $detector = new Detector();
@@ -270,6 +277,46 @@ class DetectorTest extends TestCase
         $detector->detect(new Request(), $response);
     }
 
+    public function testResponseObjectIsReturnedIfModified()
+    {
+        $detector = new Detector();
+        $response = new Response();
+
+        $this->setEventManager($detector, LocaleEvent::EVENT_FOUND, function ($e) {
+            $response = $e->getResponse();
+
+            // lets pretend we modified response
+
+            return $response;
+        });
+
+        $result = $detector->detect(new Request(), $response);
+        $this->assertInstanceOf(Response::class, $result);
+    }
+
+    public function testResponseObjectCanBeModifiedByMultipleStrategies()
+    {
+        $detector = new Detector();
+        $response = new Response();
+
+        $this->setEventManager($detector, LocaleEvent::EVENT_FOUND, function ($e) {
+            $response = $e->getResponse();
+            $response->setContent('first');
+
+            return $response;
+        });
+        $this->events->attach(LocaleEvent::EVENT_FOUND, function ($e) {
+            $response = $e->getResponse();
+            $response->setContent($response->getContent() . 'second');
+
+            return $response;
+        });
+
+        $result = $detector->detect(new Request(), $response);
+        $this->assertInstanceOf(Response::class, $result);
+        $this->assertEquals('firstsecond', $result->getContent());
+    }
+
     public function testLocaleIsSetInFoundEvent()
     {
         $detector = new Detector();
@@ -285,13 +332,11 @@ class DetectorTest extends TestCase
 
     public function setEventManager(Detector $detector, $event = null, $callback = null)
     {
-        $events = new EventManager();
-
         if (null !== $event && null !== $callback) {
-            $events->attach($event, $callback);
+            $this->events->attach($event, $callback);
         }
 
-        $detector->setEventManager($events);
+        $detector->setEventManager($this->events);
 
         return $detector;
     }
