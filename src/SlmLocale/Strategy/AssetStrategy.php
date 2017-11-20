@@ -36,10 +36,10 @@ use SlmLocale\LocaleEvent;
  * Class AssetStrategy
  * @package SlmLocale\Strategy
  */
-class AssetStrategy extends AbstractStrategy
+final class AssetStrategy extends AbstractStrategy
 {
     /** @var  array */
-    protected $file_extensions = [];
+    private $file_extensions = [];
 
     public function detect(LocaleEvent $event)
     {
