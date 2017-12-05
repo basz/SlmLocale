@@ -118,7 +118,7 @@ class UriPathStrategy extends AbstractStrategy
 
     public function found(LocaleEvent $event)
     {
-        if ('phpunit' === pathinfo($_SERVER['PHP_SELF'], PATHINFO_BASENAME)) {
+        if (array_key_exists('DISABLE_URIPATHSTRATEGY', $_SERVER) && true === $_SERVER['DISABLE_URIPATHSTRATEGY']) {
             return;
         }
 

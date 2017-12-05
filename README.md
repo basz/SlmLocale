@@ -113,6 +113,33 @@ Inject the detected language here with the following code:
 <html lang="<?= Locale::getPrimaryLanguage(Locale::getDefault())?>">
 ```
 
+### Disable UriPathStrategy in PHPUNIT
+This is necessary (at the moment) if you want to use ``this->dispatch('my/uri');`` in your `AbstractHttpControllerTestCase` unit tests.
+Otherwise, if you check for responseCode you will get `302` where it should be `200`.
+
+Example:
+```
+$this->dispatch('/to/my/uri');
+$this->assertResponseStatusCode(200); // this will be 302 instead of 200
+
+$this->dispatch('/en/to/my/uri');
+$this->assertResponseStatusCode(200); // this will be 302 instead of 200
+```
+
+To fix add the following to your phpunit config.
+
+XML:
+```
+<phpunit...>
+    ...
+    <php>
+        <server name="DISABLE_URIPATHSTRATEGY" value="true" />
+    </php>
+</phpunit>
+```
+
+Or set ``$_SERVER['DISABLE_URIPATHSTRATEGY'] = true;`` in your bootstrap file of phpunit.
+
 ### Create a list of available locales
 
 T.B.D
