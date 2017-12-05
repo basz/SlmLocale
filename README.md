@@ -128,7 +128,7 @@ $this->assertResponseStatusCode(200); // this will be 302 instead of 200
 
 To fix add the following to your phpunit config.
 
-XML:
+phpunit.xml:
 ```
 <phpunit...>
     ...
