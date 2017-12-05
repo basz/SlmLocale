@@ -118,6 +118,10 @@ class UriPathStrategy extends AbstractStrategy
 
     public function found(LocaleEvent $event)
     {
+        if ('phpunit' === pathinfo($_SERVER['PHP_SELF'], PATHINFO_BASENAME)) {
+            return;
+        }
+
         $request = $event->getRequest();
         if (! $this->isHttpRequest($request)) {
             return;
