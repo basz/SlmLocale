@@ -138,7 +138,7 @@ phpunit.xml:
 </phpunit>
 ```
 
-Or set ``$_SERVER['DISABLE_URIPATHSTRATEGY'] = true;`` in your bootstrap file of phpunit.
+Or set ``$_SERVER['DISABLE_URIPATHSTRATEGY'] = true;`` in your bootstrap file of phpunit. 
 
 ### Create a list of available locales
 
