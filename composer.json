@@ -22,7 +22,7 @@
         "ext-intl": "*",
         "zendframework/zend-eventmanager": "^3.1",
         "zendframework/zend-http": "^2.7",
-        "zendframework/zend-modulemanager": "^2.8.1",
+        "zendframework/zend-modulemanager": "^2.8.2",
         "zendframework/zend-router": "^3.0",
         "zendframework/zend-servicemanager": "^3.2",
         "zendframework/zend-stdlib": "^3.1",
