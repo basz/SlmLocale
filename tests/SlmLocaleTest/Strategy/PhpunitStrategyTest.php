@@ -11,14 +11,13 @@ namespace SlmLocaleTest\Strategy;
 use PHPUnit\Framework\TestCase;
 use SlmLocale\LocaleEvent;
 use SlmLocale\Strategy\PhpunitStrategy;
-use SlmLocale\Strategy\UriPathStrategy;
 use Zend\Http\PhpEnvironment\Request as HttpRequest;
 use Zend\Http\PhpEnvironment\Response as HttpResponse;
 use Zend\Router\Http\TreeRouteStack as HttpRouter;
 
 class PhpunitStrategyTest extends TestCase
 {
-    /** @var UriPathStrategy */
+    /** @var PhpunitStrategy */
     private $strategy;
     /** @var LocaleEvent */
     private $event;
@@ -30,28 +29,28 @@ class PhpunitStrategyTest extends TestCase
         $this->router = new HttpRouter();
 
         $this->strategy = new PhpunitStrategy();
-
-        $this->event = new LocaleEvent();
-        $this->event->setSupported(['nl', 'de', 'en']);
     }
 
-    public function testDisableUriPathStrategyPhpunit()
+    public function testPreventStrategiesExecutionIfPhpunit()
     {
-        $_SERVER['DISABLE_URIPATHSTRATEGY'] = true;
+        $_SERVER['DISABLE_STRATEGIES'] = true;
+
+        $event = new LocaleEvent();
+        $event->setSupported(['nl', 'de', 'en']);
 
         $uri     = 'http://username:password@example.com:8080/some/deep/path/some.file?withsomeparam=true';
         $request = new HttpRequest();
         $request->setUri($uri);
 
-        $this->event->setLocale('en');
-        $this->event->setRequest($request);
-        $this->event->setResponse(new HttpResponse());
+        $event->setLocale('en');
+        $event->setRequest($request);
+        $event->setResponse(new HttpResponse());
 
-        $this->strategy->found($this->event);
+        $this->strategy->found($event);
 
-        $statusCode = $this->event->getResponse()->getStatusCode();
+        $statusCode = $event->getResponse()->getStatusCode();
         $this->assertEquals(200, $statusCode);
 
-        $_SERVER['DISABLE_URIPATHSTRATEGY'] = false;
+        $_SERVER['DISABLE_STRATEGIES'] = false;
     }
 }

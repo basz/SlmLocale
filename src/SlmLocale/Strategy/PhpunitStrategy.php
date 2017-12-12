@@ -5,33 +5,10 @@ namespace SlmLocale\Strategy;
 use SlmLocale\LocaleEvent;
 
 /**
- * This class checks whether the requested uri should deliver an asset and should therefore not be redirected.
- * If it is an asset, we return false to stop further processing of other strategies in SlmLocale\Locale\Detector.
+ * This class checks if running in a phpunit environment. If so and phpunit is correctly configured, it will stop event processing as we cannot properly use this module with phpunit tests at the moment.
+ * @SEE https://github.com/basz/SlmLocale/pull/99
  *
- * Example config:
- * 'slm_locale' => [
- *     'default' => 'de_DE',
- *     'supported' => ['en_GB', 'de_DE'],
- *     'strategies' => [
- *         [
- *             'name' => SlmLocale\Strategy\AssetStrategy::class,
- *             'options' => [
- *                 'file_extensions' => [
- *                     'css', 'js'
- *                 ]
- *             ]
- *         ],
- *         'query',
- *         'cookie',
- *         'acceptlanguage'
- *     ],
- *     'mappings' => [
- *         'en' => 'en_GB',
- *         'de' => 'de_DE',
- *     ]
- * ],
- *
- * This example config would ignore the file_extensions ".css", ".CSS", ".js", ".JS".
+ * For configuration example have a look at README.md.
  *
  * Class PhpunitStrategy
  * @package SlmLocale\Strategy
@@ -57,7 +34,7 @@ final class PhpunitStrategy extends AbstractStrategy
             return;
         }
 
-        $isPhpunit = array_key_exists('DISABLE_URIPATHSTRATEGY', $_SERVER) && $_SERVER['DISABLE_URIPATHSTRATEGY'];
+        $isPhpunit = array_key_exists('DISABLE_STRATEGIES', $_SERVER) && $_SERVER['DISABLE_STRATEGIES'];
 
         // if the file extension of the uri is found within the configured file_extensions, we do not rewrite and skip further processing
         if ($isPhpunit) {
