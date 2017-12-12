@@ -9,8 +9,10 @@
 namespace SlmLocaleTest\Strategy;
 
 use PHPUnit\Framework\TestCase;
+use SlmLocale\Locale\Detector;
 use SlmLocale\LocaleEvent;
 use SlmLocale\Strategy\PhpunitStrategy;
+use Zend\EventManager\EventManager;
 use Zend\Http\PhpEnvironment\Request as HttpRequest;
 use Zend\Http\PhpEnvironment\Response as HttpResponse;
 use Zend\Router\Http\TreeRouteStack as HttpRouter;
@@ -28,6 +30,9 @@ class PhpunitStrategyTest extends TestCase
     {
         $this->router = new HttpRouter();
 
+        $this->event = new LocaleEvent();
+        $this->event->setSupported(['nl', 'de', 'en']);
+
         $this->strategy = new PhpunitStrategy();
     }
 
@@ -35,21 +40,69 @@ class PhpunitStrategyTest extends TestCase
     {
         $_SERVER['SLMLOCALE_DISABLE_STRATEGIES'] = true;
 
-        $event = new LocaleEvent();
-        $event->setSupported(['nl', 'de', 'en']);
-
         $uri     = 'http://username:password@example.com:8080/some/deep/path/some.file?withsomeparam=true';
         $request = new HttpRequest();
         $request->setUri($uri);
 
-        $event->setLocale('en');
-        $event->setRequest($request);
-        $event->setResponse(new HttpResponse());
+        $this->event->setLocale('en');
+        $this->event->setRequest($request);
+        $this->event->setResponse(new HttpResponse());
 
-        $this->strategy->found($event);
+        $this->strategy->found($this->event);
 
-        $statusCode = $event->getResponse()->getStatusCode();
+        $statusCode = $this->event->getResponse()->getStatusCode();
         $this->assertEquals(200, $statusCode);
+
+        $_SERVER['SLMLOCALE_DISABLE_STRATEGIES'] = false;
+    }
+
+    public function testPhpunitStrategyCanPreventOtherStrategiesExecution()
+    {
+        $_SERVER['SLMLOCALE_DISABLE_STRATEGIES'] = true;
+
+        $request     = new HttpRequest();
+        $request->setUri('http://example.com/css/style.css');
+        $query       = $request->getQuery();
+        $query->lang = 'de';
+        $request->setQuery($query);
+        $this->event->setRequest($request);
+
+        $detector = new Detector();
+        $detector->setEventManager(new EventManager());
+        $detector->setSupported(['nl', 'de', 'en']);
+        $detector->setDefault('en');
+        $detector->addStrategy($this->strategy);
+        $detector->addStrategy(new \SlmLocale\Strategy\QueryStrategy());
+        $response = new HttpResponse();
+
+        $result = $detector->detect($request, $response);
+        $this->assertEquals('en', $result);
+
+        $_SERVER['SLMLOCALE_DISABLE_STRATEGIES'] = false;
+    }
+
+    public function testPhpunitStrategyDoesNotPreventOtherStrategiesExecution()
+    {
+        // can also be null / not set
+        $_SERVER['SLMLOCALE_DISABLE_STRATEGIES'] = false;
+
+        $request     = new HttpRequest();
+        $request->setUri('http://example.com/css/style.css');
+        $query       = $request->getQuery();
+        $query->lang = 'de';
+        $request->setQuery($query);
+        $this->event->setRequest($request);
+
+        $detector = new Detector();
+        $detector->setEventManager(new EventManager());
+        $detector->setSupported(['nl', 'de', 'en']);
+        $detector->setDefault('en');
+        $detector->addStrategy($this->strategy);
+        $detector->addStrategy(new \SlmLocale\Strategy\QueryStrategy());
+        $response = new HttpResponse();
+
+        $result = $detector->detect($request, $response);
+        $this->assertEquals('de', $result);
 
         $_SERVER['SLMLOCALE_DISABLE_STRATEGIES'] = false;
     }
