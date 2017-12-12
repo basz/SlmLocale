@@ -58,6 +58,7 @@ class StrategyPluginManager extends AbstractPluginManager
         'query'          => QueryStrategy::class,
         'uripath'        => UriPathStrategy::class,
         'asset'          => AssetStrategy::class,
+        'phpunit'        => PhpunitStrategy::class,
     ];
 
     /**
@@ -70,5 +71,6 @@ class StrategyPluginManager extends AbstractPluginManager
         QueryStrategy::class              => InvokableFactory::class,
         UriPathStrategy::class            => UriPathStrategyFactory::class,
         AssetStrategy::class              => InvokableFactory::class,
+        PhpunitStrategy::class            => InvokableFactory::class,
     ];
 }
