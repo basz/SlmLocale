@@ -33,7 +33,7 @@ class PhpunitStrategyTest extends TestCase
 
     public function testPreventStrategiesExecutionIfPhpunit()
     {
-        $_SERVER['DISABLE_STRATEGIES'] = true;
+        $_SERVER['SLMLOCALE_DISABLE_STRATEGIES'] = true;
 
         $event = new LocaleEvent();
         $event->setSupported(['nl', 'de', 'en']);
@@ -51,6 +51,6 @@ class PhpunitStrategyTest extends TestCase
         $statusCode = $event->getResponse()->getStatusCode();
         $this->assertEquals(200, $statusCode);
 
-        $_SERVER['DISABLE_STRATEGIES'] = false;
+        $_SERVER['SLMLOCALE_DISABLE_STRATEGIES'] = false;
     }
 }

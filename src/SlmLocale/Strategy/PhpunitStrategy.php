@@ -34,7 +34,7 @@ final class PhpunitStrategy extends AbstractStrategy
             return;
         }
 
-        $isPhpunit = array_key_exists('DISABLE_STRATEGIES', $_SERVER) && $_SERVER['DISABLE_STRATEGIES'];
+        $isPhpunit = array_key_exists('SLMLOCALE_DISABLE_STRATEGIES', $_SERVER) && $_SERVER['SLMLOCALE_DISABLE_STRATEGIES'];
 
         // if the file extension of the uri is found within the configured file_extensions, we do not rewrite and skip further processing
         if ($isPhpunit) {
