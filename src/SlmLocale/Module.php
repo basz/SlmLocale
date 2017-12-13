@@ -60,6 +60,23 @@ class Module implements
     public function onBootstrap(EventInterface $e)
     {
         $app = $e->getApplication();
+        $sm = $app->getServiceManager();
+        $detector = $sm->get(Detector::class);
+
+        $em = $app->getEventManager();
+        $em->attach(MvcEvent::EVENT_ROUTE, function ($e) use ($app, $detector) {
+            $result = $detector->detect($app->getRequest(), $app->getResponse());
+            if ($result instanceof ResponseInterface) {
+                return $result;
+            } else {
+                Locale::setDefault($result);
+            }
+        }, PHP_INT_MAX);
+    }
+
+    /*public function onBootstrap(EventInterface $e)
+    {
+        $app = $e->getApplication();
         $sm  = $app->getServiceManager();
 
         $detector = $sm->get(Detector::class);
@@ -76,7 +93,7 @@ class Module implements
              *
              * The listener is attached at PHP_INT_MAX to return the response as early as
              * possible.
-             */
+             *
             $em = $app->getEventManager();
             $em->attach(MvcEvent::EVENT_ROUTE, function ($e) use ($result) {
                 return $result;
@@ -84,5 +101,5 @@ class Module implements
         } else {
             Locale::setDefault($result);
         }
-    }
+    }*/
 }
