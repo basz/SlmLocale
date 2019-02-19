@@ -48,80 +48,93 @@ use Zend\Http\Header\SetCookie;
 class CookieStrategy extends AbstractStrategy
 {
     const COOKIE_NAME = 'slm_locale';
-
+    
     /**
      * The name of the cookie.
      *
      * @var string
      */
     protected $cookieName;
-
+    
+    protected $cookieHttpOnly = false;
+    
+    protected $cookieSecure = false;
+    
     public function setOptions(array $options = [])
     {
         if (array_key_exists('cookie_name', $options)) {
             $this->setCookieName($options['cookie_name']);
         }
+        if (array_key_exists('cookie_http_only', $options)) {
+            $this->setCookieHttpOnly($options['cookie_http_only']);
+        }
+        if (array_key_exists('cookie_secure', $options)) {
+            $this->setCookieSecure($options['cookie_secure']);
+        }
     }
-
+    
     public function detect(LocaleEvent $event)
     {
         $request    = $event->getRequest();
         $cookieName = $this->getCookieName();
-
+        
         if (! $this->isHttpRequest($request)) {
             return;
         }
         if (! $event->hasSupported()) {
             return;
         }
-
+        
         $cookie = $request->getCookie();
         if (! $cookie || ! $cookie->offsetExists($cookieName)) {
             return;
         }
-
+        
         $locale    = $cookie->offsetGet($cookieName);
         $supported = $event->getSupported();
-
+        
         if (! in_array($locale, $supported)) {
             return;
         }
-
+        
         return $locale;
     }
-
+    
     public function found(LocaleEvent $event)
     {
         $locale     = $event->getLocale();
         $request    = $event->getRequest();
         $cookieName = $this->getCookieName();
-
+        
         if (! $this->isHttpRequest($request)) {
             return;
         }
-
+        
         $cookie   = $request->getCookie();
-
+        
         // Omit Set-Cookie header when cookie is present
         if ($cookie instanceof Cookie
             && $cookie->offsetExists($cookieName)
             && $locale === $cookie->offsetGet($cookieName)
-        ) {
-            return;
-        }
-
-        $path = '/';
-
-        if (method_exists($request, 'getBasePath')) {
-            $path = rtrim($request->getBasePath(), '/') . '/';
-        }
-
-        $response  = $event->getResponse();
-        $setCookie = new SetCookie($cookieName, $locale, null, $path);
-
-        $response->getHeaders()->addHeader($setCookie);
+            ) {
+                return;
+            }
+            
+            $path = '/';
+            
+            if (method_exists($request, 'getBasePath')) {
+                $path = rtrim($request->getBasePath(), '/') . '/';
+            }
+            
+            $secure = $this->getCookieSecure();
+            $httpOnly = $this->getCookieHttpOnly();
+            
+            $response  = $event->getResponse();
+            $setCookie = new SetCookie($cookieName, $locale, null, $path, null, $secure, $httpOnly);
+            
+            $response->getHeaders()->addHeader($setCookie);
     }
-
+    
     /**
      * @return string
      */
@@ -130,20 +143,68 @@ class CookieStrategy extends AbstractStrategy
         if (null === $this->cookieName) {
             return self::COOKIE_NAME;
         }
-
+        
         return (string) $this->cookieName;
     }
-
+    
     /**
      * @param string $cookieName
      * @throws InvalidArgumentException
+     * @return self
      */
     public function setCookieName($cookieName)
     {
         if (! preg_match('/^(?!\$)[!-~]+$/', $cookieName)) {
             throw new InvalidArgumentException($cookieName . ' is not a vaild cookie name.');
         }
-
+        
         $this->cookieName = $cookieName;
+        return $this;
+    }
+    
+    /**
+     * @return bool
+     */
+    public function getCookieHttpOnly()
+    {
+        return (bool) $this->cookieHttpOnly;
+    }
+    
+    /**
+     * @param bool $cookieHttpOnly
+     * @throws InvalidArgumentException
+     * @return self
+     */
+    public function setCookieHttpOnly($cookieHttpOnly)
+    {
+        if (! is_bool($cookieHttpOnly)) {
+            throw new InvalidArgumentException($cookieHttpOnly . ' is not a vaild cookie http only setting.');
+        }
+        
+        $this->cookieHttpOnly = $cookieHttpOnly;
+        return $this;
+    }
+    
+    /**
+     * @return bool
+     */
+    public function getCookieSecure()
+    {
+        return (bool) $this->cookieSecure;
+    }
+    
+    /**
+     * @param bool $cookieSecure
+     * @throws InvalidArgumentException
+     * @return self
+     */
+    public function setCookieSecure($cookieSecure)
+    {
+        if (! is_bool($cookieSecure)) {
+            throw new InvalidArgumentException($cookieSecure . ' is not a vaild cookie secure setting.');
+        }
+        
+        $this->cookieSecure = $cookieSecure;
+        return $this;
     }
 }
