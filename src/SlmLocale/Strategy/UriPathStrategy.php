@@ -129,7 +129,7 @@ class UriPathStrategy extends AbstractStrategy
         }
 
         $locale = $event->getLocale();
-        if (null === $locale || $locale === $this->default) {
+        if (null === $locale || (null !== $this->default && $locale === $this->default)) {
             return;
         }
 
@@ -201,9 +201,10 @@ class UriPathStrategy extends AbstractStrategy
         // Remove first part
         array_shift($parts);
 
-        $locale .= '/';
         if ($locale === $this->default) {
             $locale = '';
+        } else {
+            $locale .= '/';
         }
 
         $path = $base . '/' . $locale . implode('/', $parts);
