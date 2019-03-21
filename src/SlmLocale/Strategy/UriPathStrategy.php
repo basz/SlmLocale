@@ -53,6 +53,8 @@ class UriPathStrategy extends AbstractStrategy
     protected $aliases;
     protected $redirect_to_canonical;
     protected $sl;
+    /** @var string|null */
+    protected $default;
     /**
      * @var SimpleRouteStack
      */
@@ -73,6 +75,9 @@ class UriPathStrategy extends AbstractStrategy
         }
         if (array_key_exists('redirect_to_canonical', $options)) {
             $this->redirect_to_canonical = (bool) $options['redirect_to_canonical'];
+        }
+        if (array_key_exists('default', $options)) {
+            $this->default = (string) $options['default'];
         }
     }
 
@@ -124,7 +129,7 @@ class UriPathStrategy extends AbstractStrategy
         }
 
         $locale = $event->getLocale();
-        if (null === $locale) {
+        if (null === $locale || (null !== $this->default && $locale === $this->default)) {
             return;
         }
 
@@ -196,7 +201,13 @@ class UriPathStrategy extends AbstractStrategy
         // Remove first part
         array_shift($parts);
 
-        $path = $base . '/' . $locale . '/' . implode('/', $parts);
+        if ($locale === $this->default) {
+            $locale = '';
+        } else {
+            $locale .= '/';
+        }
+
+        $path = $base . '/' . $locale . implode('/', $parts);
         $uri->setPath($path);
 
         return $uri;
