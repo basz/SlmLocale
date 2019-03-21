@@ -123,6 +123,10 @@ class UriPathStrategy extends AbstractStrategy
 
     public function found(LocaleEvent $event)
     {
+        if (array_key_exists('DISABLE_URIPATHSTRATEGY', $_SERVER) && true === $_SERVER['DISABLE_URIPATHSTRATEGY']) {
+            return;
+        }
+
         $request = $event->getRequest();
         if (! $this->isHttpRequest($request)) {
             return;

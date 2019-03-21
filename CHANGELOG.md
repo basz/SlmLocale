@@ -1,8 +1,16 @@
 Changelog
 ===
 
-v0.4.0 - TBD
+v1.0.0 - TBD
 ---
+
+v0.4.1
+---
+ * [#99](https://github.com/basz/SlmLocale/pull/99) fixed #26 unit testing applications using SlmLocale
+
+v0.4.0
+---
+ * [#103](https://github.com/basz/SlmLocale/pull/103) UriPathStrategy don't redirect to default locale
 
 v0.3.0
 ---
