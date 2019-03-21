@@ -25,12 +25,12 @@
         "zendframework/zend-modulemanager": "^2.8.2",
         "zendframework/zend-router": "^3.0",
         "zendframework/zend-servicemanager": "^3.2",
-        "zendframework/zend-stdlib": "^3.1",
+        "zendframework/zend-stdlib": "^3.2.1",
         "zendframework/zend-view": "^2.9.0"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.8.1",
-        "phpunit/phpunit": "^4.8.36",
+        "phpunit/phpunit": "^5.7.27",
         "satooshi/php-coveralls": "^1.0.2",
         "zendframework/zend-console": "^2.6",
         "zendframework/zend-mvc": "^3.1",
