@@ -1,6 +1,9 @@
 Changelog
 ===
 
+v1.0.0 - TBD
+---
+
 v0.4.1
 ---
  * [#99](https://github.com/basz/SlmLocale/pull/99) fixed #26 unit testing applications using SlmLocale
