@@ -1,7 +1,11 @@
 Changelog
 ===
 
-v0.4.0 - TBD
+v1.0.0 - TBD
+---
+ * [#103](https://github.com/basz/SlmLocale/pull/103) UriPathStrategy don't redirect to default locale
+
+v0.4.0
 ---
  * [#103](https://github.com/basz/SlmLocale/pull/103) UriPathStrategy don't redirect to default locale
 
