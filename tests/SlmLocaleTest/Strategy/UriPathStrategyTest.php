@@ -225,6 +225,42 @@ class UriPathStrategyTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    public function testFoundSetsBaseUrlWithDefault()
+    {
+        $request = new HttpRequest();
+        $request->setUri('http://example.com/');
+
+        $this->event->setLocale('en');
+        $this->event->setRequest($request);
+        $this->event->setResponse(new HttpResponse());
+
+        $this->strategy->setOptions([
+            'default' => 'en',
+        ]);
+        $this->strategy->found($this->event);
+
+        $actual   = $this->router->getBaseUrl();
+        $this->assertNull($actual);
+    }
+
+    public function testFoundSetsBaseUrlWithDefaultNotMatch()
+    {
+        $request = new HttpRequest();
+        $request->setUri('http://example.com/fr');
+
+        $this->event->setLocale('fr');
+        $this->event->setRequest($request);
+        $this->event->setResponse(new HttpResponse());
+
+        $this->strategy->setOptions([
+            'default' => 'en',
+        ]);
+        $this->strategy->found($this->event);
+
+        $actual   = $this->router->getBaseUrl();
+        $this->assertSame('/fr', $actual);
+    }
+
     public function testFoundAppendsExistingBaseUrl()
     {
         $this->router->setBaseUrl('/some/deep/installation/path');
@@ -346,6 +382,42 @@ class UriPathStrategyTest extends TestCase
         $actual   = $this->event->getUri()->getPath();
 
         $this->assertEquals($expected, $actual);
+    }
+
+    public function testAssembleWithDefault()
+    {
+        $uri = new Uri('/nl/foo/bar/baz');
+
+        $this->event->setLocale('en');
+        $this->event->setUri($uri);
+
+        $this->strategy->setOptions([
+            'default' => 'en',
+        ]);
+        $this->strategy->assemble($this->event);
+
+        $expected = '/foo/bar/baz';
+        $actual   = $this->event->getUri()->getPath();
+
+        $this->assertSame($expected, $actual);
+    }
+
+    public function testAssembleWithDefaultNotMatching()
+    {
+        $uri = new Uri('/nl/foo/bar/baz');
+
+        $this->event->setLocale('en');
+        $this->event->setUri($uri);
+
+        $this->strategy->setOptions([
+            'default' => 'fr',
+        ]);
+        $this->strategy->assemble($this->event);
+
+        $expected = '/en/foo/bar/baz';
+        $actual   = $this->event->getUri()->getPath();
+
+        $this->assertSame($expected, $actual);
     }
 
     public function testDisableUriPathStrategyPhpunit()
