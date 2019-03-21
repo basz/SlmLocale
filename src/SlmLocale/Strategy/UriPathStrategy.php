@@ -216,7 +216,6 @@ class UriPathStrategy extends AbstractStrategy
             array_shift($parts);
         }
 
-
         if ($locale === $this->default) {
             $locale = '';
         } else {
