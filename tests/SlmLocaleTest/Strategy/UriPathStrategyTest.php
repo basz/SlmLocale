@@ -420,6 +420,24 @@ class UriPathStrategyTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
+    public function testAssembleWithDefaultMatchingCurrent()
+    {
+        $uri = new Uri('/foo/bar/baz');
+
+        $this->event->setLocale('en');
+        $this->event->setUri($uri);
+
+        $this->strategy->setOptions([
+            'default' => 'fr',
+        ]);
+        $this->strategy->assemble($this->event);
+
+        $expected = '/en/foo/bar/baz';
+        $actual   = $this->event->getUri()->getPath();
+
+        $this->assertSame($expected, $actual);
+    }
+
     protected function getPluginManager($console = false)
     {
         $sl = new ServiceManager();

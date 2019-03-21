@@ -198,8 +198,20 @@ class UriPathStrategy extends AbstractStrategy
         }
         $parts  = explode('/', trim($path, '/'));
 
-        // Remove first part
-        array_shift($parts);
+        $removeFirstLocale = true;
+        if (null !== $this->default &&
+            isset($parts[0]) &&
+            !in_array($parts[0], $event->getSupported(), true) &&
+            $parts[0] !== $this->default
+        ) {
+            $removeFirstLocale = false;
+        }
+
+        if (true === $removeFirstLocale) {
+            // Remove first part
+            array_shift($parts);
+        }
+
 
         if ($locale === $this->default) {
             $locale = '';
