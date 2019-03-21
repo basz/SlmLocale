@@ -205,7 +205,7 @@ class UriPathStrategy extends AbstractStrategy
         $removeFirstLocale = true;
         if (null !== $this->default &&
             isset($parts[0]) &&
-            !in_array($parts[0], $event->getSupported(), true) &&
+            ! in_array($parts[0], $event->getSupported(), true) &&
             $parts[0] !== $this->default
         ) {
             $removeFirstLocale = false;
