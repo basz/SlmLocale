@@ -202,8 +202,8 @@ class DetectorTest extends TestCase
     public function testStrategyAttachesToEventManager()
     {
         $detector = new Detector();
-        $events   = $this->getMock(EventManager::class);
-        $strategy = $this->getMock(StrategyInterface::class);
+        $events   = $this->createMock(EventManager::class);
+        $strategy = $this->createMock(StrategyInterface::class);
         $strategy->expects($this->once())
             ->method('attach')
             ->with($events);
@@ -217,12 +217,18 @@ class DetectorTest extends TestCase
         $detector  = new Detector();
         $this->setEventManager($detector);
 
-        $strategy1 = $this->getMock(AbstractStrategy::class, ['detect']);
+        $strategy1 = $this
+            ->getMockBuilder(AbstractStrategy::class)
+            ->setMethods(['detect'])
+            ->getMock();
         $strategy1->expects($this->once())
                   ->method('detect')
                   ->will($this->returnValue('Foo'));
 
-        $strategy2 = $this->getMock(AbstractStrategy::class, ['detect']);
+        $strategy2 = $this
+            ->getMockBuilder(AbstractStrategy::class)
+            ->setMethods(['detect'])
+            ->getMock();
         $strategy2->expects($this->never())
                   ->method('detect');
 

@@ -22,8 +22,22 @@ matrix:
     - php: 7.1
       env:
         - DEPENDENCIES="--prefer-stable"
-        - TEST_COVERAGE=true
     - php: 7.1
+      env:
+        - DEPENDENCIES="--prefer-lowest --prefer-stable"
+
+    - php: 7.2
+      env:
+        - DEPENDENCIES="--prefer-stable"
+    - php: 7.2
+      env:
+        - DEPENDENCIES="--prefer-lowest --prefer-stable"
+
+    - php: 7.3
+      env:
+        - DEPENDENCIES="--prefer-stable"
+        - TEST_COVERAGE=true
+    - php: 7.3
       env:
         - DEPENDENCIES="--prefer-lowest --prefer-stable"
 
