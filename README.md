@@ -110,7 +110,7 @@ in the `html` tag:
 Inject the detected language here with the following code:
 
 ```
-<html lang="<?= Locale::getPrimaryLanguage(Locale::getDefault())?>">
+<html lang="<?= $this->primaryLanguage()?>">
 ```
 
 ### Disable UriPathStrategy in PHPUNIT

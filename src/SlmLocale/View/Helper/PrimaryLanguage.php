@@ -1,13 +1,6 @@
 <?php
-
-use SlmLocale\Locale\Detector;
-use SlmLocale\Service;
-use SlmLocale\Strategy\Factory\StrategyPluginManagerFactory;
-use SlmLocale\Strategy\StrategyPluginManager;
-use SlmLocale\View\Helper;
-
 /**
- * Copyright (c) 2012-2013 Jurian Sluiman.
+ * Copyright (c) 2012-2019 Jurian Sluiman.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -44,29 +37,30 @@ use SlmLocale\View\Helper;
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link        http://juriansluiman.nl
  */
+namespace SlmLocale\View\Helper;
 
-return [
-    'slm_locale' => [
-        'strategies' => [],
-    ],
+use Locale;
+use Zend\View\Helper\AbstractHelper;
 
-    'service_manager' => [
-        'factories'  => [
-            StrategyPluginManager::class => StrategyPluginManagerFactory::class,
-            Detector::class              => Service\DetectorFactory::class,
-        ],
-    ],
+final class PrimaryLanguage extends AbstractHelper
+{
+    /** @var Locale */
+    protected $locale;
 
-    'view_helpers' => [
-        'aliases' => [
-            'localeUrl'       => Helper\LocaleUrl::class,
-            'localeMenu'      => Helper\LocaleMenu::class,
-            'primaryLanguage' => Helper\PrimaryLanguage::class,
-        ],
-        'factories' => [
-            Helper\LocaleUrl::class       => Service\LocaleUrlViewHelperFactory::class,
-            Helper\LocaleMenu::class      => Service\LocaleMenuViewHelperFactory::class,
-            Helper\PrimaryLanguage::class => Service\PrimaryLanguageHelperFactory::class,
-        ],
-    ],
-];
+    /**
+     * PrimaryLanguage constructor.
+     * @param Locale $locale
+     */
+    public function __construct(Locale $locale)
+    {
+        $this->locale = $locale;
+    }
+
+    /**
+     * @return string
+     */
+    public function __invoke()
+    {
+        return $this->locale->getPrimaryLanguage($this->locale->getDefault());
+    }
+}
