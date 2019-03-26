@@ -404,7 +404,7 @@ class UriPathStrategyTest extends TestCase
 
     public function testAssembleWithDefaultNotMatching()
     {
-        $uri = new Uri('/n1/foo/bar/baz');
+        $uri = new Uri('/nl/foo/bar/baz');
 
         $this->event->setLocale('en');
         $this->event->setUri($uri);
