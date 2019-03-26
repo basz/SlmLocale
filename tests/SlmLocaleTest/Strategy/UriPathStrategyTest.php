@@ -127,8 +127,7 @@ class UriPathStrategyTest extends TestCase
         $this->event->setResponse(new HttpResponse());
 
         $locale   = $this->strategy->detect($this->event);
-        $expected = 'en';
-        $this->assertEquals($expected, $locale);
+        $this->assertSame('en', $locale);
     }
 
     public function testFoundRedirectsByDefault()
@@ -391,6 +390,7 @@ class UriPathStrategyTest extends TestCase
         $this->event->setLocale('en');
         $this->event->setUri($uri);
 
+        $this->strategy->getRouter()->setBaseUrl('/nl');
         $this->strategy->setOptions([
             'default' => 'en',
         ]);
@@ -404,20 +404,18 @@ class UriPathStrategyTest extends TestCase
 
     public function testAssembleWithDefaultNotMatching()
     {
-        $uri = new Uri('/nl/foo/bar/baz');
+        $uri = new Uri('/n1/foo/bar/baz');
 
         $this->event->setLocale('en');
         $this->event->setUri($uri);
 
+        $this->strategy->getRouter()->setBaseUrl('/nl');
         $this->strategy->setOptions([
             'default' => 'fr',
         ]);
         $this->strategy->assemble($this->event);
 
-        $expected = '/en/foo/bar/baz';
-        $actual   = $this->event->getUri()->getPath();
-
-        $this->assertSame($expected, $actual);
+        $this->assertSame('/en/foo/bar/baz', $this->event->getUri()->getPath());
     }
 
     public function testDisableUriPathStrategyPhpunit()
@@ -454,10 +452,7 @@ class UriPathStrategyTest extends TestCase
         ]);
         $this->strategy->assemble($this->event);
 
-        $expected = '/en/foo/bar/baz';
-        $actual   = $this->event->getUri()->getPath();
-
-        $this->assertSame($expected, $actual);
+        $this->assertSame('/en/foo/bar/baz', $this->event->getUri()->getPath());
     }
 
     protected function getPluginManager($console = false)
