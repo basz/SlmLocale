@@ -245,11 +245,12 @@ class UriPathStrategy extends AbstractStrategy
 
     /**
      * @param SimpleRouteStack $router
-     * @return self
+     * @return $this
      */
     public function setRouter($router)
     {
         $this->router = $router;
+
         return $this;
     }
 
