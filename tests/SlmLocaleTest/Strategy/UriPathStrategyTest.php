@@ -390,7 +390,8 @@ class UriPathStrategyTest extends TestCase
         $this->event->setLocale('en');
         $this->event->setUri($uri);
 
-        $this->strategy->getRouter()->setBaseUrl('/nl');
+        $this->router->setBaseUrl('/nl');
+        $this->strategy = new UriPathStrategy($this->router);
         $this->strategy->setOptions([
             'default' => 'en',
         ]);
@@ -409,13 +410,48 @@ class UriPathStrategyTest extends TestCase
         $this->event->setLocale('en');
         $this->event->setUri($uri);
 
-        $this->strategy->getRouter()->setBaseUrl('/nl');
+        $this->router->setBaseUrl('/nl');
+        $this->strategy = new UriPathStrategy($this->router);
         $this->strategy->setOptions([
             'default' => 'fr',
         ]);
         $this->strategy->assemble($this->event);
 
         $this->assertSame('/en/foo/bar/baz', $this->event->getUri()->getPath());
+    }
+
+    public function testAssembleWithDefaultWithBasePath()
+    {
+        $uri = new Uri('/my-app/nl/foo/bar/baz');
+
+        $this->event->setLocale('en');
+        $this->event->setUri($uri);
+
+        $this->router->setBaseUrl('/my-app/nl');
+        $this->strategy = new UriPathStrategy($this->router);
+        $this->strategy->setOptions([
+            'default' => 'fr',
+        ]);
+        $this->strategy->assemble($this->event);
+
+        $this->assertSame('/my-app/en/foo/bar/baz', $this->event->getUri()->getPath());
+    }
+
+    public function testAssembleWithDefaultWithBasePathWithMatching()
+    {
+        $uri = new Uri('/my-app/foo/bar/baz');
+
+        $this->event->setLocale('en');
+        $this->event->setUri($uri);
+
+        $this->router->setBaseUrl('/my-app');
+        $this->strategy = new UriPathStrategy($this->router);
+        $this->strategy->setOptions([
+            'default' => 'nl',
+        ]);
+        $this->strategy->assemble($this->event);
+
+        $this->assertSame('/my-app/en/foo/bar/baz', $this->event->getUri()->getPath());
     }
 
     public function testDisableUriPathStrategyPhpunit()

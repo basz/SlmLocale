@@ -235,25 +235,6 @@ class UriPathStrategy extends AbstractStrategy
         return $uri;
     }
 
-    /**
-     * @return SimpleRouteStack
-     */
-    public function getRouter()
-    {
-        return $this->router;
-    }
-
-    /**
-     * @param SimpleRouteStack $router
-     * @return $this
-     */
-    public function setRouter($router)
-    {
-        $this->router = $router;
-
-        return $this;
-    }
-
     protected function getFirstSegmentInPath(Uri $uri, $base = null)
     {
         $path = $uri->getPath();
