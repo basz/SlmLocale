@@ -454,6 +454,37 @@ class UriPathStrategyTest extends TestCase
         $this->assertSame('/my-app/en/foo/bar/baz', $this->event->getUri()->getPath());
     }
 
+    public function testAssembleWithDefaultWithBasePathWithMatchingPubic()
+    {
+        $uri = new Uri('/my-app/public/foo/bar/baz');
+
+        $this->event->setLocale('en');
+        $this->event->setUri($uri);
+
+        $this->router->setBaseUrl('/my-app/public');
+        $this->strategy = new UriPathStrategy($this->router);
+        $this->strategy->setOptions([
+            'default' => 'nl',
+        ]);
+        $this->strategy->assemble($this->event);
+
+        $this->assertSame('/my-app/public/en/foo/bar/baz', $this->event->getUri()->getPath());
+    }
+
+    public function testAssembleWithBasePathWithMatchingLanguageName()
+    {
+        $uri = new Uri('/my-app/nl/nl/foo/bar/baz');
+
+        $this->event->setLocale('en');
+        $this->event->setUri($uri);
+
+        $this->router->setBaseUrl('/my-app/nl/nl');
+        $this->strategy = new UriPathStrategy($this->router);
+        $this->strategy->assemble($this->event);
+
+        $this->assertSame('/my-app/nl/en/foo/bar/baz', $this->event->getUri()->getPath());
+    }
+
     public function testDisableUriPathStrategyPhpunit()
     {
         $_SERVER['DISABLE_URIPATHSTRATEGY'] = true;
