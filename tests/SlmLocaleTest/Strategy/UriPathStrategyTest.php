@@ -168,6 +168,46 @@ class UriPathStrategyTest extends TestCase
         $this->assertFalse($header);
     }
 
+    public function testFoundRedirectsByDefaultWithBasePath()
+    {
+        $uri     = 'http://example.com/my-app/public/nl/some/deep/path/some.file?withsomeparam=true';
+        $request = new HttpRequest();
+        $request->setUri($uri);
+        $request->setBasePath('/my-app/public');
+
+        $this->event->setLocale('en');
+        $this->event->setRequest($request);
+        $this->event->setResponse(new HttpResponse());
+
+        $this->strategy->found($this->event);
+
+        $statusCode = $this->event->getResponse()->getStatusCode();
+        $header     = $this->event->getResponse()->getHeaders()->get('Location');
+        $expected   = 'Location: http://example.com/my-app/public/en/some/deep/path/some.file?withsomeparam=true';
+        $this->assertEquals(302, $statusCode);
+        $this->assertContains($expected, (string) $header);
+    }
+
+    public function testFoundRedirectsByDefaultWithBasePathDisabledRedirectWhenFound()
+    {
+        $this->strategy->setOptions(['redirect_when_found' => false]);
+        $uri     = 'http://example.com/my-app/public/nl/some/deep/path/some.file?withsomeparam=true';
+        $request = new HttpRequest();
+        $request->setUri($uri);
+        $request->setBasePath('/my-app/public');
+
+        $this->event->setLocale('en');
+        $this->event->setRequest($request);
+        $this->event->setResponse(new HttpResponse());
+
+        $this->strategy->found($this->event);
+
+        $statusCode = $this->event->getResponse()->getStatusCode();
+        $header     = $this->event->getResponse()->getHeaders()->has('Location');
+        $this->assertNotEquals(302, $statusCode);
+        $this->assertFalse($header);
+    }
+
     // public function testFoundWithDisabledRedirectWhenFoundOptionLocaleShouldStillBeDirectedAnywayWhenPathContainsNothingFurther()
     // {
     //     $this->strategy->setOptions(['redirect_when_found' => false]);
