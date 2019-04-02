@@ -43,6 +43,7 @@ namespace SlmLocale\Strategy;
 use SlmLocale\LocaleEvent;
 use Zend\Router\Http\TreeRouteStack;
 use Zend\Router\SimpleRouteStack;
+use Zend\Stdlib\RequestInterface;
 use Zend\Uri\Uri;
 
 class UriPathStrategy extends AbstractStrategy
@@ -103,7 +104,7 @@ class UriPathStrategy extends AbstractStrategy
             return;
         }
 
-        $base   = $this->getBasePath();
+        $base   = $this->getBasePath($request);
         $locale = $this->getFirstSegmentInPath($request->getUri(), $base);
         if (! $locale) {
             return;
@@ -144,7 +145,7 @@ class UriPathStrategy extends AbstractStrategy
             }
         }
 
-        $base  = $this->getBasePath();
+        $base  = $this->getBasePath($request);
         $found = $this->getFirstSegmentInPath($request->getUri(), $base);
 
         if ($this->router instanceof TreeRouteStack) {
@@ -180,7 +181,7 @@ class UriPathStrategy extends AbstractStrategy
     public function assemble(LocaleEvent $event)
     {
         $uri     = $event->getUri();
-        $base    = $this->getBasePath();
+        $base    = $this->getBasePath($event->getRequest());
         $locale  = $event->getLocale();
 
         if (! $this->redirectToCanonical() && null !== $this->getAliases()) {
@@ -193,17 +194,34 @@ class UriPathStrategy extends AbstractStrategy
         $path = $uri->getPath();
 
         // Last part of base is now always locale, remove that
-        $parts = explode('/', trim($base, '/'));
-        array_pop($parts);
+        $parts       = explode('/', trim($base, '/'));
+        $lastElement = count($parts) - 1;
+
+        $removeFirstLocale = true;
+        if (null !== $this->default &&
+            isset($parts[$lastElement]) &&
+            ! in_array($parts[$lastElement], $event->getSupported(), true) &&
+            $parts[$lastElement] !== $this->default
+        ) {
+            $removeFirstLocale = false;
+        }
+
+        if (true === $removeFirstLocale) {
+            // Remove first part
+            array_pop($parts);
+        }
+
         $base  = implode('/', $parts);
 
         if ($base) {
-            $path = substr($path, strlen($base));
+            $path = substr(trim($path, '/'), strlen($base));
         }
-        $parts  = explode('/', trim($path, '/'));
 
-        // Remove first part
-        array_shift($parts);
+        $parts  = explode('/', trim($path, '/'));
+        if (true === $removeFirstLocale) {
+            // Remove first part
+            array_shift($parts);
+        }
 
         if ($locale === $this->default) {
             $locale = '';
@@ -211,7 +229,7 @@ class UriPathStrategy extends AbstractStrategy
             $locale .= '/';
         }
 
-        $path = $base . '/' . $locale . implode('/', $parts);
+        $path = ($base ? '/' : '') . trim($base, '/') . '/' . $locale . implode('/', $parts);
         $uri->setPath($path);
 
         return $uri;
@@ -240,12 +258,21 @@ class UriPathStrategy extends AbstractStrategy
         }
     }
 
-    protected function getBasePath()
+    /**
+     * @param RequestInterface|null $request
+     * @return string|null
+     */
+    protected function getBasePath(RequestInterface $request = null)
     {
+        $result = null;
         if ($this->router instanceof TreeRouteStack) {
-            return $this->router->getBaseUrl();
+            $result = $this->router->getBaseUrl();
         }
 
-        return null;
+        if (null === $result && null !== $request && method_exists($request, 'getBasePath')) {
+            $result = $request->getBasePath();
+        }
+
+        return $result;
     }
 }

@@ -127,8 +127,7 @@ class UriPathStrategyTest extends TestCase
         $this->event->setResponse(new HttpResponse());
 
         $locale   = $this->strategy->detect($this->event);
-        $expected = 'en';
-        $this->assertEquals($expected, $locale);
+        $this->assertSame('en', $locale);
     }
 
     public function testFoundRedirectsByDefault()
@@ -156,6 +155,46 @@ class UriPathStrategyTest extends TestCase
 
         $request = new HttpRequest();
         $request->setUri('http://example.com/');
+
+        $this->event->setLocale('en');
+        $this->event->setRequest($request);
+        $this->event->setResponse(new HttpResponse());
+
+        $this->strategy->found($this->event);
+
+        $statusCode = $this->event->getResponse()->getStatusCode();
+        $header     = $this->event->getResponse()->getHeaders()->has('Location');
+        $this->assertNotEquals(302, $statusCode);
+        $this->assertFalse($header);
+    }
+
+    public function testFoundRedirectsByDefaultWithBasePath()
+    {
+        $uri     = 'http://example.com/my-app/public/nl/some/deep/path/some.file?withsomeparam=true';
+        $request = new HttpRequest();
+        $request->setUri($uri);
+        $request->setBasePath('/my-app/public');
+
+        $this->event->setLocale('en');
+        $this->event->setRequest($request);
+        $this->event->setResponse(new HttpResponse());
+
+        $this->strategy->found($this->event);
+
+        $statusCode = $this->event->getResponse()->getStatusCode();
+        $header     = $this->event->getResponse()->getHeaders()->get('Location');
+        $expected   = 'Location: http://example.com/my-app/public/en/some/deep/path/some.file?withsomeparam=true';
+        $this->assertEquals(302, $statusCode);
+        $this->assertContains($expected, (string) $header);
+    }
+
+    public function testFoundRedirectsByDefaultWithBasePathDisabledRedirectWhenFound()
+    {
+        $this->strategy->setOptions(['redirect_when_found' => false]);
+        $uri     = 'http://example.com/my-app/public/nl/some/deep/path/some.file?withsomeparam=true';
+        $request = new HttpRequest();
+        $request->setUri($uri);
+        $request->setBasePath('/my-app/public');
 
         $this->event->setLocale('en');
         $this->event->setRequest($request);
@@ -391,6 +430,8 @@ class UriPathStrategyTest extends TestCase
         $this->event->setLocale('en');
         $this->event->setUri($uri);
 
+        $this->router->setBaseUrl('/nl');
+        $this->strategy = new UriPathStrategy($this->router);
         $this->strategy->setOptions([
             'default' => 'en',
         ]);
@@ -409,15 +450,79 @@ class UriPathStrategyTest extends TestCase
         $this->event->setLocale('en');
         $this->event->setUri($uri);
 
+        $this->router->setBaseUrl('/nl');
+        $this->strategy = new UriPathStrategy($this->router);
         $this->strategy->setOptions([
             'default' => 'fr',
         ]);
         $this->strategy->assemble($this->event);
 
-        $expected = '/en/foo/bar/baz';
-        $actual   = $this->event->getUri()->getPath();
+        $this->assertSame('/en/foo/bar/baz', $this->event->getUri()->getPath());
+    }
 
-        $this->assertSame($expected, $actual);
+    public function testAssembleWithDefaultWithBasePath()
+    {
+        $uri = new Uri('/my-app/nl/foo/bar/baz');
+
+        $this->event->setLocale('en');
+        $this->event->setUri($uri);
+
+        $this->router->setBaseUrl('/my-app/nl');
+        $this->strategy = new UriPathStrategy($this->router);
+        $this->strategy->setOptions([
+            'default' => 'fr',
+        ]);
+        $this->strategy->assemble($this->event);
+
+        $this->assertSame('/my-app/en/foo/bar/baz', $this->event->getUri()->getPath());
+    }
+
+    public function testAssembleWithDefaultWithBasePathWithMatching()
+    {
+        $uri = new Uri('/my-app/foo/bar/baz');
+
+        $this->event->setLocale('en');
+        $this->event->setUri($uri);
+
+        $this->router->setBaseUrl('/my-app');
+        $this->strategy = new UriPathStrategy($this->router);
+        $this->strategy->setOptions([
+            'default' => 'nl',
+        ]);
+        $this->strategy->assemble($this->event);
+
+        $this->assertSame('/my-app/en/foo/bar/baz', $this->event->getUri()->getPath());
+    }
+
+    public function testAssembleWithDefaultWithBasePathWithMatchingPubic()
+    {
+        $uri = new Uri('/my-app/public/foo/bar/baz');
+
+        $this->event->setLocale('en');
+        $this->event->setUri($uri);
+
+        $this->router->setBaseUrl('/my-app/public');
+        $this->strategy = new UriPathStrategy($this->router);
+        $this->strategy->setOptions([
+            'default' => 'nl',
+        ]);
+        $this->strategy->assemble($this->event);
+
+        $this->assertSame('/my-app/public/en/foo/bar/baz', $this->event->getUri()->getPath());
+    }
+
+    public function testAssembleWithBasePathWithMatchingLanguageName()
+    {
+        $uri = new Uri('/my-app/nl/nl/foo/bar/baz');
+
+        $this->event->setLocale('en');
+        $this->event->setUri($uri);
+
+        $this->router->setBaseUrl('/my-app/nl/nl');
+        $this->strategy = new UriPathStrategy($this->router);
+        $this->strategy->assemble($this->event);
+
+        $this->assertSame('/my-app/nl/en/foo/bar/baz', $this->event->getUri()->getPath());
     }
 
     public function testDisableUriPathStrategyPhpunit()
@@ -440,6 +545,21 @@ class UriPathStrategyTest extends TestCase
         $this->assertEquals(200, $statusCode);
 
         $_SERVER['DISABLE_URIPATHSTRATEGY'] = false;
+    }
+
+    public function testAssembleWithDefaultMatchingCurrent()
+    {
+        $uri = new Uri('/foo/bar/baz');
+
+        $this->event->setLocale('en');
+        $this->event->setUri($uri);
+
+        $this->strategy->setOptions([
+            'default' => 'fr',
+        ]);
+        $this->strategy->assemble($this->event);
+
+        $this->assertSame('/en/foo/bar/baz', $this->event->getUri()->getPath());
     }
 
     protected function getPluginManager($console = false)
