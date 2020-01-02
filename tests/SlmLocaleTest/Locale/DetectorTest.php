@@ -45,9 +45,9 @@ use SlmLocale\LocaleEvent;
 
 use SlmLocale\Strategy\AbstractStrategy;
 use SlmLocale\Strategy\StrategyInterface;
-use LaminasEventManager\EventManager;
-use LaminasStdlib\Request;
-use LaminasStdlib\Response;
+use Laminas\EventManager\EventManager;
+use Laminas\Stdlib\Request;
+use Laminas\Stdlib\Response;
 
 class DetectorTest extends TestCase
 {

@@ -40,10 +40,10 @@
 
 namespace SlmLocale;
 
-use LaminasEventManager\Event;
-use LaminasStdlib\RequestInterface;
-use LaminasStdlib\ResponseInterface;
-use LaminasUri\Uri;
+use Laminas\EventManager\Event;
+use Laminas\Stdlib\RequestInterface;
+use Laminas\Stdlib\ResponseInterface;
+use Laminas\Uri\Uri;
 
 class LocaleEvent extends Event
 {

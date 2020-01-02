@@ -43,14 +43,14 @@ use PHPUnit_Framework_TestCase as TestCase;
 use SlmLocale\LocaleEvent;
 use SlmLocale\Strategy\StrategyPluginManager;
 use SlmLocale\Strategy\UriPathStrategy;
-use LaminasConsole\Request as ConsoleRequest;
-use LaminasConsole\Response as ConsoleResponse;
-use LaminasHttp\PhpEnvironment\Request as HttpRequest;
-use LaminasHttp\PhpEnvironment\Response as HttpResponse;
-use LaminasMvc\Console\Router\SimpleRouteStack as ConsoleRouter;
-use LaminasRouter\Http\TreeRouteStack as HttpRouter;
-use LaminasServiceManager\ServiceManager;
-use LaminasUri\Uri;
+use Laminas\Console\Request as ConsoleRequest;
+use Laminas\Console\Response as ConsoleResponse;
+use Laminas\Http\PhpEnvironment\Request as HttpRequest;
+use Laminas\Http\PhpEnvironment\Response as HttpResponse;
+use Laminas\Mvc\Console\Router\SimpleRouteStack as ConsoleRouter;
+use Laminas\Router\Http\TreeRouteStack as HttpRouter;
+use Laminas\ServiceManager\ServiceManager;
+use Laminas\Uri\Uri;
 
 class UriPathStrategyTest extends TestCase
 {

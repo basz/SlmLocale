@@ -42,8 +42,8 @@ namespace SlmLocale\Strategy;
 
 use SlmLocale\LocaleEvent;
 use SlmLocale\Strategy\Exception\InvalidArgumentException;
-use LaminasHttp\Header\Cookie;
-use LaminasHttp\Header\SetCookie;
+use Laminas\Http\Header\Cookie;
+use Laminas\Http\Header\SetCookie;
 
 class CookieStrategy extends AbstractStrategy
 {

@@ -44,8 +44,8 @@ use PHPUnit_Framework_TestCase as TestCase;
 use SlmLocale\LocaleEvent;
 use SlmLocale\Strategy\HttpAcceptLanguageStrategy;
 
-use LaminasHttp\Header\AcceptLanguage;
-use LaminasHttp\Request as HttpRequest;
+use Laminas\Http\Header\AcceptLanguage;
+use Laminas\Http\Request as HttpRequest;
 
 class HttpAcceptLanguageStrategyTest extends TestCase
 {

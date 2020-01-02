@@ -40,7 +40,7 @@
 
 namespace SlmLocale\Strategy;
 
-use LaminasEventManager\ListenerAggregateInterface;
+use Laminas\EventManager\ListenerAggregateInterface;
 
 interface StrategyInterface extends ListenerAggregateInterface
 {

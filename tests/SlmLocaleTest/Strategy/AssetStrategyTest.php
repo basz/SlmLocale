@@ -6,11 +6,11 @@ use PHPUnit_Framework_TestCase as TestCase;
 use SlmLocale\Locale\Detector;
 use SlmLocale\LocaleEvent;
 use SlmLocale\Strategy\AssetStrategy;
-use LaminasConsole\Request as ConsoleRequest;
-use LaminasConsole\Response as ConsoleResponse;
-use LaminasEventManager\EventManager;
-use LaminasHttp\PhpEnvironment\Request as HttpRequest;
-use LaminasHttp\PhpEnvironment\Response as HttpResponse;
+use Laminas\Console\Request as ConsoleRequest;
+use Laminas\Console\Response as ConsoleResponse;
+use Laminas\EventManager\EventManager;
+use Laminas\Http\PhpEnvironment\Request as HttpRequest;
+use Laminas\Http\PhpEnvironment\Response as HttpResponse;
 
 class AssetStrategyTest extends TestCase
 {

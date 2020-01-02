@@ -46,8 +46,8 @@ use SlmLocale\Service\DetectorFactory;
 use SlmLocale\Strategy\Factory\StrategyPluginManagerFactory;
 use SlmLocale\Strategy\StrategyInterface;
 use SlmLocale\Strategy\StrategyPluginManager;
-use LaminasEventManager\EventManager;
-use LaminasServiceManager\ServiceManager;
+use Laminas\EventManager\EventManager;
+use Laminas\ServiceManager\ServiceManager;
 
 class DetectFactoryTest extends TestCase
 {

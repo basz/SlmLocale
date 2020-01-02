@@ -40,7 +40,7 @@
 namespace SlmLocale\View\Helper;
 
 use Locale;
-use LaminasView\Helper\AbstractHelper;
+use Laminas\View\Helper\AbstractHelper;
 
 final class PrimaryLanguage extends AbstractHelper
 {

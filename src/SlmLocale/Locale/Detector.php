@@ -42,11 +42,11 @@ namespace SlmLocale\Locale;
 
 use SlmLocale\LocaleEvent;
 use SlmLocale\Strategy\StrategyInterface;
-use LaminasEventManager\EventManagerAwareInterface;
-use LaminasEventManager\EventManagerInterface;
-use LaminasStdlib\RequestInterface;
-use LaminasStdlib\ResponseInterface;
-use LaminasUri\Uri;
+use Laminas\EventManager\EventManagerAwareInterface;
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\Stdlib\RequestInterface;
+use Laminas\Stdlib\ResponseInterface;
+use Laminas\Uri\Uri;
 
 class Detector implements EventManagerAwareInterface
 {

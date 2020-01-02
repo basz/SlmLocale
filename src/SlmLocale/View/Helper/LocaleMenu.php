@@ -42,8 +42,8 @@ namespace SlmLocale\View\Helper;
 
 use Locale;
 use SlmLocale\Locale\Detector;
-use LaminasView\Exception\RuntimeException;
-use LaminasView\Helper\AbstractHelper;
+use Laminas\View\Exception\RuntimeException;
+use Laminas\View\Helper\AbstractHelper;
 
 class LocaleMenu extends AbstractHelper
 {
@@ -230,7 +230,7 @@ class LocaleMenu extends AbstractHelper
     /**
      * @param array $options
      * @return string
-     * @todo implement add way to completely default rendering for maximum flexibility (see LaminasView\Helper\Navigation::renderPartial)
+     * @todo implement add way to completely default rendering for maximum flexibility (see Laminas\View\Helper\Navigation::renderPartial)
      */
     public function __toString()
     {
