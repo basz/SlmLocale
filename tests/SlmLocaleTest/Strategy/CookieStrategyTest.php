@@ -44,9 +44,9 @@ use PHPUnit_Framework_TestCase as TestCase;
 use SlmLocale\LocaleEvent;
 use SlmLocale\Strategy\CookieStrategy;
 
-use Zend\Http\Header\Cookie;
-use Zend\Http\Request  as HttpRequest;
-use Zend\Http\Response as HttpResponse;
+use LaminasHttp\Header\Cookie;
+use LaminasHttp\Request  as HttpRequest;
+use LaminasHttp\Response as HttpResponse;
 
 class CookieStrategyTest extends TestCase
 {

@@ -40,10 +40,10 @@
 
 namespace SlmLocale;
 
-use Zend\EventManager\Event;
-use Zend\Stdlib\RequestInterface;
-use Zend\Stdlib\ResponseInterface;
-use Zend\Uri\Uri;
+use LaminasEventManager\Event;
+use LaminasStdlib\RequestInterface;
+use LaminasStdlib\ResponseInterface;
+use LaminasUri\Uri;
 
 class LocaleEvent extends Event
 {

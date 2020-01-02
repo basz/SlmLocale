@@ -45,9 +45,9 @@ use SlmLocale\LocaleEvent;
 
 use SlmLocale\Strategy\AbstractStrategy;
 use SlmLocale\Strategy\StrategyInterface;
-use Zend\EventManager\EventManager;
-use Zend\Stdlib\Request;
-use Zend\Stdlib\Response;
+use LaminasEventManager\EventManager;
+use LaminasStdlib\Request;
+use LaminasStdlib\Response;
 
 class DetectorTest extends TestCase
 {

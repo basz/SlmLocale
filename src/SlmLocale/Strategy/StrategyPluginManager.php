@@ -41,8 +41,8 @@
 namespace SlmLocale\Strategy;
 
 use SlmLocale\Strategy\Factory\UriPathStrategyFactory;
-use Zend\ServiceManager\AbstractPluginManager;
-use Zend\ServiceManager\Factory\InvokableFactory;
+use LaminasServiceManager\AbstractPluginManager;
+use LaminasServiceManager\Factory\InvokableFactory;
 
 class StrategyPluginManager extends AbstractPluginManager
 {

@@ -41,10 +41,10 @@
 namespace SlmLocale\Strategy;
 
 use SlmLocale\LocaleEvent;
-use Zend\EventManager\AbstractListenerAggregate;
-use Zend\EventManager\EventManagerInterface;
-use Zend\Http\Request as HttpRequest;
-use Zend\Stdlib\RequestInterface;
+use LaminasEventManager\AbstractListenerAggregate;
+use LaminasEventManager\EventManagerInterface;
+use LaminasHttp\Request as HttpRequest;
+use LaminasStdlib\RequestInterface;
 
 abstract class AbstractStrategy extends AbstractListenerAggregate implements StrategyInterface
 {

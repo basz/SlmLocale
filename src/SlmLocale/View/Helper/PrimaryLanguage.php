@@ -40,7 +40,7 @@
 namespace SlmLocale\View\Helper;
 
 use Locale;
-use Zend\View\Helper\AbstractHelper;
+use LaminasView\Helper\AbstractHelper;
 
 final class PrimaryLanguage extends AbstractHelper
 {

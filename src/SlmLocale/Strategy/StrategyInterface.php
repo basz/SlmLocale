@@ -40,7 +40,7 @@
 
 namespace SlmLocale\Strategy;
 
-use Zend\EventManager\ListenerAggregateInterface;
+use LaminasEventManager\ListenerAggregateInterface;
 
 interface StrategyInterface extends ListenerAggregateInterface
 {

@@ -44,9 +44,9 @@ use PHPUnit_Framework_TestCase as TestCase;
 use SlmLocale\LocaleEvent;
 use SlmLocale\Strategy\QueryStrategy;
 
-use Zend\Http\Request  as HttpRequest;
-use Zend\Http\Response as HttpResponse;
-use Zend\Uri\Uri;
+use LaminasHttp\Request  as HttpRequest;
+use LaminasHttp\Response as HttpResponse;
+use LaminasUri\Uri;
 
 class QueryStrategyTest extends TestCase
 {

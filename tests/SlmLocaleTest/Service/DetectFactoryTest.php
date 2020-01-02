@@ -46,8 +46,8 @@ use SlmLocale\Service\DetectorFactory;
 use SlmLocale\Strategy\Factory\StrategyPluginManagerFactory;
 use SlmLocale\Strategy\StrategyInterface;
 use SlmLocale\Strategy\StrategyPluginManager;
-use Zend\EventManager\EventManager;
-use Zend\ServiceManager\ServiceManager;
+use LaminasEventManager\EventManager;
+use LaminasServiceManager\ServiceManager;
 
 class DetectFactoryTest extends TestCase
 {

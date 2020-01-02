@@ -42,7 +42,7 @@ namespace SlmLocale\Service;
 use Interop\Container\ContainerInterface;
 use Locale;
 use SlmLocale\View\Helper\PrimaryLanguage;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use LaminasServiceManager\Factory\FactoryInterface;
 
 final class PrimaryLanguageHelperFactory implements FactoryInterface
 {
