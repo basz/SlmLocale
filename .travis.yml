@@ -41,6 +41,14 @@ matrix:
       env:
         - DEPENDENCIES="--prefer-lowest --prefer-stable"
 
+    - php: 7.4
+      env:
+        - DEPENDENCIES="--prefer-stable"
+        - TEST_COVERAGE=true
+    - php: 7.4
+      env:
+        - DEPENDENCIES="--prefer-lowest --prefer-stable"
+
 
 before_script:
   - phpenv config-rm xdebug.ini
