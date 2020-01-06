@@ -40,13 +40,13 @@
 
 namespace SlmLocale;
 
-use Locale;
-
-use SlmLocale\Locale\Detector;
 use Laminas\EventManager\EventInterface;
+
 use Laminas\ModuleManager\Feature;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Stdlib\ResponseInterface;
+use Locale;
+use SlmLocale\Locale\Detector;
 
 class Module implements
     Feature\ConfigProviderInterface,

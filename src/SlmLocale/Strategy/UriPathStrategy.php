@@ -40,11 +40,11 @@
 
 namespace SlmLocale\Strategy;
 
-use SlmLocale\LocaleEvent;
 use Laminas\Router\Http\TreeRouteStack;
 use Laminas\Router\SimpleRouteStack;
 use Laminas\Stdlib\RequestInterface;
 use Laminas\Uri\Uri;
+use SlmLocale\LocaleEvent;
 
 class UriPathStrategy extends AbstractStrategy
 {

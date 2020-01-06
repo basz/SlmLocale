@@ -39,11 +39,11 @@
  */
 namespace SlmLocale\View\Helper;
 
-use SlmLocale\Locale\Detector;
 use Laminas\Http\Request;
 use Laminas\Router\Http\RouteMatch;
 use Laminas\View\Exception\RuntimeException;
 use Laminas\View\Helper\AbstractHelper;
+use SlmLocale\Locale\Detector;
 
 class LocaleUrl extends AbstractHelper
 {

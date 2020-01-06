@@ -2,13 +2,13 @@
 
 namespace SlmLocaleTest\Strategy;
 
-use PHPUnit_Framework_TestCase as TestCase;
-use SlmLocale\LocaleEvent;
-use SlmLocale\Strategy\HostStrategy;
 use Laminas\Http\PhpEnvironment\Request;
 use Laminas\Stdlib\Parameters;
 use Laminas\Stdlib\RequestInterface;
 use Laminas\Uri\Uri;
+use PHPUnit_Framework_TestCase as TestCase;
+use SlmLocale\LocaleEvent;
+use SlmLocale\Strategy\HostStrategy;
 
 class HostStrategyTest extends TestCase
 {

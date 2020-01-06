@@ -39,8 +39,8 @@
  */
 namespace SlmLocale\View\Helper;
 
-use Locale;
 use Laminas\View\Helper\AbstractHelper;
+use Locale;
 
 final class PrimaryLanguage extends AbstractHelper
 {

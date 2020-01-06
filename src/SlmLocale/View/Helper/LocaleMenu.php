@@ -40,10 +40,10 @@
 
 namespace SlmLocale\View\Helper;
 
-use Locale;
-use SlmLocale\Locale\Detector;
 use Laminas\View\Exception\RuntimeException;
 use Laminas\View\Helper\AbstractHelper;
+use Locale;
+use SlmLocale\Locale\Detector;
 
 class LocaleMenu extends AbstractHelper
 {

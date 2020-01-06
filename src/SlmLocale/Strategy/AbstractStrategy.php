@@ -40,11 +40,11 @@
 
 namespace SlmLocale\Strategy;
 
-use SlmLocale\LocaleEvent;
 use Laminas\EventManager\AbstractListenerAggregate;
 use Laminas\EventManager\EventManagerInterface;
 use Laminas\Http\Request as HttpRequest;
 use Laminas\Stdlib\RequestInterface;
+use SlmLocale\LocaleEvent;
 
 abstract class AbstractStrategy extends AbstractListenerAggregate implements StrategyInterface
 {

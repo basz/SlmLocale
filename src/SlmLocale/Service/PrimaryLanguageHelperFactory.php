@@ -40,9 +40,9 @@
 namespace SlmLocale\Service;
 
 use Interop\Container\ContainerInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Locale;
 use SlmLocale\View\Helper\PrimaryLanguage;
-use Laminas\ServiceManager\Factory\FactoryInterface;
 
 final class PrimaryLanguageHelperFactory implements FactoryInterface
 {
