@@ -59,7 +59,7 @@ class QueryStrategyTest extends TestCase
      */
     protected $event;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->strategy = new QueryStrategy();
         $this->event    = new LocaleEvent();

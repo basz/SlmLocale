@@ -61,7 +61,7 @@ class UriPathStrategyTest extends TestCase
     /** @var HttpRouter */
     private $router;
 
-    public function setup()
+    public function setUp(): void
     {
         $this->router = new HttpRouter();
 
@@ -146,7 +146,7 @@ class UriPathStrategyTest extends TestCase
         $header     = $this->event->getResponse()->getHeaders()->get('Location');
         $expected   = 'Location: http://username:password@example.com:8080/en/some/deep/path/some.file?withsomeparam=true';
         $this->assertEquals(302, $statusCode);
-        $this->assertContains($expected, (string) $header);
+        $this->assertStringContainsString($expected, (string) $header);
     }
 
     public function testFoundShouldRespectDisabledRedirectWhenFound()
@@ -185,7 +185,7 @@ class UriPathStrategyTest extends TestCase
         $header     = $this->event->getResponse()->getHeaders()->get('Location');
         $expected   = 'Location: http://example.com/my-app/public/en/some/deep/path/some.file?withsomeparam=true';
         $this->assertEquals(302, $statusCode);
-        $this->assertContains($expected, (string) $header);
+        $this->assertStringContainsString($expected, (string) $header);
     }
 
     public function testFoundRedirectsByDefaultWithBasePathDisabledRedirectWhenFound()
@@ -225,7 +225,7 @@ class UriPathStrategyTest extends TestCase
     //     $locale = $this->strategy->found($this->event);
 
     //     $this->assertEquals($this->event->getResponse()->getStatusCode(), 302);
-    //     $this->assertContains($this->event->getResponse()->getHeaders()->toString(), "Location: http://example.com/en/\r\n");
+    //     $this->assertStringContainsString($this->event->getResponse()->getHeaders()->toString(), "Location: http://example.com/en/\r\n");
     // }
 
     // public function testFoundWithDisabledRedirectWhenFoundOptionLocaleShouldStillBeDirectedAnyway()

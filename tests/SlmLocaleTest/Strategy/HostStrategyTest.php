@@ -4,6 +4,7 @@ namespace SlmLocaleTest\Strategy;
 
 use PHPUnit\Framework\TestCase;
 use SlmLocale\LocaleEvent;
+use SlmLocale\Strategy\Exception\InvalidArgumentException;
 use SlmLocale\Strategy\HostStrategy;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Stdlib\Parameters;
@@ -31,9 +32,6 @@ class HostStrategyTest extends TestCase
         $this->assertNull($strategy->detect($event));
     }
 
-    /**
-     * @expectedException \SlmLocale\Strategy\Exception\InvalidArgumentException
-     */
     public function testDetectWithoutDomainThrowsInvalidArgumentException()
     {
         $event = new LocaleEvent();
@@ -42,6 +40,8 @@ class HostStrategyTest extends TestCase
 
         $strategy = new HostStrategy();
         $strategy->setOptions(['domain' => 'test']);
+
+        $this->expectException(InvalidArgumentException::class);
         $this->assertNull($strategy->detect($event));
     }
 

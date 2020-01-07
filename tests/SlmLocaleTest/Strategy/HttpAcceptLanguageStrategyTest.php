@@ -52,7 +52,7 @@ class HttpAcceptLanguageStrategyTest extends TestCase
     protected $strategy;
     protected $event;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->strategy = new HttpAcceptLanguageStrategy();
         $this->event    = new LocaleEvent();

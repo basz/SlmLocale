@@ -20,7 +20,7 @@ class AssetStrategyTest extends TestCase
     /** @var LocaleEvent */
     private $event;
 
-    public function setup()
+    public function setUp(): void
     {
         $this->strategy = new AssetStrategy();
         $this->strategy->setOptions(['file_extensions' => ['css', 'js']]);
