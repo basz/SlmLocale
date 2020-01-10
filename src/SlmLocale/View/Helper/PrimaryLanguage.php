@@ -39,8 +39,8 @@
  */
 namespace SlmLocale\View\Helper;
 
+use Laminas\View\Helper\AbstractHelper;
 use Locale;
-use Zend\View\Helper\AbstractHelper;
 
 final class PrimaryLanguage extends AbstractHelper
 {

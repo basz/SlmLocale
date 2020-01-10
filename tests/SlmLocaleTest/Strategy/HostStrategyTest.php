@@ -2,14 +2,14 @@
 
 namespace SlmLocaleTest\Strategy;
 
+use Laminas\Http\PhpEnvironment\Request;
+use Laminas\Stdlib\Parameters;
+use Laminas\Stdlib\RequestInterface;
+use Laminas\Uri\Uri;
 use PHPUnit\Framework\TestCase;
 use SlmLocale\LocaleEvent;
 use SlmLocale\Strategy\Exception\InvalidArgumentException;
 use SlmLocale\Strategy\HostStrategy;
-use Zend\Http\PhpEnvironment\Request;
-use Zend\Stdlib\Parameters;
-use Zend\Stdlib\RequestInterface;
-use Zend\Uri\Uri;
 
 class HostStrategyTest extends TestCase
 {
@@ -25,7 +25,7 @@ class HostStrategyTest extends TestCase
     public function testDetectWithoutSupportedReturnsNull()
     {
         $event = new LocaleEvent();
-        $event->setRequest($this->getMockForAbstractClass(\Zend\Http\Request::class));
+        $event->setRequest($this->getMockForAbstractClass(\Laminas\Http\Request::class));
         $event->setSupported([]);
 
         $strategy = new HostStrategy();
@@ -35,7 +35,7 @@ class HostStrategyTest extends TestCase
     public function testDetectWithoutDomainThrowsInvalidArgumentException()
     {
         $event = new LocaleEvent();
-        $event->setRequest($this->getMockForAbstractClass(\Zend\Http\Request::class));
+        $event->setRequest($this->getMockForAbstractClass(\Laminas\Http\Request::class));
         $event->setSupported(['en_GB', 'de_DE']);
 
         $strategy = new HostStrategy();

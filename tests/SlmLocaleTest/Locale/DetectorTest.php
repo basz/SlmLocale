@@ -39,15 +39,14 @@
  */
 namespace SlmLocaleTest\Locale;
 
+use Laminas\EventManager\EventManager;
+use Laminas\Stdlib\Request;
+use Laminas\Stdlib\Response;
 use PHPUnit\Framework\TestCase;
 use SlmLocale\Locale\Detector;
 use SlmLocale\LocaleEvent;
-
 use SlmLocale\Strategy\AbstractStrategy;
 use SlmLocale\Strategy\StrategyInterface;
-use Zend\EventManager\EventManager;
-use Zend\Stdlib\Request;
-use Zend\Stdlib\Response;
 
 class DetectorTest extends TestCase
 {

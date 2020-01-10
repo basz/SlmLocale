@@ -39,15 +39,14 @@
  */
 namespace SlmLocaleTest\Locale;
 
+use Laminas\EventManager\EventManager;
+use Laminas\ServiceManager\ServiceManager;
 use PHPUnit\Framework\TestCase;
-
 use SlmLocale\Locale\Detector;
 use SlmLocale\Service\DetectorFactory;
 use SlmLocale\Strategy\Factory\StrategyPluginManagerFactory;
 use SlmLocale\Strategy\StrategyInterface;
 use SlmLocale\Strategy\StrategyPluginManager;
-use Zend\EventManager\EventManager;
-use Zend\ServiceManager\ServiceManager;
 
 class DetectFactoryTest extends TestCase
 {
