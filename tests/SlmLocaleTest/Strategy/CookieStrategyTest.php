@@ -39,14 +39,14 @@
  */
 namespace SlmLocaleTest\Locale;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use Laminas\Http\Header\Cookie;
 
+use Laminas\Http\Request  as HttpRequest;
+use Laminas\Http\Response as HttpResponse;
+
+use PHPUnit_Framework_TestCase as TestCase;
 use SlmLocale\LocaleEvent;
 use SlmLocale\Strategy\CookieStrategy;
-
-use Zend\Http\Header\Cookie;
-use Zend\Http\Request  as HttpRequest;
-use Zend\Http\Response as HttpResponse;
 
 class CookieStrategyTest extends TestCase
 {
