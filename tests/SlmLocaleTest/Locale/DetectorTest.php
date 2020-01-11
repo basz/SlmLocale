@@ -42,8 +42,7 @@ namespace SlmLocaleTest\Locale;
 use Laminas\EventManager\EventManager;
 use Laminas\Stdlib\Request;
 use Laminas\Stdlib\Response;
-
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use SlmLocale\Locale\Detector;
 use SlmLocale\LocaleEvent;
 use SlmLocale\Strategy\AbstractStrategy;
@@ -53,7 +52,7 @@ class DetectorTest extends TestCase
 {
     private $events;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->events = new EventManager();
     }

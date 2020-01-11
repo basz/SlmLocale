@@ -40,7 +40,7 @@
 namespace SlmLocaleTest\View\Helper;
 
 use Locale;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use SlmLocale\View\Helper\PrimaryLanguage;
 
 final class PrimaryLanguageTest extends TestCase

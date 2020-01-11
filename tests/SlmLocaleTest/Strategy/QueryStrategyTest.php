@@ -40,11 +40,9 @@
 namespace SlmLocaleTest\Locale;
 
 use Laminas\Http\Request  as HttpRequest;
-
 use Laminas\Http\Response as HttpResponse;
 use Laminas\Uri\Uri;
-
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use SlmLocale\LocaleEvent;
 use SlmLocale\Strategy\QueryStrategy;
 
@@ -59,7 +57,7 @@ class QueryStrategyTest extends TestCase
      */
     protected $event;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->strategy = new QueryStrategy();
         $this->event    = new LocaleEvent();

@@ -40,9 +40,8 @@
 namespace SlmLocaleTest\Locale;
 
 use Laminas\EventManager\EventManager;
-
 use Laminas\ServiceManager\ServiceManager;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use SlmLocale\Locale\Detector;
 use SlmLocale\Service\DetectorFactory;
 use SlmLocale\Strategy\Factory\StrategyPluginManagerFactory;
