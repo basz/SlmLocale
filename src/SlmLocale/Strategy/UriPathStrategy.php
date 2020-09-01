@@ -41,9 +41,9 @@
 namespace SlmLocale\Strategy;
 
 use SlmLocale\LocaleEvent;
-use Zend\Router\Http\TreeRouteStack;
-use Zend\Router\SimpleRouteStack;
-use Zend\Uri\Uri;
+use Laminas\Router\Http\TreeRouteStack;
+use Laminas\Router\SimpleRouteStack;
+use Laminas\Uri\Uri;
 
 class UriPathStrategy extends AbstractStrategy
 {

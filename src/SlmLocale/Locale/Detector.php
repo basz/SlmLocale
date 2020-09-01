@@ -42,11 +42,11 @@ namespace SlmLocale\Locale;
 
 use SlmLocale\LocaleEvent;
 use SlmLocale\Strategy\StrategyInterface;
-use Zend\EventManager\EventManagerAwareInterface;
-use Zend\EventManager\EventManagerInterface;
-use Zend\Stdlib\RequestInterface;
-use Zend\Stdlib\ResponseInterface;
-use Zend\Uri\Uri;
+use Laminas\EventManager\EventManagerAwareInterface;
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\Stdlib\RequestInterface;
+use Laminas\Stdlib\ResponseInterface;
+use Laminas\Uri\Uri;
 
 class Detector implements EventManagerAwareInterface
 {

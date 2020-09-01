@@ -43,10 +43,10 @@ namespace SlmLocale;
 use Locale;
 
 use SlmLocale\Locale\Detector;
-use Zend\EventManager\EventInterface;
-use Zend\ModuleManager\Feature;
-use Zend\Mvc\MvcEvent;
-use Zend\Stdlib\ResponseInterface;
+use Laminas\EventManager\EventInterface;
+use Laminas\ModuleManager\Feature;
+use Laminas\Mvc\MvcEvent;
+use Laminas\Stdlib\ResponseInterface;
 
 class Module implements
     Feature\ConfigProviderInterface,

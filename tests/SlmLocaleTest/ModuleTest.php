@@ -5,12 +5,12 @@ namespace SlmLocaleTest\Locale;
 use PHPUnit_Framework_TestCase as TestCase;
 use SlmLocale\Locale\Detector;
 use SlmLocale\Module;
-use Zend\EventManager\EventManager;
-use Zend\Mvc\Application;
-use Zend\Mvc\MvcEvent;
-use Zend\ServiceManager\ServiceManager;
-use Zend\Stdlib\Request;
-use Zend\Stdlib\Response;
+use Laminas\EventManager\EventManager;
+use Laminas\Mvc\Application;
+use Laminas\Mvc\MvcEvent;
+use Laminas\ServiceManager\ServiceManager;
+use Laminas\Stdlib\Request;
+use Laminas\Stdlib\Response;
 
 class ModuleTest extends TestCase
 {

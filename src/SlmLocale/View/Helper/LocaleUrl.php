@@ -40,10 +40,10 @@
 namespace SlmLocale\View\Helper;
 
 use SlmLocale\Locale\Detector;
-use Zend\Http\Request;
-use Zend\Router\Http\RouteMatch;
-use Zend\View\Exception\RuntimeException;
-use Zend\View\Helper\AbstractHelper;
+use Laminas\Http\Request;
+use Laminas\Router\Http\RouteMatch;
+use Laminas\View\Exception\RuntimeException;
+use Laminas\View\Helper\AbstractHelper;
 
 class LocaleUrl extends AbstractHelper
 {
@@ -84,7 +84,7 @@ class LocaleUrl extends AbstractHelper
     /**
      * Generates an localized url
      *
-     * @see    \Zend\View\Helper\Url::__invoke()
+     * @see    \Laminas\View\Helper\Url::__invoke()
      * @param  string  $locale             Locale
      * @param  string  $name               Name of the route
      * @param  array   $params             Parameters for the link
