@@ -40,13 +40,13 @@
 
 namespace SlmLocale\Locale;
 
-use SlmLocale\LocaleEvent;
-use SlmLocale\Strategy\StrategyInterface;
 use Laminas\EventManager\EventManagerAwareInterface;
 use Laminas\EventManager\EventManagerInterface;
 use Laminas\Stdlib\RequestInterface;
 use Laminas\Stdlib\ResponseInterface;
 use Laminas\Uri\Uri;
+use SlmLocale\LocaleEvent;
+use SlmLocale\Strategy\StrategyInterface;
 
 class Detector implements EventManagerAwareInterface
 {

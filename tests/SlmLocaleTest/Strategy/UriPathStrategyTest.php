@@ -39,10 +39,6 @@
  */
 namespace SlmLocaleTest\Locale;
 
-use PHPUnit_Framework_TestCase as TestCase;
-use SlmLocale\LocaleEvent;
-use SlmLocale\Strategy\StrategyPluginManager;
-use SlmLocale\Strategy\UriPathStrategy;
 use Laminas\Console\Request as ConsoleRequest;
 use Laminas\Console\Response as ConsoleResponse;
 use Laminas\Http\PhpEnvironment\Request as HttpRequest;
@@ -51,6 +47,10 @@ use Laminas\Mvc\Console\Router\SimpleRouteStack as ConsoleRouter;
 use Laminas\Router\Http\TreeRouteStack as HttpRouter;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\Uri\Uri;
+use PHPUnit_Framework_TestCase as TestCase;
+use SlmLocale\LocaleEvent;
+use SlmLocale\Strategy\StrategyPluginManager;
+use SlmLocale\Strategy\UriPathStrategy;
 
 class UriPathStrategyTest extends TestCase
 {

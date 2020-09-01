@@ -39,14 +39,12 @@
  */
 namespace SlmLocaleTest\Locale;
 
-use PHPUnit_Framework_TestCase as TestCase;
-
-use SlmLocale\LocaleEvent;
-use SlmLocale\Strategy\QueryStrategy;
-
-use Laminas\Http\Request  as HttpRequest;
+use Laminas\Http\Request as HttpRequest;
 use Laminas\Http\Response as HttpResponse;
 use Laminas\Uri\Uri;
+use PHPUnit_Framework_TestCase as TestCase;
+use SlmLocale\LocaleEvent;
+use SlmLocale\Strategy\QueryStrategy;
 
 class QueryStrategyTest extends TestCase
 {

@@ -39,13 +39,11 @@
  */
 namespace SlmLocaleTest\Locale;
 
-use PHPUnit_Framework_TestCase as TestCase;
-
-use SlmLocale\LocaleEvent;
-use SlmLocale\Strategy\HttpAcceptLanguageStrategy;
-
 use Laminas\Http\Header\AcceptLanguage;
 use Laminas\Http\Request as HttpRequest;
+use PHPUnit_Framework_TestCase as TestCase;
+use SlmLocale\LocaleEvent;
+use SlmLocale\Strategy\HttpAcceptLanguageStrategy;
 
 class HttpAcceptLanguageStrategyTest extends TestCase
 {

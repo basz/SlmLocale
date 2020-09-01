@@ -2,15 +2,15 @@
 
 namespace SlmLocaleTest\Strategy;
 
-use PHPUnit_Framework_TestCase as TestCase;
-use SlmLocale\Locale\Detector;
-use SlmLocale\LocaleEvent;
-use SlmLocale\Strategy\AssetStrategy;
 use Laminas\Console\Request as ConsoleRequest;
 use Laminas\Console\Response as ConsoleResponse;
 use Laminas\EventManager\EventManager;
 use Laminas\Http\PhpEnvironment\Request as HttpRequest;
 use Laminas\Http\PhpEnvironment\Response as HttpResponse;
+use PHPUnit_Framework_TestCase as TestCase;
+use SlmLocale\Locale\Detector;
+use SlmLocale\LocaleEvent;
+use SlmLocale\Strategy\AssetStrategy;
 
 class AssetStrategyTest extends TestCase
 {

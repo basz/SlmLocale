@@ -2,15 +2,15 @@
 
 namespace SlmLocaleTest\Locale;
 
-use PHPUnit_Framework_TestCase as TestCase;
-use SlmLocale\Locale\Detector;
-use SlmLocale\Module;
 use Laminas\EventManager\EventManager;
 use Laminas\Mvc\Application;
 use Laminas\Mvc\MvcEvent;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\Stdlib\Request;
 use Laminas\Stdlib\Response;
+use PHPUnit_Framework_TestCase as TestCase;
+use SlmLocale\Locale\Detector;
+use SlmLocale\Module;
 
 class ModuleTest extends TestCase
 {

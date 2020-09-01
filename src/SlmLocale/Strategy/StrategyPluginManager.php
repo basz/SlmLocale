@@ -40,9 +40,9 @@
 
 namespace SlmLocale\Strategy;
 
-use SlmLocale\Strategy\Factory\UriPathStrategyFactory;
 use Laminas\ServiceManager\AbstractPluginManager;
 use Laminas\ServiceManager\Factory\InvokableFactory;
+use SlmLocale\Strategy\Factory\UriPathStrategyFactory;
 
 class StrategyPluginManager extends AbstractPluginManager
 {
