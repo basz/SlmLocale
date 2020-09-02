@@ -47,7 +47,7 @@ use Laminas\Mvc\Console\Router\SimpleRouteStack as ConsoleRouter;
 use Laminas\Router\Http\TreeRouteStack as HttpRouter;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\Uri\Uri;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use SlmLocale\LocaleEvent;
 use SlmLocale\Strategy\StrategyPluginManager;
 use SlmLocale\Strategy\UriPathStrategy;
@@ -61,7 +61,7 @@ class UriPathStrategyTest extends TestCase
     /** @var HttpRouter */
     private $router;
 
-    public function setup()
+    public function setUp(): void
     {
         $this->router = new HttpRouter();
 
@@ -147,7 +147,7 @@ class UriPathStrategyTest extends TestCase
         $header     = $this->event->getResponse()->getHeaders()->get('Location');
         $expected   = 'Location: http://username:password@example.com:8080/en/some/deep/path/some.file?withsomeparam=true';
         $this->assertEquals(302, $statusCode);
-        $this->assertContains($expected, (string) $header);
+        $this->assertStringContainsString($expected, (string) $header);
     }
 
     public function testFoundShouldRespectDisabledRedirectWhenFound()

@@ -42,16 +42,17 @@ namespace SlmLocaleTest\Locale;
 use Laminas\Http\Header\Cookie;
 use Laminas\Http\Request as HttpRequest;
 use Laminas\Http\Response as HttpResponse;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use SlmLocale\LocaleEvent;
 use SlmLocale\Strategy\CookieStrategy;
+use SlmLocale\Strategy\Exception\InvalidArgumentException;
 
 class CookieStrategyTest extends TestCase
 {
     protected $strategy;
     protected $event;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->strategy = new CookieStrategy();
         $this->event    = new LocaleEvent();
@@ -174,11 +175,9 @@ class CookieStrategyTest extends TestCase
         $this->assertEquals('foo', $locale);
     }
 
-    /**
-     * @expectedException \SlmLocale\Strategy\Exception\InvalidArgumentException
-     */
     public function testInvalidCookieNameFails()
     {
+        $this->expectException(InvalidArgumentException::class);
         $strategy = $this->strategy;
         $strategy->setCookieName('$ThisIsAnInvalidCookieName');
     }

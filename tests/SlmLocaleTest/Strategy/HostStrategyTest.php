@@ -6,8 +6,9 @@ use Laminas\Http\PhpEnvironment\Request;
 use Laminas\Stdlib\Parameters;
 use Laminas\Stdlib\RequestInterface;
 use Laminas\Uri\Uri;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use SlmLocale\LocaleEvent;
+use SlmLocale\Strategy\Exception\InvalidArgumentException;
 use SlmLocale\Strategy\HostStrategy;
 
 class HostStrategyTest extends TestCase
@@ -31,11 +32,10 @@ class HostStrategyTest extends TestCase
         $this->assertNull($strategy->detect($event));
     }
 
-    /**
-     * @expectedException \SlmLocale\Strategy\Exception\InvalidArgumentException
-     */
     public function testDetectWithoutDomainThrowsInvalidArgumentException()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $event = new LocaleEvent();
         $event->setRequest($this->getMockForAbstractClass(\Laminas\Http\Request::class));
         $event->setSupported(['en_GB', 'de_DE']);

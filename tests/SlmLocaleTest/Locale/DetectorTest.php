@@ -42,7 +42,7 @@ namespace SlmLocaleTest\Locale;
 use Laminas\EventManager\EventManager;
 use Laminas\Stdlib\Request;
 use Laminas\Stdlib\Response;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use SlmLocale\Locale\Detector;
 use SlmLocale\LocaleEvent;
 use SlmLocale\Strategy\AbstractStrategy;
@@ -52,7 +52,7 @@ class DetectorTest extends TestCase
 {
     private $events;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->events = new EventManager();
     }
@@ -201,8 +201,8 @@ class DetectorTest extends TestCase
     public function testStrategyAttachesToEventManager()
     {
         $detector = new Detector();
-        $events   = $this->getMock(EventManager::class);
-        $strategy = $this->getMock(StrategyInterface::class);
+        $events   = $this->getMockBuilder(EventManager::class)->getMock();
+        $strategy = $this->getMockBuilder(StrategyInterface::class)->getMock();
         $strategy->expects($this->once())
             ->method('attach')
             ->with($events);
@@ -216,12 +216,15 @@ class DetectorTest extends TestCase
         $detector  = new Detector();
         $this->setEventManager($detector);
 
-        $strategy1 = $this->getMock(AbstractStrategy::class, ['detect']);
+        $strategy1 = $this->getMockBuilder(AbstractStrategy::class)
+            ->onlyMethods(['detect'])
+            ->getMock();
         $strategy1->expects($this->once())
                   ->method('detect')
                   ->will($this->returnValue('Foo'));
 
-        $strategy2 = $this->getMock(AbstractStrategy::class, ['detect']);
+        $strategy2 = $this->getMockBuilder(AbstractStrategy::class)
+            ->getMock();
         $strategy2->expects($this->never())
                   ->method('detect');
 
