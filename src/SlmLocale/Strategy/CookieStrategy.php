@@ -40,10 +40,10 @@
 
 namespace SlmLocale\Strategy;
 
+use Laminas\Http\Header\Cookie;
+use Laminas\Http\Header\SetCookie;
 use SlmLocale\LocaleEvent;
 use SlmLocale\Strategy\Exception\InvalidArgumentException;
-use Zend\Http\Header\Cookie;
-use Zend\Http\Header\SetCookie;
 
 class CookieStrategy extends AbstractStrategy
 {

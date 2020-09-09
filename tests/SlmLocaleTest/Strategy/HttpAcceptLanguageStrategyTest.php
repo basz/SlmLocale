@@ -39,20 +39,18 @@
  */
 namespace SlmLocaleTest\Locale;
 
-use PHPUnit_Framework_TestCase as TestCase;
-
+use Laminas\Http\Header\AcceptLanguage;
+use Laminas\Http\Request as HttpRequest;
+use PHPUnit\Framework\TestCase;
 use SlmLocale\LocaleEvent;
 use SlmLocale\Strategy\HttpAcceptLanguageStrategy;
-
-use Zend\Http\Header\AcceptLanguage;
-use Zend\Http\Request as HttpRequest;
 
 class HttpAcceptLanguageStrategyTest extends TestCase
 {
     protected $strategy;
     protected $event;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->strategy = new HttpAcceptLanguageStrategy();
         $this->event    = new LocaleEvent();

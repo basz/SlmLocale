@@ -39,15 +39,14 @@
  */
 namespace SlmLocaleTest\Locale;
 
-use PHPUnit_Framework_TestCase as TestCase;
-
+use Laminas\EventManager\EventManager;
+use Laminas\ServiceManager\ServiceManager;
+use PHPUnit\Framework\TestCase;
 use SlmLocale\Locale\Detector;
 use SlmLocale\Service\DetectorFactory;
 use SlmLocale\Strategy\Factory\StrategyPluginManagerFactory;
 use SlmLocale\Strategy\StrategyInterface;
 use SlmLocale\Strategy\StrategyPluginManager;
-use Zend\EventManager\EventManager;
-use Zend\ServiceManager\ServiceManager;
 
 class DetectFactoryTest extends TestCase
 {
@@ -125,7 +124,7 @@ class DetectFactoryTest extends TestCase
         $plugins->setFactory('TestStrategy', function () use ($self, &$called) {
             $called = true;
 
-            return $self->getMock(StrategyInterface::class);
+            return $self->createMock(StrategyInterface::class);
         });
 
         $detector = $sl->get(Detector::class);
@@ -144,14 +143,14 @@ class DetectFactoryTest extends TestCase
         $plugins->setFactory('TestStrategy1', function () use ($self, &$called1) {
             $called1 = true;
 
-            return $self->getMock(StrategyInterface::class);
+            return $self->createMock(StrategyInterface::class);
         });
 
         $called2 = false;
         $plugins->setFactory('TestStrategy2', function () use ($self, &$called2) {
             $called2 = true;
 
-            return $self->getMock(StrategyInterface::class);
+            return $self->createMock(StrategyInterface::class);
         });
 
         $detector = $sl->get(Detector::class);
@@ -173,7 +172,7 @@ class DetectFactoryTest extends TestCase
         $plugins->setFactory('TestStrategy', function () use ($self, &$called) {
             $called = true;
 
-            return $self->getMock(StrategyInterface::class);
+            return $self->createMock(StrategyInterface::class);
         });
 
         $detector = $sl->get(Detector::class);
@@ -189,7 +188,7 @@ class DetectFactoryTest extends TestCase
         ]);
         $em = $sl->get('EventManager');
 
-        $strategy = $this->getMock(StrategyInterface::class, ['attach', 'detach']);
+        $strategy = $this->createMock(StrategyInterface::class, ['attach', 'detach']);
         $strategy->expects($this->once())
                  ->method('attach')
                  ->with($em, 100);
@@ -206,7 +205,10 @@ class DetectFactoryTest extends TestCase
                 ['name' => 'TestStrategy', 'options' => 'Foo'],
             ],
         ]);
-        $strategy = $this->getMock(StrategyInterface::class, ['attach', 'detach', 'setOptions']);
+
+        $strategy = $this->getMockBuilder(StrategyInterface::class)
+            ->setMethods(['attach', 'detach', 'setOptions'])
+            ->getMock();
         $strategy->expects($this->once())
                  ->method('setOptions')
                  ->with('Foo');

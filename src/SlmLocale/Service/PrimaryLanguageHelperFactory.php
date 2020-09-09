@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2012-2013 Jurian Sluiman.
+ * Copyright (c) 2012-2019 Jurian Sluiman.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,38 +37,23 @@
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link        http://juriansluiman.nl
  */
+namespace SlmLocale\Service;
 
-namespace SlmLocale\Strategy;
+use Interop\Container\ContainerInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
+use Locale;
+use SlmLocale\View\Helper\PrimaryLanguage;
 
-use Laminas\ServiceManager\AbstractPluginManager;
-use Laminas\ServiceManager\Factory\InvokableFactory;
-use SlmLocale\Strategy\Factory\UriPathStrategyFactory;
-
-class StrategyPluginManager extends AbstractPluginManager
+final class PrimaryLanguageHelperFactory implements FactoryInterface
 {
-    protected $instanceOf = StrategyInterface::class;
-
     /**
-     * {@inheritdoc}
+     * @param ContainerInterface $container
+     * @param string $requestedName
+     * @param array|null $options
+     * @return object|PrimaryLanguage
      */
-    protected $aliases = [
-        'cookie'         => CookieStrategy::class,
-        'host'           => HostStrategy::class,
-        'acceptlanguage' => HttpAcceptLanguageStrategy::class,
-        'query'          => QueryStrategy::class,
-        'uripath'        => UriPathStrategy::class,
-        'asset'          => AssetStrategy::class,
-    ];
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $factories = [
-        CookieStrategy::class             => InvokableFactory::class,
-        HostStrategy::class               => InvokableFactory::class,
-        HttpAcceptLanguageStrategy::class => InvokableFactory::class,
-        QueryStrategy::class              => InvokableFactory::class,
-        UriPathStrategy::class            => UriPathStrategyFactory::class,
-        AssetStrategy::class              => InvokableFactory::class,
-    ];
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        return new PrimaryLanguage(new Locale());
+    }
 }

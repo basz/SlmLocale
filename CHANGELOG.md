@@ -4,6 +4,14 @@ Changelog
 v1.0.0 - TBD
 ---
 
+v0.5.0 - 2020-09-09
+---
+ * [#104](https://github.com/basz/SlmLocale/pull/104) Run tests for php 7.2 and 7.3
+ * [#106](https://github.com/basz/SlmLocale/pull/106) Added a view-helper to get the primary-language
+ * [#105](https://github.com/basz/SlmLocale/pull/105) Fixed locale url change, from default locale to other locale
+ * [#107](https://github.com/basz/SlmLocale/pull/107) Added Laminas support
+ * [#108](https://github.com/basz/SlmLocale/pull/108) Added tests for php74
+
 v0.4.1
 ---
  * [#99](https://github.com/basz/SlmLocale/pull/99) fixed #26 unit testing applications using SlmLocale

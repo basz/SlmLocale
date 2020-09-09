@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2012-2013 Jurian Sluiman.
+ * Copyright (c) 2012-2019 Jurian Sluiman.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,38 +37,30 @@
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link        http://juriansluiman.nl
  */
+namespace SlmLocale\View\Helper;
 
-namespace SlmLocale\Strategy;
+use Laminas\View\Helper\AbstractHelper;
+use Locale;
 
-use Laminas\ServiceManager\AbstractPluginManager;
-use Laminas\ServiceManager\Factory\InvokableFactory;
-use SlmLocale\Strategy\Factory\UriPathStrategyFactory;
-
-class StrategyPluginManager extends AbstractPluginManager
+final class PrimaryLanguage extends AbstractHelper
 {
-    protected $instanceOf = StrategyInterface::class;
+    /** @var Locale */
+    protected $locale;
 
     /**
-     * {@inheritdoc}
+     * PrimaryLanguage constructor.
+     * @param Locale $locale
      */
-    protected $aliases = [
-        'cookie'         => CookieStrategy::class,
-        'host'           => HostStrategy::class,
-        'acceptlanguage' => HttpAcceptLanguageStrategy::class,
-        'query'          => QueryStrategy::class,
-        'uripath'        => UriPathStrategy::class,
-        'asset'          => AssetStrategy::class,
-    ];
+    public function __construct(Locale $locale)
+    {
+        $this->locale = $locale;
+    }
 
     /**
-     * {@inheritdoc}
+     * @return string
      */
-    protected $factories = [
-        CookieStrategy::class             => InvokableFactory::class,
-        HostStrategy::class               => InvokableFactory::class,
-        HttpAcceptLanguageStrategy::class => InvokableFactory::class,
-        QueryStrategy::class              => InvokableFactory::class,
-        UriPathStrategy::class            => UriPathStrategyFactory::class,
-        AssetStrategy::class              => InvokableFactory::class,
-    ];
+    public function __invoke()
+    {
+        return $this->locale->getPrimaryLanguage($this->locale->getDefault());
+    }
 }

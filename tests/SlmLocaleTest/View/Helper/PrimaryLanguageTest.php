@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2012-2013 Jurian Sluiman.
+ * Copyright (c) 2012-2019 Jurian Sluiman.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,38 +37,20 @@
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link        http://juriansluiman.nl
  */
+namespace SlmLocaleTest\View\Helper;
 
-namespace SlmLocale\Strategy;
+use Locale;
+use PHPUnit\Framework\TestCase;
+use SlmLocale\View\Helper\PrimaryLanguage;
 
-use Laminas\ServiceManager\AbstractPluginManager;
-use Laminas\ServiceManager\Factory\InvokableFactory;
-use SlmLocale\Strategy\Factory\UriPathStrategyFactory;
-
-class StrategyPluginManager extends AbstractPluginManager
+final class PrimaryLanguageTest extends TestCase
 {
-    protected $instanceOf = StrategyInterface::class;
+    public function testInvoke()
+    {
+        $locale = new Locale();
+        $locale->setDefault('de-DE');
+        $primaryLanguage = new PrimaryLanguage($locale);
 
-    /**
-     * {@inheritdoc}
-     */
-    protected $aliases = [
-        'cookie'         => CookieStrategy::class,
-        'host'           => HostStrategy::class,
-        'acceptlanguage' => HttpAcceptLanguageStrategy::class,
-        'query'          => QueryStrategy::class,
-        'uripath'        => UriPathStrategy::class,
-        'asset'          => AssetStrategy::class,
-    ];
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $factories = [
-        CookieStrategy::class             => InvokableFactory::class,
-        HostStrategy::class               => InvokableFactory::class,
-        HttpAcceptLanguageStrategy::class => InvokableFactory::class,
-        QueryStrategy::class              => InvokableFactory::class,
-        UriPathStrategy::class            => UriPathStrategyFactory::class,
-        AssetStrategy::class              => InvokableFactory::class,
-    ];
+        $this->assertSame('de', $primaryLanguage());
+    }
 }
