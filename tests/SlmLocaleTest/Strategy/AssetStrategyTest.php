@@ -2,8 +2,6 @@
 
 namespace SlmLocaleTest\Strategy;
 
-use Laminas\Console\Request as ConsoleRequest;
-use Laminas\Console\Response as ConsoleResponse;
 use Laminas\EventManager\EventManager;
 use Laminas\Http\PhpEnvironment\Request as HttpRequest;
 use Laminas\Http\PhpEnvironment\Response as HttpResponse;
@@ -33,15 +31,6 @@ class AssetStrategyTest extends TestCase
     {
         $this->event->setRequest(new HttpRequest());
         $this->event->setResponse(new HttpResponse());
-
-        $locale = $this->strategy->detect($this->event);
-        $this->assertNull($locale);
-    }
-
-    public function testDetectWithConsoleRequestReturnsNull()
-    {
-        $this->event->setRequest(new ConsoleRequest());
-        $this->event->setResponse(new ConsoleResponse());
 
         $locale = $this->strategy->detect($this->event);
         $this->assertNull($locale);

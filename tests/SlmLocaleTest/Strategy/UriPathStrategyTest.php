@@ -71,15 +71,6 @@ class UriPathStrategyTest extends TestCase
         $this->event->setSupported(['nl', 'de', 'en']);
     }
 
-    public function testDetectWithConsoleRequestReturnsNull()
-    {
-        $this->event->setRequest(new ConsoleRequest());
-        $this->event->setResponse(new ConsoleResponse());
-
-        $locale = $this->strategy->detect($this->event);
-        $this->assertNull($locale);
-    }
-
     public function testDetectReturnsNullByDefault()
     {
         $this->event->setRequest(new HttpRequest());

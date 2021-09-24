@@ -24,8 +24,15 @@ matrix:
     - php: 7.4
       env:
         - DEPENDENCIES="--prefer-stable"
-        - TEST_COVERAGE=true
     - php: 7.4
+      env:
+        - DEPENDENCIES="--prefer-lowest --prefer-stable"
+
+    - php: 8.0
+      env:
+        - DEPENDENCIES="--prefer-stable"
+        - TEST_COVERAGE=true
+    - php: 8.0
       env:
         - DEPENDENCIES="--prefer-lowest --prefer-stable"
 
