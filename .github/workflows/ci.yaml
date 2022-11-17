@@ -1,0 +1,58 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  run-tests:
+    name: Tests with PHP ${{ matrix.php-version }} (Composer ${{ matrix.dependencies }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - php-version: 7.4
+            dependencies: "--prefer-stable"
+            test_coverage: "yes"
+          - php-version: 7.4
+            dependencies: "--prefer-lowest --prefer-stable"
+            test_coverage: "no"
+#          - php-version: 8.0
+#            dependencies: "--prefer-stable"
+#            test_coverage: false
+#          - php-version: 8.0
+#            dependencies: "--prefer-lowest --prefer-stable"
+#            test_coverage: false
+#          - php-version: 8.1
+#            dependencies: "--prefer-stable"
+#            test_coverage: false
+#          - php-version: 8.1
+#            dependencies: "--prefer-lowest --prefer-stable"
+#            test_coverage: false
+
+    steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: xdebug
+          tools: composer:2.4.4
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install composer dependencies
+        run: composer update --prefer-source ${{ matrix.dependencies }}
+
+      - name: Run php-cs-fixer
+        run: vendor/bin/php-cs-fixer fix -v --diff --dry-run
+
+      - name: Run tests (without coverage)
+        if: ${{ matrix.test_coverage == 'no' }}
+        run: vendor/bin/phpunit
+
+      - name: Run tests (with coverage)
+        if: ${{ matrix.test_coverage == 'yes' }}
+        run: php -dzend_extension=xdebug.so ./vendor/bin/phpunit --coverage-text --coverage-clover ./build/logs/clover.xml
+
+      - name: Run coveralls
+        if: ${{ matrix.test_coverage == 'yes' }}
+        run: vendor/bin/coveralls
