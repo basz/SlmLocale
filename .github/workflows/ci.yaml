@@ -43,11 +43,11 @@ jobs:
         run: composer update --prefer-source ${{ matrix.dependencies }}
 
       - name: Run php-cs-fixer
-        run: vendor/bin/php-cs-fixer fix -v --diff --dry-run
+        run: composer cs-check
 
       - name: Run tests (without coverage)
         if: ${{ matrix.test_coverage == 'no' }}
-        run: vendor/bin/phpunit
+        run: composer test
 
       - name: Run tests (with coverage)
         if: ${{ matrix.test_coverage == 'yes' }}
@@ -55,4 +55,4 @@ jobs:
 
       - name: Run coveralls
         if: ${{ matrix.test_coverage == 'yes' }}
-        run: vendor/bin/coveralls
+        run: vendor/bin/php-coveralls
