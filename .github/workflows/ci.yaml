@@ -11,7 +11,7 @@ jobs:
         include:
           - php-version: 7.4
             dependencies: "--prefer-stable"
-            test_coverage: "yes"
+            test_coverage: "no"
           - php-version: 7.4
             dependencies: "--prefer-lowest --prefer-stable"
             test_coverage: "no"
