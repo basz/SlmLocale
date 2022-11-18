@@ -31,11 +31,10 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.19.3",
-        "laminas/laminas-console": "^2.6",
         "laminas/laminas-mvc": "^3.1",
         "phpspec/prophecy": "^1.15",
         "phpunit/phpunit": "^8.5.1",
-        "satooshi/php-coveralls": "^2.4.3"
+        "php-coveralls/php-coveralls": "^2.4.3"
     },
     "suggest": {
         "laminas/laminas-mvc": "For using the router in the UriPath strategy"
