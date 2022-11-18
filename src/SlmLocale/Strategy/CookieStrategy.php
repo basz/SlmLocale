@@ -47,7 +47,7 @@ use SlmLocale\Strategy\Exception\InvalidArgumentException;
 
 class CookieStrategy extends AbstractStrategy
 {
-    const COOKIE_NAME = 'slm_locale';
+    public const COOKIE_NAME = 'slm_locale';
 
     /**
      * The name of the cookie.

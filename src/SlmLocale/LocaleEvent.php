@@ -47,11 +47,11 @@ use Laminas\Uri\Uri;
 
 class LocaleEvent extends Event
 {
-    const EVENT_DETECT   = 'detect';
+    public const EVENT_DETECT   = 'detect';
 
-    const EVENT_FOUND    = 'found';
+    public const EVENT_FOUND    = 'found';
 
-    const EVENT_ASSEMBLE = 'assemble';
+    public const EVENT_ASSEMBLE = 'assemble';
 
     protected $request;
 

@@ -49,7 +49,7 @@ class QueryStrategy extends AbstractStrategy
      *
      * @var string
      */
-    const QUERY_KEY = 'lang';
+    public const QUERY_KEY = 'lang';
 
     /**
      * Query key to use for request

@@ -45,9 +45,9 @@ use SlmLocale\Strategy\Exception\InvalidArgumentException;
 
 class HostStrategy extends AbstractStrategy
 {
-    const LOCALE_KEY           = ':locale';
+    public const LOCALE_KEY           = ':locale';
 
-    const REDIRECT_STATUS_CODE = 302;
+    public const REDIRECT_STATUS_CODE = 302;
 
     protected $domain;
 
@@ -102,7 +102,9 @@ class HostStrategy extends AbstractStrategy
         }
         if (strpos($domain, self::LOCALE_KEY) === false) {
             throw new Exception\InvalidArgumentException(sprintf(
-                'The domain %s must contain a locale key part "%s"', $domain, self::LOCALE_KEY
+                'The domain %s must contain a locale key part "%s"',
+                $domain,
+                self::LOCALE_KEY
             ));
         }
 

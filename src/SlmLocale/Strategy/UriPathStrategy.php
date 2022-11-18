@@ -48,7 +48,7 @@ use SlmLocale\LocaleEvent;
 
 class UriPathStrategy extends AbstractStrategy
 {
-    const REDIRECT_STATUS_CODE = 302;
+    public const REDIRECT_STATUS_CODE = 302;
 
     protected $redirect_when_found = true;
 
