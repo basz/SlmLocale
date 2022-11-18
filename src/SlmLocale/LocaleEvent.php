@@ -48,13 +48,19 @@ use Laminas\Uri\Uri;
 class LocaleEvent extends Event
 {
     const EVENT_DETECT   = 'detect';
+
     const EVENT_FOUND    = 'found';
+
     const EVENT_ASSEMBLE = 'assemble';
 
     protected $request;
+
     protected $response;
+
     protected $supported;
+
     protected $locale;
+
     protected $uri;
 
     public function getRequest()

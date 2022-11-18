@@ -39,8 +39,6 @@
  */
 namespace SlmLocaleTest\Locale;
 
-use Laminas\Console\Request as ConsoleRequest;
-use Laminas\Console\Response as ConsoleResponse;
 use Laminas\Http\PhpEnvironment\Request as HttpRequest;
 use Laminas\Http\PhpEnvironment\Response as HttpResponse;
 use Laminas\Mvc\Console\Router\SimpleRouteStack as ConsoleRouter;
@@ -56,8 +54,10 @@ class UriPathStrategyTest extends TestCase
 {
     /** @var UriPathStrategy */
     private $strategy;
+
     /** @var LocaleEvent */
     private $event;
+
     /** @var HttpRouter */
     private $router;
 

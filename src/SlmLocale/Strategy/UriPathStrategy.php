@@ -51,11 +51,16 @@ class UriPathStrategy extends AbstractStrategy
     const REDIRECT_STATUS_CODE = 302;
 
     protected $redirect_when_found = true;
+
     protected $aliases;
+
     protected $redirect_to_canonical;
+
     protected $sl;
+
     /** @var string|null */
     protected $default;
+
     /**
      * @var SimpleRouteStack
      */

@@ -52,6 +52,7 @@ class QueryStrategyTest extends TestCase
      * @var QueryStrategy $strategy
      */
     protected $strategy;
+
     /**
      * @var LocaleEvent $event
      */

@@ -75,7 +75,7 @@ class QueryStrategy extends AbstractStrategy
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function detect(LocaleEvent $event)
     {
@@ -101,7 +101,7 @@ class QueryStrategy extends AbstractStrategy
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function assemble(LocaleEvent $event)
     {
