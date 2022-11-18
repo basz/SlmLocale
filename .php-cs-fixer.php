@@ -11,7 +11,7 @@ class Config extends PhpCsFixerConfig
         $this->setRiskyAllowed(true);
     }
 
-    public function getRules()
+    public function getRules(): array
     {
         return [
             '@PSR2' => true,
@@ -62,8 +62,7 @@ class Config extends PhpCsFixerConfig
             'echo_tag_syntax' => true,
             'no_singleline_whitespace_before_semicolons' => true,
             'no_spaces_around_offset' => true,
-            'no_trailing_comma_in_list_call' => true,
-            'no_trailing_comma_in_singleline_array' => true,
+            'no_trailing_comma_in_singleline' => true,
             'no_unneeded_control_parentheses' => true,
             'no_unreachable_default_argument_value' => true,
             'no_unused_imports' => true,
