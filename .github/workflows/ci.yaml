@@ -15,18 +15,18 @@ jobs:
           - php-version: 7.4
             dependencies: "--prefer-lowest --prefer-stable"
             test_coverage: "no"
-#          - php-version: 8.0
-#            dependencies: "--prefer-stable"
-#            test_coverage: false
-#          - php-version: 8.0
-#            dependencies: "--prefer-lowest --prefer-stable"
-#            test_coverage: false
-#          - php-version: 8.1
-#            dependencies: "--prefer-stable"
-#            test_coverage: false
-#          - php-version: 8.1
-#            dependencies: "--prefer-lowest --prefer-stable"
-#            test_coverage: false
+          - php-version: 8.0
+            dependencies: "--prefer-stable"
+            test_coverage: false
+          - php-version: 8.0
+            dependencies: "--prefer-lowest --prefer-stable"
+            test_coverage: false
+          - php-version: 8.1
+            dependencies: "--prefer-stable"
+            test_coverage: false
+          - php-version: 8.1
+            dependencies: "--prefer-lowest --prefer-stable"
+            test_coverage: false
 
     steps:
       - name: Setup PHP
