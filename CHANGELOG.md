@@ -1,6 +1,9 @@
 Changelog
 ===
 
+v1.1.0 - TBD
+---
+
 1.0.0 - 2022-11-21
 ---
 * [#112](https://github.com/basz/SlmLocale/pull/112) Switch to GitHub Actions by @demiankatz
