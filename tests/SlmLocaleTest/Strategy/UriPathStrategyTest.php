@@ -39,8 +39,6 @@
  */
 namespace SlmLocaleTest\Locale;
 
-use Laminas\Console\Request as ConsoleRequest;
-use Laminas\Console\Response as ConsoleResponse;
 use Laminas\Http\PhpEnvironment\Request as HttpRequest;
 use Laminas\Http\PhpEnvironment\Response as HttpResponse;
 use Laminas\Mvc\Console\Router\SimpleRouteStack as ConsoleRouter;
@@ -56,8 +54,10 @@ class UriPathStrategyTest extends TestCase
 {
     /** @var UriPathStrategy */
     private $strategy;
+
     /** @var LocaleEvent */
     private $event;
+
     /** @var HttpRouter */
     private $router;
 
@@ -69,15 +69,6 @@ class UriPathStrategyTest extends TestCase
 
         $this->event = new LocaleEvent();
         $this->event->setSupported(['nl', 'de', 'en']);
-    }
-
-    public function testDetectWithConsoleRequestReturnsNull()
-    {
-        $this->event->setRequest(new ConsoleRequest());
-        $this->event->setResponse(new ConsoleResponse());
-
-        $locale = $this->strategy->detect($this->event);
-        $this->assertNull($locale);
     }
 
     public function testDetectReturnsNullByDefault()

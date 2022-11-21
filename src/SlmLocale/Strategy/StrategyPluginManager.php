@@ -49,7 +49,7 @@ class StrategyPluginManager extends AbstractPluginManager
     protected $instanceOf = StrategyInterface::class;
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     protected $aliases = [
         'cookie'         => CookieStrategy::class,
@@ -61,7 +61,7 @@ class StrategyPluginManager extends AbstractPluginManager
     ];
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     protected $factories = [
         CookieStrategy::class             => InvokableFactory::class,

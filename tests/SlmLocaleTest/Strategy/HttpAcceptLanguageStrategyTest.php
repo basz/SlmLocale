@@ -48,6 +48,7 @@ use SlmLocale\Strategy\HttpAcceptLanguageStrategy;
 class HttpAcceptLanguageStrategyTest extends TestCase
 {
     protected $strategy;
+
     protected $event;
 
     public function setUp(): void

@@ -49,7 +49,7 @@ class QueryStrategy extends AbstractStrategy
      *
      * @var string
      */
-    const QUERY_KEY = 'lang';
+    public const QUERY_KEY = 'lang';
 
     /**
      * Query key to use for request
@@ -75,7 +75,7 @@ class QueryStrategy extends AbstractStrategy
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function detect(LocaleEvent $event)
     {
@@ -101,7 +101,7 @@ class QueryStrategy extends AbstractStrategy
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function assemble(LocaleEvent $event)
     {

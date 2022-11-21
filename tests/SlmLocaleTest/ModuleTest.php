@@ -9,11 +9,14 @@ use Laminas\ServiceManager\ServiceManager;
 use Laminas\Stdlib\Request;
 use Laminas\Stdlib\Response;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use SlmLocale\Locale\Detector;
 use SlmLocale\Module;
 
 class ModuleTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testCanGetConfig()
     {
         $module = new Module();
