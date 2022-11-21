@@ -50,6 +50,7 @@ use SlmLocale\Strategy\Exception\InvalidArgumentException;
 class CookieStrategyTest extends TestCase
 {
     protected $strategy;
+
     protected $event;
 
     public function setUp(): void
