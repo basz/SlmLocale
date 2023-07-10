@@ -1,6 +1,9 @@
 Changelog
 ===
 
+v1.1.0 - TBD
+---
+
 v1.1.0 - 2023-07-10
 ---
 * [#113](https://github.com/basz/SlmLocale/pull/113) Added PHP 8.2 support by @kokspflanze
