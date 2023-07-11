@@ -198,6 +198,32 @@ class DetectorTest extends TestCase
         $this->assertFalse($detector->hasMappings());
     }
 
+    public function testMainSupportedLocalesExcludesMappings()
+    {
+        $detector = new Detector();
+        $detector->setSupported([
+            'nl',
+            'nl_NL',
+        ]);
+
+        $detector->setMappings([
+            'nl' => 'nl_NL',
+        ]);
+
+        $this->assertEquals(['nl_NL'], $detector->getMainSupportedLocales());
+    }
+
+    public function testMainSupportedLocalesWithoutMappings()
+    {
+        $detector = new Detector();
+        $detector->setSupported([
+            'nl',
+            'nl_NL',
+        ]);
+
+        $this->assertEquals(['nl', 'nl_NL'], $detector->getMainSupportedLocales());
+    }
+
     public function testStrategyAttachesToEventManager()
     {
         $detector = new Detector();

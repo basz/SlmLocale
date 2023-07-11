@@ -67,14 +67,14 @@ class Detector implements EventManagerAwareInterface
     /**
      * Optional list of supported locales
      *
-     * @var array
+     * @var string[]
      */
     protected $supported;
 
     /**
      * Optional list of locale mappings
      *
-     * @var array
+     * @var array & string[string]
      */
     protected $mappings;
 
@@ -126,6 +126,21 @@ class Detector implements EventManagerAwareInterface
     public function hasSupported()
     {
         return is_array($this->supported) && count($this->supported);
+    }
+
+    /**
+     * get the supported locales excluding those which are mapped to another locale
+     *
+     * @return string[]
+     */
+    public function getMainSupportedLocales()
+    {
+        $supported = $this->getSupported() ?: [];
+        $mappings  = $this->getMappings() ?: [];
+
+        $mappedFrom = array_keys($mappings);
+
+        return array_values(array_diff($supported, $mappedFrom));
     }
 
     public function getMappings()
