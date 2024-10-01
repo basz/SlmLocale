@@ -33,6 +33,12 @@ jobs:
           - php-version: 8.2
             dependencies: "--prefer-lowest --prefer-stable"
             test_coverage: "no"
+          - php-version: 8.3
+            dependencies: "--prefer-stable"
+            test_coverage: "no"
+          - php-version: 8.3
+            dependencies: "--prefer-lowest --prefer-stable"
+            test_coverage: "no"
 
     steps:
       - name: Setup PHP
