@@ -19,7 +19,7 @@
         }
     ],
     "require": {
-        "php": "^7.2 || ~8.0.0 || ~8.1.0 || ~8.2.0",
+        "php": "^7.2 || ~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0",
         "ext-intl": "*",
         "laminas/laminas-eventmanager": "^3.1",
         "laminas/laminas-http": "^2.7",
