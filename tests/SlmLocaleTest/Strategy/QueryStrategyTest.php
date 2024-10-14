@@ -39,7 +39,7 @@
  */
 namespace SlmLocaleTest\Locale;
 
-use Laminas\Http\Request  as HttpRequest;
+use Laminas\Http\Request as HttpRequest;
 use Laminas\Http\Response as HttpResponse;
 use Laminas\Uri\Uri;
 use PHPUnit\Framework\TestCase;

@@ -40,7 +40,7 @@
 namespace SlmLocaleTest\Locale;
 
 use Laminas\Http\Header\Cookie;
-use Laminas\Http\Request  as HttpRequest;
+use Laminas\Http\Request as HttpRequest;
 use Laminas\Http\Response as HttpResponse;
 use PHPUnit\Framework\TestCase;
 use SlmLocale\LocaleEvent;
